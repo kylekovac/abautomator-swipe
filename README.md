@@ -6,7 +6,7 @@ A/B testing at the press of a button
 Via docker (recommended):
 
 ```bash
-docker build -t abauto . && docker run -it --rm -v ${PWD}:/transformations make-seg
+docker build -t abauto . && docker run -it --rm -v ${PWD}:/. abauto
 ```
 
 Or within a `virtualenv` run the standard
