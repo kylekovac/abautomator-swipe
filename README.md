@@ -9,7 +9,7 @@ Via docker (recommended):
 docker build -t abauto . && docker run -it --rm -v ${PWD}:/transformations make-seg
 ```
 
-Or within a `virtualenv` un the standard
+Or within a `virtualenv` run the standard
 
 ```bash
 pip install -r requirements.txt
