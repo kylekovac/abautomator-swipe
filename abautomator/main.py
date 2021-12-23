@@ -1,28 +1,32 @@
 from datetime import date
+from dataclasses import dataclass
 
 from google.cloud import bigquery
-from sqlalchemy.engine import create_engine
+from sqlalchemy.engine import *
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
 
-exp_config = {
-  "EXP_START": date(2021, 12, 10),
-  "EXP_END": None,
-  "DEVICES": ["android", "ios"],
-  "COHORTING_PROP": "context_traits_onboarding_flow_001",
-  "COHORTING_TABLE": "segment_signup_flow_started",
-  "COHORT_NAMES": [
-    'Dec1021InspirationMomentFinalVideo01',
-    'Dec1021InspirationMomentFinalVideo02',
-    'Dec1021InspirationMomentFinalCarousel01',
-    'Dec1021InspirationMomentFinalCarousel02',
-    'Dec1021InspirationMomentFinalCarousel03',
-    'Dec1021InspirationMomentFinalCarousel04',
-    'Dec1021InspirationMomentFinalControl',
-  ],
-}
+from abautomator.config import GCP_PROJECT_ID
 
-GCP_PROJECT_ID = 'citizen-ops-21adfa65' # Prod
+
+
+from typing import List
+
+@dataclass
+class Cohort:
+  control: str
+  treatment_groups: List[str]
+  event: str
+  event_property: str
+
+
+@dataclass
+class Experiment:
+  cohort: Cohort
+  start: date
+  end: date=None
+  devices: List[str]=["android", "ios"]
+
 
 def get_users(engine, exp_config):
   table = Table(f'echelon.{exp_config["COHORTING_TABLE"]}', MetaData(bind=engine), autoload=True)
@@ -53,3 +57,26 @@ def add_time_frame(query, table, exp_config):
       table.c.event_date <= exp_config["EXP_END"]
     )
   return query
+
+class Event:
+  def __init__(self, table_name, col):
+    self.table_name = table_name
+    self.col = col
+
+class EventMetric:
+  def __init__(self, event, exp_config):
+    self.event = event
+    self.exp_config = exp_config
+  
+  def get_query(self, conn):
+    table = Table(f'echelon.{self.event.table_name}', MetaData(bind=engine), autoload=True)
+
+    result = select(
+        table.c.echelon_user_id,
+        func.count(getattr(table.c, self.event.col).distinct()).label("n_events")
+    ).group_by(
+        table.c.echelon_user_id,
+    )
+    result = add_time_frame(result, table, self.exp_config)
+
+    return result
