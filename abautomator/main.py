@@ -1,11 +1,13 @@
 from datetime import date
 from dataclasses import dataclass, field
 
-from google.cloud import bigquery
-import sqlalchemy
+
+import pandas as pd
 from sqlalchemy.engine import *
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
+
+from google.cloud import bigquery
 
 from abautomator.config import GCP_PROJECT_ID
 
@@ -73,5 +75,10 @@ def add_time_frame(query, table, start_dt=None, end_dt=None):
     )
   return query
 
+def _get_query_df(query, conn):
+  result = pd.read_sql(query, conn)
+  result['echelon_user_id'] = result['echelon_user_id'].astype("string")
+  return result
+
 def get_user_metrics_df(users_df, metric_df):
-  return users_df.join(metric_df, on="echelon_user_id", how="left")
+  return users_df.merge(metric_df, on="echelon_user_id", how="left")

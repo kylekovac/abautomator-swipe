@@ -80,8 +80,23 @@ def test_get_metric_query(conn, metric_query):
     assert len(result) > 10
 
 
-
 def test_get_users_metrics_df(conn, metric_query, users_query):
+    old_result = _get_old_result(conn, metric_query, users_query)
+
+    users_df =  main._get_query_df(users_query, conn)
+    sessions_df =  main._get_query_df(metric_query, conn)
+
+    assert len(users_df) > 10
+    assert len(sessions_df) > 10
+
+    result_df = main.get_user_metrics_df(users_df, sessions_df)
+
+    assert len(result_df) > 10
+    assert len(result_df) == len(users_df)
+    assert len(result_df) == len(old_result)
+
+
+def _get_old_result(conn, metric_query, users_query):
     users_cte = users_query.cte("users")
     session_metric_cte = metric_query.cte("sessions")
     user_metrics_query = select(
@@ -89,14 +104,4 @@ def test_get_users_metrics_df(conn, metric_query, users_query):
         ).select_from(
             users_cte.join(session_metric_cte, users_cte.c.echelon_user_id == session_metric_cte.c.echelon_user_id, isouter=True)
     )
-
-    # result = conn.execute(user_metrics_query).all()
-    # print(len(result))
-    # assert len(result) > 10
-
-    df = pd.read_sql(users_query, conn)
-    print(df.head())
-
-    assert len(df) > 10
-
-    # result = conn.execute(users_query).all()
+    return conn.execute(user_metrics_query).all()
