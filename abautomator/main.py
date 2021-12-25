@@ -3,6 +3,8 @@ from dataclasses import dataclass, field
 
 
 import pandas as pd
+import numpy as np
+from sqlalchemy import case
 from sqlalchemy.engine import *
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
@@ -34,7 +36,7 @@ def get_users_query(engine, exp):
 
   result = select(
       table.c.echelon_user_id,
-      getattr(table.c, exp.event_prop).label("cohort"),
+      getattr(table.c, exp.event_prop).label("exp_cond"),
   ).where(
       getattr(table.c, exp.event_prop).in_(exp.all_conds())
   ).group_by(
@@ -48,15 +50,28 @@ def get_users_query(engine, exp):
 
 @dataclass
 class Metric:
+  name: str
   table_name: str
   table_col: str
+
+  def n_label(self):
+    return f"n_{self.name.lower().replace(' ', '_')}"
+
+  def pct_label(self):
+    return f"pct_{self.name.lower().replace(' ', '_')}"
 
 def get_metric_query(engine, exp, metric):
   table = Table(f'echelon.{metric.table_name}', MetaData(bind=engine), autoload=True)
 
   result = select(
       table.c.echelon_user_id,
-      func.count(getattr(table.c, metric.table_col)).label("n_events")
+      func.count(getattr(table.c, metric.table_col)).label(metric.n_label()),
+      case(
+        (
+          func.count(getattr(table.c, metric.table_col)) > 0, 1
+        ),
+        else_=0
+      ).label(metric.pct_label()),
   ).group_by(
       table.c.echelon_user_id,
   )
@@ -80,5 +95,12 @@ def _get_query_df(query, conn):
   result['echelon_user_id'] = result['echelon_user_id'].astype("string")
   return result
 
-def get_user_metrics_df(users_df, metric_df):
-  return users_df.merge(metric_df, on="echelon_user_id", how="left")
+def get_user_metrics_df(users_df, metrics):
+  result = users_df
+  for metric_df in metrics:
+    result = result.merge(metric_df, on="echelon_user_id", how="left")
+  return result
+
+def calc_sampling_distribution(user_metrics_df):
+  result = user_metrics_df.groupby(["exp_cond"], as_index=False).mean()
+  return result
