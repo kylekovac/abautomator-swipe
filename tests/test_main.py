@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import select, selectable
 
-from abautomator import main, config
+from abautomator import main, experiment
 
 @pytest.fixture
 def engine(scope="module"):
@@ -46,7 +46,7 @@ def users_query(engine, exp):
 
 @pytest.fixture
 def exp():
-    return main.Experiment(
+    return experiment.Experiment(
         ctrl_cond='Dec1021InspirationMomentFinalControl',
         tx_conds=[
             'Dec1021InspirationMomentFinalVideo01',
@@ -166,6 +166,4 @@ def test_sampling_distribution(dfs, exp):
     pickle.dump(
         result_df, open(os.path.join("tests", f"sampling_dist.p"), "wb" )
     )
-
-
 
