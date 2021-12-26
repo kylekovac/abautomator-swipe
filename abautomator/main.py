@@ -1,38 +1,16 @@
-from datetime import date
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 import math
 
-
 import pandas as pd
-import numpy as np
 from sqlalchemy import case
 from sqlalchemy.engine import *
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
 
-from google.cloud import bigquery
-
-from abautomator.config import GCP_PROJECT_ID
+from abautomator.experiment import Experiment
 
 
-from typing import List
-
-
-@dataclass
-class Experiment:
-  ctrl_cond: str           # col values
-  tx_conds: List[str]      # col values
-  event: str               # table
-  event_prop: str          # table col
-  start_dt: date
-  end_dt: date=None
-  devices: List[str]=field(default_factory=lambda: ['android', 'ios'])
-
-  def all_conds(self):
-    return [self.ctrl_cond] + self.tx_conds
-
-
-def get_users_query(engine, exp):
+def get_users_query(engine: Engine, exp: Experiment):
   table = Table(f'echelon.{exp.event}', MetaData(bind=engine), autoload=True)
 
   result = select(
@@ -55,24 +33,28 @@ class Metric:
   table_name: str
   table_col: str
 
-  def n_label(self):
-    return f"n_{self.name.lower().replace(' ', '_')}"
+  def __post_init__(self):
+    self.n_label = f"n_{self.name.lower().replace(' ', '_')}"
+    self.pct_label = f"pct_{self.name.lower().replace(' ', '_')}"
 
-  def pct_label(self):
-    return f"pct_{self.name.lower().replace(' ', '_')}"
+  # def n_label(self):
+  #   return f"n_{self.name.lower().replace(' ', '_')}"
 
-def get_metric_query(engine, exp, metric):
+  # def pct_label(self):
+  #   return f"pct_{self.name.lower().replace(' ', '_')}"
+
+def get_metric_query(engine: Engine, exp: Experiment, metric: Metric):
   table = Table(f'echelon.{metric.table_name}', MetaData(bind=engine), autoload=True)
 
   result = select(
       table.c.echelon_user_id,
-      func.count(getattr(table.c, metric.table_col)).label(metric.n_label()),
+      func.count(getattr(table.c, metric.table_col)).label(metric.n_label),
       case(
         (
           func.count(getattr(table.c, metric.table_col)) > 0, 1
         ),
         else_=0
-      ).label(metric.pct_label()),
+      ).label(metric.pct_label),
   ).group_by(
       table.c.echelon_user_id,
   )

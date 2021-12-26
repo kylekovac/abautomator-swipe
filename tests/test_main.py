@@ -8,11 +8,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import select, selectable
 
-from abautomator import main, experiment
+from abautomator import main, experiment, config
 
 @pytest.fixture
 def engine(scope="module"):
-    return create_engine(f'bigquery://{main.GCP_PROJECT_ID}')
+    return create_engine(f'bigquery://{config.GCP_PROJECT_ID}')
 
 @pytest.fixture
 def conn(engine):
