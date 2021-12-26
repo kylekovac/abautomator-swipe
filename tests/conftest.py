@@ -58,3 +58,13 @@ def get_incident_views_metric():
         table_name="fct_incident_views",
         table_col="id",
     )
+
+@pytest.fixture
+def dfs(conn, queries):
+    users_query, sessions_query, views_query = queries
+
+    users_df =  utils._df_from_cache("users", users_query, conn)
+    sessions_df =  utils._df_from_cache("sessions", sessions_query, conn)
+    views_df =  utils._df_from_cache("views", views_query, conn)
+
+    return users_df, sessions_df, views_df

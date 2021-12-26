@@ -1,8 +1,7 @@
-import pytest
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import select, selectable
 
-from abautomator import main
+from abautomator import get_df
 from tests import utils
 
 
@@ -21,14 +20,14 @@ def test_get_user_data(conn, users_query):
     
     assert isinstance(users_query, selectable.Select)
 
-    result = main._get_query_df(users_query, conn)
+    result = get_df._get_query_df(users_query, conn)
     print(len(result))
     assert len(result) > 10
 
 def test_get_sessions_metric(conn, sessions_query):
     assert isinstance(sessions_query, selectable.Select)
 
-    result = main._get_query_df(sessions_query, conn)
+    result = get_df._get_query_df(sessions_query, conn)
 
     print(sessions_query)
     print(len(result))
