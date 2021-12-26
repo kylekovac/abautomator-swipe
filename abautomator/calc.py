@@ -1,6 +1,5 @@
 # Calculate sampling distributions
 from dataclasses import dataclass
-from datetime import date
 import math
 
 import pandas as pd
