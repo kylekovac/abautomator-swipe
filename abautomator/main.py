@@ -8,6 +8,7 @@ from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
 
 from abautomator.experiment import Experiment
+from abautomator.metric import Metric
 
 
 def get_users_query(engine: Engine, exp: Experiment):
@@ -26,22 +27,6 @@ def get_users_query(engine: Engine, exp: Experiment):
 
   result = add_time_frame(result, table, exp.start_dt, exp.end_dt)
   return result
-
-@dataclass
-class Metric:
-  name: str
-  table_name: str
-  table_col: str
-
-  def __post_init__(self):
-    self.n_label = f"n_{self.name.lower().replace(' ', '_')}"
-    self.pct_label = f"pct_{self.name.lower().replace(' ', '_')}"
-
-  # def n_label(self):
-  #   return f"n_{self.name.lower().replace(' ', '_')}"
-
-  # def pct_label(self):
-  #   return f"pct_{self.name.lower().replace(' ', '_')}"
 
 def get_metric_query(engine: Engine, exp: Experiment, metric: Metric):
   table = Table(f'echelon.{metric.table_name}', MetaData(bind=engine), autoload=True)
