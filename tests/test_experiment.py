@@ -12,3 +12,7 @@ def test_get_name(exp):
     with pytest.raises(experiment.InvalidName):
         exp._get_name(exp.ctrl_cond, exp.ctrl_cond + "onecondempty")
 
+def test_exp_name_set(exp):
+    assert exp.name == "Dec1021InspirationMomentFinal"
+
+

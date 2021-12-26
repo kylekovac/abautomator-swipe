@@ -13,7 +13,7 @@ def calc_sampling_distribution(user_metrics_df, exp):
     **_get_agg_params(metrics),
   )
 
-  result = []  
+  data = []  
 
   for tx_cond in exp.tx_conds:
 
@@ -26,9 +26,14 @@ def calc_sampling_distribution(user_metrics_df, exp):
       curr_row[f"{metric}_est"] = _get_estimator(tx_chars, ctrl_chars)
       curr_row[f"{metric}_ci"] = _get_estimator_ci(tx_chars, ctrl_chars) # confidence interval
     
-    result.append(curr_row)
+    data.append(curr_row)
+  
+  return _convert_data_to_df(data, exp)
 
-  return pd.DataFrame(result).set_index("exp_cond")
+def _convert_data_to_df(data, exp):
+  result = pd.DataFrame(data).set_index("exp_cond")
+  result.index = result.index.str.replace(exp.name, '')
+  return result
 
 def _get_estimator(tx, ctrl):
   return tx.mean - ctrl.mean

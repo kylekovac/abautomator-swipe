@@ -15,8 +15,8 @@ class Experiment:
   end_dt: date=None
   devices: List[str]=field(default_factory=lambda: ['android', 'ios'])
 
-  # def __post_inti__(self):
-  #   self.name = 
+  def __post_init__(self):
+    self.name = self._get_name(self.ctrl_cond, self.tx_conds[0])
   
   def _get_name(self, ctrl: str, tx: str):
     end = 0
