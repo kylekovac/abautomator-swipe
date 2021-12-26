@@ -38,21 +38,21 @@ def _get_estimator_ci(tx, ctrl):
 
 def _get_estimator_standard_error(tx, ctrl):
   return math.sqrt(
-    ( (tx.var * tx.var) / tx.size ) + \
-    ( (ctrl.var * ctrl.var) / ctrl.size )
+    ( (tx.std * tx.std) / tx.size ) + \
+    ( (ctrl.std * ctrl.std) / ctrl.size )
   )
 
 def _get_agg_params(metrics):
   avg_params = {
     f"{metric}_mean": pd.NamedAgg(column=metric, aggfunc='mean') for metric in metrics
   }
-  var_params = {
-    f"{metric}_var": pd.NamedAgg(column=metric, aggfunc='var') for metric in metrics
+  std_params = {
+    f"{metric}_std": pd.NamedAgg(column=metric, aggfunc='std') for metric in metrics
   }
   n_params = {
     f"{metric}_size": pd.NamedAgg(column=metric, aggfunc='size') for metric in metrics
   }
-  return _concat_dicts(avg_params, var_params, n_params)
+  return _concat_dicts(avg_params, std_params, n_params)
 
 def _concat_dicts(d1, d2, d3):
   result = dict(d1, **d2)
@@ -64,7 +64,7 @@ def _get_sample_chars(stat_df, condition, metric):
     condition,
     metric,
     stat_df[f"{metric}_mean"][condition],
-    stat_df[f"{metric}_var"][condition],
+    stat_df[f"{metric}_std"][condition],
     stat_df[f"{metric}_size"][condition],
   )
 
@@ -73,8 +73,8 @@ class SampleMetricChars:  # Characteristics
   cond: str
   metric: str
   mean: float
-  var: float
+  std: float
   size: int
 
   def __repr__(self):
-    return f"{self.cond} {self.metric} mean:{self.mean:.2f}±{self.var:.2f} size:{self.size}"
+    return f"{self.cond} {self.metric} mean:{self.mean:.2f}±{self.std:.2f} size:{self.size}"
