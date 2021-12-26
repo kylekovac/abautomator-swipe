@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import select, selectable
 
-from abautomator import main, experiment, config
+from abautomator import main, experiment, config, get_query, metric
 
 @pytest.fixture
 def engine(scope="module"):
@@ -42,7 +42,7 @@ def test_get_user_data(conn, users_query):
 
 @pytest.fixture
 def users_query(engine, exp):
-    return main.get_users_query(engine, exp)
+    return get_query.get_users_query(engine, exp)
 
 @pytest.fixture
 def exp():
@@ -63,21 +63,21 @@ def exp():
 
 @pytest.fixture
 def sessions_query(engine, exp):
-    return main.get_metric_query(engine, exp, get_sessions_metric())
+    return get_query.get_metric_query(engine, exp, get_sessions_metric())
 
 @pytest.fixture
 def views_query(engine, exp):
-    return main.get_metric_query(engine, exp, get_incident_views_metric())
+    return get_query.get_metric_query(engine, exp, get_incident_views_metric())
 
 def get_sessions_metric():
-    return main.Metric(
+    return metric.Metric(
         name="User Sessions",
         table_name="fct_user_sessions",
         table_col="id",
     )
 
 def get_incident_views_metric():
-    return main.Metric(
+    return metric.Metric(
         name="Incident Views",
         table_name="fct_incident_views",
         table_col="id",
