@@ -17,6 +17,16 @@ class Experiment:
 
   def __post_init__(self):
     self.name = self._get_name(self.ctrl_cond, self.tx_conds[0])
+    self._clean_up_cond_labels()
+  
+  def _clean_up_cond_labels(self):
+    self.ctrl_cond = self.ctrl_cond.replace(self.name, "")
+    new_txs = []
+    for tx in self.tx_conds:
+      new_txs.append(tx.replace(self.name, ""))
+    self.tx_conds = new_txs
+
+
   
   def _get_name(self, ctrl: str, tx: str):
     end = 0
