@@ -16,7 +16,7 @@ def get_users_query(engine: Engine, exp: Experiment):
       table.c.echelon_user_id,
       getattr(table.c, exp.event_prop).label("exp_cond"),
   ).where(
-      getattr(table.c, exp.event_prop).in_(exp.all_conds())
+      getattr(table.c, exp.event_prop).in_(exp.get_queryable_conds())
   ).group_by(
       table.c.echelon_user_id, 
       getattr(table.c, exp.event_prop),
