@@ -6,27 +6,27 @@ from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
 from sqlalchemy.sql.selectable import Selectable
 
-from abautomator.experiment import Experiment
+from abautomator.collector import Collector
 from abautomator.metric import Metric
 
-def get_users_query(engine: Engine, exp: Experiment):
-  table = Table(f'echelon.{exp.event}', MetaData(bind=engine), autoload=True)
+def get_users_query(engine: Engine, coll: Collector):
+  table = Table(f'echelon.{coll.event}', MetaData(bind=engine), autoload=True)
 
   result = select(
       table.c.echelon_user_id,
-      getattr(table.c, exp.event_prop).label("exp_cond"),
+      getattr(table.c, coll.event_prop).label("exp_cond"),
   ).where(
-      getattr(table.c, exp.event_prop).in_(exp.all_conds())
+      getattr(table.c, coll.event_prop).in_(coll.conds)
   ).group_by(
       table.c.echelon_user_id, 
-      getattr(table.c, exp.event_prop),
+      getattr(table.c, coll.event_prop),
   )
   # Ommitting first_event_datetime for now
 
-  result = add_time_frame(result, table, exp.start_dt, exp.end_dt)
+  result = add_time_frame(result, table, coll.start_dt, coll.end_dt)
   return result
 
-def get_metric_query(engine: Engine, exp: Experiment, metric: Metric):
+def get_metric_query(engine: Engine, coll: Collector, metric: Metric):
   table = Table(f'echelon.{metric.table_name}', MetaData(bind=engine), autoload=True)
 
   result = select(
@@ -41,7 +41,7 @@ def get_metric_query(engine: Engine, exp: Experiment, metric: Metric):
   ).group_by(
       table.c.echelon_user_id,
   )
-  result = add_time_frame(result, table, exp.start_dt, exp.end_dt)
+  result = add_time_frame(result, table, coll.start_dt, coll.end_dt)
 
   return result
 

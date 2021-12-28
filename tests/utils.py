@@ -13,7 +13,7 @@ def _df_from_cache(name, query, conn):
             open(os.path.join("tests", f"{name}.p"), "rb" )
         )
     except FileNotFoundError:
-        result =  get_df._get_query_df(query, conn)
+        result =  get_df.get_df_from_query(query, conn)
         pickle.dump(
             result, open(os.path.join("tests", f"{name}.p"), "wb" )
         )
