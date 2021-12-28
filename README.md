@@ -1,8 +1,9 @@
 # abautomator
 A/B testing at the press of a button
 
+## Setup
 
-### Development Setup
+### Local Development 
 
 ```bash
 # Should only keep to run these gcloud commands once
@@ -16,7 +17,9 @@ docker run -ti --rm                                                          \
     abauto
 ```
 
-### Jupyter Setup
+### Jupyter
+
+Useful for working on visualization stuff
 
 ```bash
 docker run -p 8888:8888                    \
@@ -29,3 +32,8 @@ JupyterLab terminal:
 ```bash
 pip install -U pandas
 ```
+
+## Data Architecture
+
+![Images showing abautomator data architecture](images/data_arch.drawio.png)
+[Edit](https://app.diagrams.net/#Hruben-cit%2Fabautomator%2Fmain%2Fimages%2Fdata_arch.drawio.png)
