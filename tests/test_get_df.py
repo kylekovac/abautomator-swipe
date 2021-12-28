@@ -4,18 +4,27 @@ from sqlalchemy.sql import select
 from abautomator import get_df
 from tests import utils
 
-def test_get_users_metrics_df(old_result, dfs):
 
-    users_df, sessions_df, views_df = dfs
+def test_get_df_from_query(users_query, conn):
+    result = get_df.get_df_from_query(users_query, conn)
+    assert len(result) > 10
+
+def test_get_users_metrics_df(dfs):
+    users_df, sessions_df, = dfs
+    result_df = get_df.get_user_metrics_df(users_df, sessions_df)
+    assert len(result_df) > 10
+
+
+def test_get_users_metrics_df_counts(old_result, dfs):
+    users_df, sessions_df, = dfs
 
     assert len(users_df) > 10
     assert len(sessions_df) > 10
 
-    result_df = get_df.get_user_metrics_df(users_df, [sessions_df, views_df])
-    print(result_df.head())
-    print(result_df.dtypes)
+    result_df = get_df.get_user_metrics_df(users_df, sessions_df)
 
     assert len(result_df) > 10
+    assert len(old_result) > 10
     assert len(result_df) == len(users_df)
     assert len(result_df) == len(old_result)
 
