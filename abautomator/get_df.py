@@ -1,6 +1,6 @@
 import pandas as pd
 
-def _get_query_df(query, conn):
+def get_df_from_query(query, conn):
   result = pd.read_sql(query, conn)
   result['echelon_user_id'] = result['echelon_user_id'].astype("string")
   return result
