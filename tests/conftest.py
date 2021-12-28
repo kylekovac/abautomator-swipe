@@ -29,21 +29,29 @@ def views_query(engine, exp):
     return get_query.get_metric_query(engine, exp, get_incident_views_metric())
 
 @pytest.fixture
-def exp():
+def exp(ctrl_cond, tx_conds):
     return experiment.Experiment(
-        ctrl_cond='Dec1021InspirationMomentFinalControl',
-        tx_conds=[
-            'Dec1021InspirationMomentFinalVideo01',
-            'Dec1021InspirationMomentFinalVideo02',
-            'Dec1021InspirationMomentFinalCarousel01',
-            'Dec1021InspirationMomentFinalCarousel02',
-            'Dec1021InspirationMomentFinalCarousel03',
-            'Dec1021InspirationMomentFinalCarousel04',
-        ],
+        ctrl_cond=ctrl_cond,
+        tx_conds=tx_conds,
         event="segment_signup_flow_started",
         event_prop="context_traits_onboarding_flow_001",
         start_dt=utils._get_yesterday(),
     )
+
+@pytest.fixture
+def ctrl_cond():
+    return experiment.ExpCondition('Dec1021InspirationMomentFinalControl')
+
+@pytest.fixture
+def tx_conds():
+    return [
+        experiment.ExpCondition('Dec1021InspirationMomentFinalVideo01'),
+        experiment.ExpCondition('Dec1021InspirationMomentFinalVideo02'),
+        experiment.ExpCondition('Dec1021InspirationMomentFinalCarousel01'),
+        experiment.ExpCondition('Dec1021InspirationMomentFinalCarousel02'),
+        experiment.ExpCondition('Dec1021InspirationMomentFinalCarousel03'),
+        experiment.ExpCondition('Dec1021InspirationMomentFinalCarousel04'),
+    ]
 
 def get_sessions_metric():
     return metric.Metric(

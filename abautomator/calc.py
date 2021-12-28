@@ -17,22 +17,23 @@ def calc_sampling_distribution(user_metrics_df, exp):
 
   data = []
 
-
   for tx_cond in exp.tx_conds:
     
     for metric in metrics:
-      curr_row = {"exp_cond": tx_cond, "metric": metric, "metric_cond_label": (metric, tx_cond)}
-      ctrl_chars = _get_sample_chars(stat_df, exp.ctrl_cond, metric)
-      tx_chars = _get_sample_chars(stat_df, tx_cond, metric)
+      curr_row = {
+        "exp_cond": tx_cond.name, "metric": metric, "metric_cond_label": (metric, tx_cond.name)
+      }
+      ctrl_desc = _get_sample_desc(stat_df, exp.ctrl_cond.name, metric)
+      tx_desc = _get_sample_desc(stat_df, tx_cond.name, metric)
 
-      curr_row["est_mean"] = _get_estimator_mean(tx_chars, ctrl_chars)
-      curr_row["est_se"] = _get_estimator_standard_error(tx_chars, ctrl_chars)
+      curr_row["est_mean"] = _get_estimator_mean(tx_desc, ctrl_desc)
+      curr_row["est_se"] = _get_estimator_standard_error(tx_desc, ctrl_desc)
     
       data.append(curr_row)
   
-  return _convert_data_to_df(data, exp)
+  return _convert_data_to_df(data)
 
-def _convert_data_to_df(data, exp):
+def _convert_data_to_df(data):
   return pd.DataFrame(data)
 
 def _get_estimator_mean(tx, ctrl):
@@ -61,13 +62,13 @@ def _concat_dicts(d1, d2, d3):
   result.update(d3)
   return result
   
-def _get_sample_chars(stat_df, condition, metric):
+def _get_sample_desc(stat_df: pd.DataFrame, cond_name: str, metric: str):
   return SampleMetricChars(
-    condition,
+    cond_name,
     metric,
-    stat_df[f"{metric}_mean"][condition],
-    stat_df[f"{metric}_std"][condition],
-    stat_df[f"{metric}_size"][condition],
+    stat_df[f"{metric}_mean"][cond_name],
+    stat_df[f"{metric}_std"][cond_name],
+    stat_df[f"{metric}_size"][cond_name],
   )
 
 @dataclass
