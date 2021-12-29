@@ -9,26 +9,14 @@ from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
 from sqlalchemy.sql.selectable import Selectable
 
-from abautomator import get_query, get_df
-
-
-@dataclass
-class Metric:
-    name: str
-    table_name: str
-    table_col: str
-    data_df: pd.DataFrame = None
-
-    def __post_init__(self):
-        self.n_label = f"n_{self.name.lower().replace(' ', '_')}"
-        self.pct_label = f"pct_{self.name.lower().replace(' ', '_')}"
+from abautomator import get_query, get_df, metric
 
 
 @dataclass
 class Collector:
     engine: sqlalchemy.engine.Engine
     conds: List[str]                  # column values
-    metrics: List[Metric]             # metadata for getting metric data
+    metrics: List[metric.Metric]             # metadata for getting metric data
     event: str                        # table/thing user does to become exp participant
     event_prop: str                   # table col with exp_cond info
     start_dt: date
@@ -71,7 +59,7 @@ class Collector:
             )
             metric.data_df = self._add_exp_cond_to_metric(metric_df)
     
-    def _get_metric_query(self, metric: Metric):
+    def _get_metric_query(self, metric: metric.Metric):
         table = Table(f'echelon.{metric.table_name}', MetaData(bind=self.engine), autoload=True)
 
         result = select(

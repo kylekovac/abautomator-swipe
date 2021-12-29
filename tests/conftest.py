@@ -44,6 +44,7 @@ def coll_w_users_df(coll, users_df):
 @pytest.fixture
 def cond_strs():
     return [
+        "Dec1021InspirationMomentFinalControl",
         "Dec1021InspirationMomentFinalVideo01",
         "Dec1021InspirationMomentFinalVideo02",
         "Dec1021InspirationMomentFinalCarousel01",

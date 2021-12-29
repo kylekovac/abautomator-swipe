@@ -13,6 +13,8 @@ def test_populate_users_df(coll, conn):
     print(coll.users_df)
     assert len(coll.users_df) > 10
     assert "exp_cond" in list(coll.users_df.columns)
+    ctrl_cond = "Dec1021InspirationMomentFinalControl"
+    assert ctrl_cond in coll.users_df["exp_cond"].unique()
 
 def test_add_exp_cond_to_metric(coll_w_users_df, sessions_df):
     result_df = coll_w_users_df._add_exp_cond_to_metric(sessions_df)

@@ -1,3 +1,4 @@
+from collections import defaultdict
 from dataclasses import dataclass
 from typing import List
 
@@ -21,6 +22,7 @@ class Transformer:
     
     def transform_data(self, exp_name):
         self._clean_data_dfs(exp_name)
+        return self._generate_outcome_desc()
     
     def _clean_data_dfs(self, exp_name):
         for metric in self.metrics:
@@ -30,12 +32,20 @@ class Transformer:
         data_df["exp_cond"] = data_df["exp_cond"].str.replace(
             exp_name, ""
         )
+    
+    def _generate_outcome_desc(self):
+        outcomes = defaultdict(lambda: dict())  # keyed to [metric][cond]
 
-
+        for metric in self.metrics:
+            df = metric.data_df
+            conds = df["exp_cond"].unique()
+            for cond in conds:
+                outcomes[metric.name][cond] = df[df["exp_cond"] == cond].describe()
+        return outcomes
 
     """
     [x] 1. Receive metric data 
     [x] 2. Clean exp_conds of experiment name
-    [ ] 3. Generate outcome descriptors
+    [ ] 3. Generate outcome descriptors (metric x cond mean/std/etc)
     """
     

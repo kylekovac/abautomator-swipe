@@ -2,6 +2,8 @@ import os
 import pickle
 import pytest
 
+import pandas as pd
+
 from abautomator import transformer
 
 @pytest.fixture
@@ -40,9 +42,11 @@ def test_column_check(sessions_metric, users_df):
             metrics=[sessions_metric]
         )
 
-def test_remove_exp_name_from_exp_cond(trans):
+@pytest.fixture
+def exp_name():
+    return "Dec1021InspirationMomentFinal"
 
-    exp_name = "Dec1021InspirationMomentFinal"
+def test_remove_exp_name_from_exp_cond(trans, exp_name):
 
     metric_df = trans.metrics[0].data_df
     assert exp_name in metric_df["exp_cond"][0]
@@ -51,3 +55,18 @@ def test_remove_exp_name_from_exp_cond(trans):
     assert exp_name not in metric_df["exp_cond"][0]
 
     print(trans.metrics[0].data_df.head())
+
+@pytest.fixture
+def cleaned_trans(trans, exp_name):
+    trans._clean_data_dfs(exp_name)
+    return trans
+
+def test_generate_outcome_desc(cleaned_trans):
+    assert "Control" in cleaned_trans.metrics[0].data_df["exp_cond"].unique()
+    result = cleaned_trans._generate_outcome_desc()
+
+    outcome_df = result["User Sessions"]["Control"]
+
+    assert isinstance(outcome_df, pd.DataFrame)
+    assert "mean" in list(outcome_df.index)
+    assert "n_user_sessions" in outcome_df.columns
