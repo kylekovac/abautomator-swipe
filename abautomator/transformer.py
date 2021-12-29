@@ -42,10 +42,3 @@ class Transformer:
             for cond in conds:
                 outcomes[metric.name][cond] = df[df["exp_cond"] == cond].describe()
         return outcomes
-
-    """
-    [x] 1. Receive metric data 
-    [x] 2. Clean exp_conds of experiment name
-    [ ] 3. Generate outcome descriptors (metric x cond mean/std/etc)
-    """
-    
