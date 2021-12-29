@@ -17,28 +17,34 @@ def queries(users_query, sessions_query, views_query):
     return users_query, sessions_query, views_query
 
 @pytest.fixture
-def users_query(engine, coll):
-    return get_query.get_users_query(engine, coll)
+def users_query(coll):
+    return coll._get_users_query()
 
 @pytest.fixture
-def coll(engine, cond_strs, metrics_list):
+def coll(engine, cond_strs, sessions_metric):
     return collector.Collector(
         engine=engine,
         conds=cond_strs,
-        metrics=metrics_list,
+        metrics=[sessions_metric],
         event="segment_signup_flow_started",
         event_prop="context_traits_onboarding_flow_001",
         start_dt=utils._get_yesterday(),
     )
 
 @pytest.fixture
-def coll_single_metric(coll, sessions_metric):
-    coll.metrics = [sessions_metric]
+def coll_two_metric(coll, metrics_list):
+    coll.metrics = metrics_list
+    return coll
+
+@pytest.fixture
+def coll_w_users_df(coll, users_df):
+    coll.users_df = users_df
     return coll
 
 @pytest.fixture
 def cond_strs():
     return [
+        "Dec1021InspirationMomentFinalControl",
         "Dec1021InspirationMomentFinalVideo01",
         "Dec1021InspirationMomentFinalVideo02",
         "Dec1021InspirationMomentFinalCarousel01",
@@ -48,12 +54,12 @@ def cond_strs():
     ]
 
 @pytest.fixture
-def sessions_query(engine, coll, sessions_metric):
-    return get_query.get_metric_query(engine, coll, sessions_metric)
+def sessions_query(coll, sessions_metric):
+    return coll._get_metric_query(sessions_metric)
 
 @pytest.fixture
-def views_query(engine, coll, incident_views_metric):
-    return get_query.get_metric_query(engine, coll, incident_views_metric)
+def views_query(coll, incident_views_metric):
+    return coll._get_metric_query(incident_views_metric)
 
 @pytest.fixture
 def exp(ctrl_cond, tx_conds, metrics_list):
@@ -102,11 +108,13 @@ def metrics_list(sessions_metric, incident_views_metric):
     return [sessions_metric, incident_views_metric]
 
 @pytest.fixture
-def dfs(conn, queries):
-    users_query, sessions_query, views_query = queries
+def dfs(users_df, sessions_df):
+    return users_df, sessions_df
 
-    users_df =  utils._df_from_cache("users", users_query, conn)
-    sessions_df =  utils._df_from_cache("sessions", sessions_query, conn)
-    views_df =  utils._df_from_cache("views", views_query, conn)
+@pytest.fixture
+def users_df(conn, users_query):
+    return utils._df_from_cache("users", users_query, conn)
 
-    return users_df, sessions_df, views_df
+@pytest.fixture
+def sessions_df(conn, sessions_query):
+    return utils._df_from_cache("sessions", sessions_query, conn)
