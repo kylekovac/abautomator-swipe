@@ -27,4 +27,5 @@ def test_populate_metric_data_df(coll_w_users_df, conn):
     result_df = coll_w_users_df.metrics[0].data_df
     assert len(result_df) > 10
     assert len(result_df.columns) > len(coll_w_users_df.users_df.columns)
-    assert "exp_cond" in list(coll_w_users_df.users_df.columns)
+    assert "exp_cond" in list(result_df.columns)
+    assert "n_user_sessions" in list(result_df.columns)
