@@ -1,26 +1,8 @@
-import os
-import pickle
 import pytest
 
 import pandas as pd
 
 from abautomator import describer
-
-@pytest.fixture
-def trans(coll_w_users_df):
-    try:
-        return pickle.load(
-            open(os.path.join("tests", f"describer.p"), "rb" )
-        )
-    except FileNotFoundError:
-        coll_w_users_df.collect_data()
-        trans = describer.Describer(
-            metrics=coll_w_users_df.metrics
-        )
-        pickle.dump(
-            trans, open(os.path.join("tests", f"describer.p"), "wb" )
-        )
-        return trans
 
 def test_get_metric_data(trans):
 
@@ -42,10 +24,6 @@ def test_column_check(sessions_metric, users_df):
             metrics=[sessions_metric]
         )
 
-@pytest.fixture
-def exp_name():
-    return "Dec1021InspirationMomentFinal"
-
 def test_remove_exp_name_from_exp_cond(trans, exp_name):
 
     metric_df = trans.metrics[0].data_df
@@ -55,11 +33,6 @@ def test_remove_exp_name_from_exp_cond(trans, exp_name):
     assert exp_name not in metric_df["exp_cond"][0]
 
     print(trans.metrics[0].data_df.head())
-
-@pytest.fixture
-def cleaned_trans(trans, exp_name):
-    trans._clean_data_dfs(exp_name)
-    return trans
 
 def test_generate_outcome_desc(cleaned_trans):
     assert "Control" in cleaned_trans.metrics[0].data_df["exp_cond"].unique()
