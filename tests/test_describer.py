@@ -4,21 +4,21 @@ import pytest
 
 import pandas as pd
 
-from abautomator import transformer
+from abautomator import describer
 
 @pytest.fixture
 def trans(coll_w_users_df):
     try:
         return pickle.load(
-            open(os.path.join("tests", f"transformer.p"), "rb" )
+            open(os.path.join("tests", f"describer.p"), "rb" )
         )
     except FileNotFoundError:
         coll_w_users_df.collect_data()
-        trans = transformer.Transformer(
+        trans = describer.Describer(
             metrics=coll_w_users_df.metrics
         )
         pickle.dump(
-            trans, open(os.path.join("tests", f"transformer.p"), "wb" )
+            trans, open(os.path.join("tests", f"describer.p"), "wb" )
         )
         return trans
 
@@ -32,13 +32,13 @@ def test_get_metric_data(trans):
 
 def test_column_check(sessions_metric, users_df):
     with pytest.raises(TypeError):
-        transformer.Transformer(
+        describer.Describer(
             metrics=[sessions_metric]
         )
 
     sessions_metric.data_df = users_df
-    with pytest.raises(transformer.InvalidColumns):
-        transformer.Transformer(
+    with pytest.raises(describer.InvalidColumns):
+        describer.Describer(
             metrics=[sessions_metric]
         )
 

@@ -8,7 +8,7 @@ class InvalidColumns(Exception):
     pass
 
 @dataclass
-class Transformer:
+class Describer:
     metrics: List[Metric]
 
     def __post_init__(self):
@@ -20,7 +20,7 @@ class Transformer:
         if col_name not in cols_to_check:
             raise InvalidColumns(f"{col_name} not in {cols_to_check}")
     
-    def transform_data(self, exp_name):
+    def describe_data(self, exp_name):
         self._clean_data_dfs(exp_name)
         return self._generate_outcome_desc()
     

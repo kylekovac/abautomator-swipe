@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy import create_engine
 
-from abautomator import config, experiment, get_query, metric, collector
+from abautomator import config, experiment, metric, collector
 from tests import utils
 
 @pytest.fixture
