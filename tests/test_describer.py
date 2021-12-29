@@ -4,10 +4,10 @@ import pandas as pd
 
 from abautomator import describer
 
-def test_get_metric_data(trans):
+def test_get_metric_data(desc):
 
-    print(trans.metrics[0])
-    result_df = trans.metrics[0].data_df
+    print(desc.metrics[0])
+    result_df = desc.metrics[0].data_df
     assert len(result_df) > 10
     assert "exp_cond" in list(result_df.columns)
     assert "n_user_sessions" in list(result_df.columns)
@@ -24,15 +24,15 @@ def test_column_check(sessions_metric, users_df):
             metrics=[sessions_metric]
         )
 
-def test_remove_exp_name_from_exp_cond(trans, exp_name):
+def test_remove_exp_name_from_exp_cond(desc, exp_name):
 
-    metric_df = trans.metrics[0].data_df
+    metric_df = desc.metrics[0].data_df
     assert exp_name in metric_df["exp_cond"][0]
-    trans._clean_data_dfs(exp_name)
+    desc._clean_data_dfs(exp_name)
 
     assert exp_name not in metric_df["exp_cond"][0]
 
-    print(trans.metrics[0].data_df.head())
+    print(desc.metrics[0].data_df.head())
 
 def test_generate_outcome_desc(cleaned_trans):
     assert "Control" in cleaned_trans.metrics[0].data_df["exp_cond"].unique()

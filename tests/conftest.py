@@ -126,22 +126,22 @@ def exp_name():
     return "Dec1021InspirationMomentFinal"
 
 @pytest.fixture
-def trans(coll_w_users_df):
+def desc(coll_w_users_df):
     try:
         return pickle.load(
             open(os.path.join("tests", f"describer.p"), "rb" )
         )
     except FileNotFoundError:
         coll_w_users_df.collect_data()
-        trans = describer.Describer(
+        desc = describer.Describer(
             metrics=coll_w_users_df.metrics
         )
         pickle.dump(
-            trans, open(os.path.join("tests", f"describer.p"), "wb" )
+            desc, open(os.path.join("tests", f"describer.p"), "wb" )
         )
-        return trans
+        return desc
 
 @pytest.fixture
-def cleaned_trans(trans, exp_name):
-    trans._clean_data_dfs(exp_name)
-    return trans
+def cleaned_trans(desc, exp_name):
+    desc._clean_data_dfs(exp_name)
+    return desc

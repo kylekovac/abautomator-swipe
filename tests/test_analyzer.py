@@ -1,3 +1,5 @@
+import os
+import pickle
 import pytest
 
 from abautomator import analyzer, describer
@@ -29,4 +31,14 @@ def test_consolidate_descriptions(analy):
     print(result.head())
 
 def test_add_confidence_intervals(analy):
-    pass
+    intermed = analy._consolidate_descriptions()
+    result = analy._add_confidence_intervals(intermed)
+
+    assert "upper_68_ci" in list(result.columns)
+    assert "lower_95_ci" in list(result.columns)
+
+    print(result.head())
+
+    pickle.dump(
+        result, open(os.path.join("tests", f"data_desc.p"), "wb" )
+    )
