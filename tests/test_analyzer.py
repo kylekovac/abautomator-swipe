@@ -41,7 +41,7 @@ def test_add_basic_confidence_intervals(analy):
     print(result.head())
 
     pickle.dump(
-        result, open(os.path.join("tests", f"data_desc.p"), "wb" )
+        result, open(os.path.join("tests", f"basic_ci.p"), "wb" )
     )
 
 def test_add_abs_diff_confidence_intervals(analy):
@@ -49,3 +49,10 @@ def test_add_abs_diff_confidence_intervals(analy):
     result = analy._add_abs_diff_confidence_intervals()
 
     print(result)
+    print(result.columns)
+
+    assert "factor_label" in list(result.columns)
+
+    pickle.dump(
+        result, open(os.path.join("tests", f"abs_diff_ci.p"), "wb" )
+    )

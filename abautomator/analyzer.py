@@ -57,6 +57,13 @@ class Analyzer:
 
     def _add_abs_diff_confidence_intervals(self):
 
+        df = self._get_abs_diff_desc()
+        df = self._calculate_confidence_interval(df)
+
+        return df
+    
+    def _get_abs_diff_desc(self):
+
         df = self.base_df.copy()
 
         ctrl_df = self._get_ctrl_df(df)
@@ -73,8 +80,6 @@ class Analyzer:
         return df
     
     def _add_diff_std(self, df):
-
-        print(df.dtypes)
 
         df["std"] = np.sqrt(
             ( df["tx_std"]**2 / df["tx_count"] ) \
@@ -104,7 +109,6 @@ class Analyzer:
     def _get_tx_df(self, df):
         tx_df = df[df["exp_cond"] != self.ctrl_name]
         tx_df = self._rename_tx_cols(tx_df)
-        tx_df = tx_df.drop(['exp_cond', 'factor_label'], axis=1)
         return tx_df
     
     def _rename_tx_cols(self, df):
