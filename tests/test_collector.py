@@ -10,7 +10,6 @@ def test_populate_users_df(coll, conn):
 
     coll._populate_users_df(conn)
 
-    print(coll.users_df)
     assert len(coll.users_df) > 10
     assert "exp_cond" in list(coll.users_df.columns)
     ctrl_cond = "Dec1021InspirationMomentFinalControl"
