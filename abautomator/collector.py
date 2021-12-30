@@ -9,7 +9,7 @@ from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
 from sqlalchemy.sql.selectable import Selectable
 
-from abautomator import get_query, get_df, metric
+from abautomator import get_df, metric
 
 
 @dataclass

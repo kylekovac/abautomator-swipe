@@ -1,7 +1,9 @@
+import os
+import pickle
 import pytest
 from sqlalchemy import create_engine
 
-from abautomator import config, experiment, get_query, metric, collector
+from abautomator import config, experiment, metric, collector, describer
 from tests import utils
 
 @pytest.fixture
@@ -118,3 +120,28 @@ def users_df(conn, users_query):
 @pytest.fixture
 def sessions_df(conn, sessions_query):
     return utils._df_from_cache("sessions", sessions_query, conn)
+
+@pytest.fixture
+def exp_name():
+    return "Dec1021InspirationMomentFinal"
+
+@pytest.fixture
+def desc(coll_w_users_df):
+    try:
+        return pickle.load(
+            open(os.path.join("tests", f"describer.p"), "rb" )
+        )
+    except FileNotFoundError:
+        coll_w_users_df.collect_data()
+        desc = describer.Describer(
+            metrics=coll_w_users_df.metrics
+        )
+        pickle.dump(
+            desc, open(os.path.join("tests", f"describer.p"), "wb" )
+        )
+        return desc
+
+@pytest.fixture
+def cleaned_desc(desc, exp_name):
+    desc._clean_data_dfs(exp_name)
+    return desc

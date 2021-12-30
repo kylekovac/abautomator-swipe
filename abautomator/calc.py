@@ -26,7 +26,7 @@ def calc_sampling_distribution(user_metrics_df, exp):
       ctrl_desc = _get_sample_desc(stat_df, exp.ctrl_cond.name, metric)
       tx_desc = _get_sample_desc(stat_df, tx_cond.name, metric)
 
-      curr_row["est_mean"] = _get_estimator_mean(tx_desc, ctrl_desc)
+      curr_row["mean"] = _get_estimator_mean(tx_desc, ctrl_desc)
       curr_row["est_se"] = _get_estimator_standard_error(tx_desc, ctrl_desc)
     
       data.append(curr_row)
