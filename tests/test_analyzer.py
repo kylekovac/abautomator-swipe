@@ -31,9 +31,9 @@ def test_consolidate_descriptions(analy):
 
     print(result.head())
 
-def test_add_basic_confidence_intervals(analy):
+def test_get_basic_confidence_intervals(analy):
     analy._consolidate_descriptions()
-    result = analy._add_basic_confidence_intervals()
+    result = analy.get_basic_confidence_intervals()
 
     assert "upper_68_ci" in list(result.columns)
     assert "lower_95_ci" in list(result.columns)
@@ -44,15 +44,28 @@ def test_add_basic_confidence_intervals(analy):
         result, open(os.path.join("tests", f"basic_ci.p"), "wb" )
     )
 
-def test_add_abs_diff_confidence_intervals(analy):
+def test_get_abs_diff_confidence_intervals(analy):
     analy._consolidate_descriptions()
-    result = analy._add_abs_diff_confidence_intervals()
+    result = analy.get_abs_diff_confidence_intervals()
+
+    assert "factor_label" in list(result.columns)
+    assert "mean" in list(result.columns)
+
+    pickle.dump(
+        result, open(os.path.join("tests", f"abs_diff_ci.p"), "wb" )
+    )
+
+
+def test_get_rel_diff_confidence_intervals(analy):
+    analy._consolidate_descriptions()
+    result = analy.get_rel_diff_confidence_intervals()
 
     print(result)
     print(result.columns)
 
-    assert "factor_label" in list(result.columns)
+    assert "abs_mean" in list(result.columns)
+    assert "mean" in list(result.columns)
 
     pickle.dump(
-        result, open(os.path.join("tests", f"abs_diff_ci.p"), "wb" )
+        result, open(os.path.join("tests", f"rel_diff_ci.p"), "wb" )
     )

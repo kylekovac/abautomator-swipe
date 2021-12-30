@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import numpy as np
 
 import pandas as pd
+from pandas.core.frame import DataFrame
 
 
 @dataclass
@@ -35,10 +36,10 @@ class Analyzer:
                         "factor_label": (n_or_pct_metric, exp_cond),
                     }
                     raw_data.append(curr_row)
-        
+
         self.base_df = pd.DataFrame(raw_data)
     
-    def _add_basic_confidence_intervals(self):
+    def get_basic_confidence_intervals(self) -> pd.DataFrame:
 
         df = self.base_df.copy()
         df = self._calculate_confidence_interval(df)
@@ -54,13 +55,21 @@ class Analyzer:
         df["lower_95_ci"] = df["mean"] - (2 * df["std"])
 
         return df
+    
+    def get_rel_diff_confidence_intervals(self) -> pd.DataFrame:
 
-    def _add_abs_diff_confidence_intervals(self):
+        df = self.get_abs_diff_confidence_intervals()
+        df = df.rename(columns={"mean": "abs_mean", "std": "abs_std"})
+        df["mean"] =(( df["abs_mean"] / df["ctrl_mean"] ) * 100)
+        df["std"] = df["abs_std"] / df["ctrl_mean"] * 100
+
+        return self._calculate_confidence_interval(df)
+
+
+    def get_abs_diff_confidence_intervals(self) -> pd.DataFrame:
 
         df = self._get_abs_diff_desc()
-        df = self._calculate_confidence_interval(df)
-
-        return df
+        return self._calculate_confidence_interval(df)
     
     def _get_abs_diff_desc(self):
 
