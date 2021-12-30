@@ -6,8 +6,8 @@ from abautomator import analyzer, describer
 
 
 @pytest.fixture
-def outcomes(cleaned_trans):
-    return cleaned_trans._generate_outcome_desc()
+def outcomes(cleaned_desc):
+    return cleaned_desc._generate_outcome_desc()
 
 @pytest.fixture
 def analy(outcomes):

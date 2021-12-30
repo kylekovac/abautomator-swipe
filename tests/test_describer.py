@@ -34,9 +34,9 @@ def test_remove_exp_name_from_exp_cond(desc, exp_name):
 
     print(desc.metrics[0].data_df.head())
 
-def test_generate_outcome_desc(cleaned_trans):
-    assert "Control" in cleaned_trans.metrics[0].data_df["exp_cond"].unique()
-    result = cleaned_trans._generate_outcome_desc()
+def test_generate_outcome_desc(cleaned_desc):
+    assert "Control" in cleaned_desc.metrics[0].data_df["exp_cond"].unique()
+    result = cleaned_desc._generate_outcome_desc()
 
     outcome_df = result["User Sessions"]["Control"]
 

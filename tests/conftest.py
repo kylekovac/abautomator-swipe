@@ -142,6 +142,6 @@ def desc(coll_w_users_df):
         return desc
 
 @pytest.fixture
-def cleaned_trans(desc, exp_name):
+def cleaned_desc(desc, exp_name):
     desc._clean_data_dfs(exp_name)
     return desc
