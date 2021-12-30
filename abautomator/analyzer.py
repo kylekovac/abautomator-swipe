@@ -6,16 +6,18 @@ import pandas as pd
 @dataclass
 class Analyzer:
     """
-    [ ] 1. Individual descriptions   -> Consolidated desc [exp_cond, metric, est_mean, est_est, count]
+    [ ] 1. Individual descriptions   -> Consolidated desc [exp_cond, metric, mean, est_est, count]
     [ ] 2. Consolidated descriptions -> Consolidated desc + confidence intervals
               - Useful for viz for all info to travel together at this point
     """
     outcomes: dict  # key is [metric name][cond name]
     ctrl_name: str
+    base_df: pd.DataFrame=None
 
-    def analze(self):
-        result_df = self._consolidate_descriptions()
-        return self._add_confidence_intervals(result_df)
+    def _get_ci(self):
+        if self.base_desc is None:
+            self._consolidate_descriptions()
+        return self._add_basic_confidence_intervals()
 
     def _consolidate_descriptions(self):
         raw_data = []
@@ -27,20 +29,58 @@ class Analyzer:
                     curr_row = {
                         "exp_cond": exp_cond,
                         "metric": n_or_pct_metric,
-                        "est_mean": desc_df[n_or_pct_metric]["mean"],
-                        "est_std": desc_df[n_or_pct_metric]["std"],
-                        "est_count": desc_df[n_or_pct_metric]["count"],
+                        "mean": desc_df[n_or_pct_metric]["mean"],
+                        "std": desc_df[n_or_pct_metric]["std"],
+                        "count": desc_df[n_or_pct_metric]["count"],
+                        "factor_label": (n_or_pct_metric, exp_cond),
                     }
                     raw_data.append(curr_row)
         
-        return pd.DataFrame(raw_data)
+        self.base_df = pd.DataFrame(raw_data)
     
-    def _add_confidence_intervals(self, df):
+    def _add_basic_confidence_intervals(self):
 
-        df["upper_68_ci"] = df["est_mean"] + df["est_std"]
-        df["lower_68_ci"] = df["est_mean"] - df["est_std"]
+        df = self.base_df.copy()
 
-        df["upper_95_ci"] = df["est_mean"] + (2 * df["est_std"])
-        df["lower_95_ci"] = df["est_mean"] - (2 * df["est_std"])
-        
+        df["upper_68_ci"] = df["mean"] + df["std"]
+        df["lower_68_ci"] = df["mean"] - df["std"]
+
+        df["upper_95_ci"] = df["mean"] + (2 * df["std"])
+        df["lower_95_ci"] = df["mean"] - (2 * df["std"])
+
         return df
+
+    def _add_abs_diff_confidence_intervals(self):
+
+        df = self.base_df.copy()
+
+        ctrl_df = self._get_ctrl_df(df)
+
+        tx_df = df[df["exp_cond"] != self.ctrl_name]
+        result_df = tx_df.merge(ctrl_df, how="left")
+        print(result_df)
+        # print(ctrl_df.head())
+        # print(tx_df.head())
+
+        # df["upper_68_ci"] = df["mean"] + df["std"]
+        # df["lower_68_ci"] = df["mean"] - df["std"]
+
+        # df["upper_95_ci"] = df["mean"] + (2 * df["std"])
+        # df["lower_95_ci"] = df["mean"] - (2 * df["std"])
+
+        return df
+    
+    def _get_ctrl_df(self, df):
+        ctrl_df = df[df["exp_cond"] == self.ctrl_name]
+        ctrl_df = self._rename_ctrl_cols(ctrl_df)
+        ctrl_df = ctrl_df.drop(['exp_cond', 'factor_label'], axis=1)
+        return ctrl_df
+    
+    def _rename_ctrl_cols(self, df):
+        return df.rename(
+            columns={
+                "mean": "ctrl_mean",
+                "std": "ctrl_std",
+                "count": "ctrl_count",
+            }
+        )
