@@ -47,3 +47,5 @@ def test_add_basic_confidence_intervals(analy):
 def test_add_abs_diff_confidence_intervals(analy):
     analy._consolidate_descriptions()
     result = analy._add_abs_diff_confidence_intervals()
+
+    print(result)
