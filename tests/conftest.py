@@ -64,17 +64,6 @@ def views_query(coll, incident_views_metric):
     return coll._get_metric_query(incident_views_metric)
 
 @pytest.fixture
-def exp(ctrl_cond, tx_conds, metrics_list):
-    return experiment.Experiment(
-        ctrl_cond=ctrl_cond,
-        tx_conds=tx_conds,
-        metrics=metrics_list,
-        event="segment_signup_flow_started",
-        event_prop="context_traits_onboarding_flow_001",
-        start_dt=utils._get_yesterday(),
-    )
-
-@pytest.fixture
 def ctrl_cond():
     return experiment.Condition("Dec1021InspirationMomentFinalControl")
 
