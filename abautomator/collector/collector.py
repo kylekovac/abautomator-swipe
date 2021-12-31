@@ -3,21 +3,18 @@ from datetime import date
 from dataclasses import dataclass, field
 from typing import List
 
-import pandas as pd
 import sqlalchemy
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
-from sqlalchemy.sql.selectable import Selectable
 
-from abautomator import metric
-from . import get_df
+from abautomator import metric, utils
 
 
 @dataclass
 class Collector:
     engine: sqlalchemy.engine.Engine
     conds: List[str]                  # column values
-    metrics: List[metric.Metric]             # metadata for getting metric data
+    metrics: List[metric.Metric]      # Metric data/metadata
     event: str                        # table/thing user does to become exp participant
     event_prop: str                   # table col with exp_cond info
     start_dt: date
@@ -32,7 +29,7 @@ class Collector:
     
     def _populate_users_df(self, conn):
         if self.users_df is None:
-            self.users_df = get_df.get_df_from_query(
+            self.users_df = utils.get_df_from_query(
                 self._get_users_query(), conn,
             )
 
@@ -50,15 +47,8 @@ class Collector:
         )
         # Ommitting first_event_datetime for now
 
-        result = add_time_frame(result, table, self.start_dt, self.end_dt)
+        result = utils.add_time_frame(result, table, self.start_dt, self.end_dt)
         return result
-    
-    def _populate_metric_data_dfs(self, conn):
-        for metric in self.metrics:
-            metric_df = get_df.get_df_from_query(
-                self._get_metric_query(metric), conn,
-            )
-            metric.data_df = self._add_exp_cond_to_metric(metric_df)
     
     def _get_metric_query(self, metric: metric.Metric):
         table = Table(f'echelon.{metric.table_name}', MetaData(bind=self.engine), autoload=True)
@@ -75,23 +65,36 @@ class Collector:
         ).group_by(
             table.c.echelon_user_id,
         )
-        result = add_time_frame(result, table, self.start_dt, self.end_dt)
+        result = utils.add_time_frame(result, table, self.start_dt, self.end_dt)
+
+        return result
+    
+    def _populate_metric_data_dfs(self, conn):
+        for metric in self.metrics:
+            # metric.populate_data_df(self)  # Ideal state
+            metric_df = utils.get_df_from_query(
+                self._get_metric_query(metric), conn,
+            )
+            metric.data_df = self._add_exp_cond_to_metric(metric_df)
+    
+    def _add_exp_cond_to_metric(self, metric_df):
+        return self.get_user_metrics_df(metric_df)
+
+    def get_user_metrics_df(self, metric_df):
+        result = self.users_df.copy()
+        result = result.merge(metric_df, on="echelon_user_id", how="left")
+    
+        result = _fill_nan_metrics_with_zeros(result)
 
         return result
 
-    def _add_exp_cond_to_metric(self, metric_df):
-        return get_df.get_user_metrics_df(self.users_df, metric_df)
+def _fill_nan_metrics_with_zeros(df):
+  for col in df.columns:
+    if col not in ["echelon_user_id", "exp_cond"]:
+      df[col] = df[col].fillna(0)
+  return df
 
-def add_time_frame(query: Selectable, table: Table, start_dt: date = None, end_dt: date = None):
-  if start_dt:
-    query = query.where(
-      table.c.event_date >= start_dt
-    )
-  if end_dt:
-    query = query.where(
-      table.c.event_date <= end_dt
-    )
-  return query
+
 
 
 
