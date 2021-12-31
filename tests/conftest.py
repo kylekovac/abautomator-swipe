@@ -103,7 +103,7 @@ def exp_name():
 def desc(coll_w_users_df):
     try:
         return pickle.load(
-            open(os.path.join("tests", f"describer.p"), "rb" )
+            open(utils.get_cache_path("describer"), "rb" )
         )
     except FileNotFoundError:
         coll_w_users_df.collect_data()
@@ -111,7 +111,7 @@ def desc(coll_w_users_df):
             metrics=coll_w_users_df.metrics
         )
         pickle.dump(
-            desc, open(os.path.join("tests", f"describer.p"), "wb" )
+            desc, open(utils.get_cache_path("describer"), "wb" )
         )
         return desc
 

@@ -3,6 +3,7 @@ import pickle
 import pytest
 
 from abautomator import analyzer, describer
+from tests import utils
 
 
 @pytest.fixture
@@ -41,7 +42,7 @@ def test_get_basic_confidence_intervals(analy):
     print(result.head())
 
     pickle.dump(
-        result, open(os.path.join("tests", f"basic_ci.p"), "wb" )
+        result, open(utils.get_cache_path("basic_ci.p"), "wb" )
     )
 
 def test_get_abs_diff_confidence_intervals(analy):
@@ -52,7 +53,7 @@ def test_get_abs_diff_confidence_intervals(analy):
     assert "mean" in list(result.columns)
 
     pickle.dump(
-        result, open(os.path.join("tests", f"abs_diff_ci.p"), "wb" )
+        result, open(utils.get_cache_path("abs_diff_ci"), "wb" )
     )
 
 
@@ -67,5 +68,5 @@ def test_get_rel_diff_confidence_intervals(analy):
     assert "mean" in list(result.columns)
 
     pickle.dump(
-        result, open(os.path.join("tests", f"rel_diff_ci.p"), "wb" )
+        result, open(utils.get_cache_path("rel_diff_ci.p"), "wb" )
     )
