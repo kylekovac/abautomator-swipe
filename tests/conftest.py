@@ -3,7 +3,7 @@ import pickle
 import pytest
 from sqlalchemy import create_engine
 
-from abautomator import config, experiment, metric, collector, describer
+from abautomator import config, metric, collector, describer
 from tests import utils
 
 @pytest.fixture
@@ -30,7 +30,7 @@ def coll(engine, cond_strs, sessions_metric):
         metrics=[sessions_metric],
         event="segment_signup_flow_started",
         event_prop="context_traits_onboarding_flow_001",
-        start_dt=utils._get_yesterday(),
+        start_dt=utils.get_yesterday(),
     )
 
 @pytest.fixture
@@ -64,21 +64,6 @@ def views_query(coll, incident_views_metric):
     return coll._get_metric_query(incident_views_metric)
 
 @pytest.fixture
-def ctrl_cond():
-    return experiment.Condition("Dec1021InspirationMomentFinalControl")
-
-@pytest.fixture
-def tx_conds():
-    return [
-        experiment.Condition("Dec1021InspirationMomentFinalVideo01"),
-        experiment.Condition("Dec1021InspirationMomentFinalVideo02"),
-        experiment.Condition("Dec1021InspirationMomentFinalCarousel01"),
-        experiment.Condition("Dec1021InspirationMomentFinalCarousel02"),
-        experiment.Condition("Dec1021InspirationMomentFinalCarousel03"),
-        experiment.Condition("Dec1021InspirationMomentFinalCarousel04"),
-    ]
-
-@pytest.fixture
 def sessions_metric():
     return metric.Metric(
         name="User Sessions",
@@ -104,11 +89,11 @@ def dfs(users_df, sessions_df):
 
 @pytest.fixture
 def users_df(conn, users_query):
-    return utils._df_from_cache("users", users_query, conn)
+    return utils.df_from_cache("users", users_query, conn)
 
 @pytest.fixture
 def sessions_df(conn, sessions_query):
-    return utils._df_from_cache("sessions", sessions_query, conn)
+    return utils.df_from_cache("sessions", sessions_query, conn)
 
 @pytest.fixture
 def exp_name():

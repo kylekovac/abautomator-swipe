@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.sql import select
 
-from abautomator import get_df
+from abautomator.collector import get_df
 from tests import utils
 
 
@@ -44,4 +44,4 @@ def _get_old_result(conn, sessions_query, users_query):
         ).select_from(
             users_cte.join(session_metric_cte, users_cte.c.echelon_user_id == session_metric_cte.c.echelon_user_id, isouter=True)
     )
-    return utils._df_from_cache("old", user_metrics_query, conn)
+    return utils.df_from_cache("old", user_metrics_query, conn)
