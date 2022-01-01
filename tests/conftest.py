@@ -3,7 +3,8 @@ import pickle
 import pytest
 from sqlalchemy import create_engine
 
-from abautomator import config, experiment, metric, collector, describer
+from abautomator import config, metrics, collector, describer
+from abautomator.metrics.metric_lookup import METRIC_LOOKUP
 from tests import utils
 
 @pytest.fixture
@@ -30,7 +31,7 @@ def coll(engine, cond_strs, sessions_metric):
         metrics=[sessions_metric],
         event="segment_signup_flow_started",
         event_prop="context_traits_onboarding_flow_001",
-        start_dt=utils._get_yesterday(),
+        start_dt=utils.get_yesterday(),
     )
 
 @pytest.fixture
@@ -57,53 +58,19 @@ def cond_strs():
 
 @pytest.fixture
 def sessions_query(coll, sessions_metric):
-    return coll._get_metric_query(sessions_metric)
+    return sessions_metric._get_metric_query(coll)
 
 @pytest.fixture
 def views_query(coll, incident_views_metric):
-    return coll._get_metric_query(incident_views_metric)
-
-@pytest.fixture
-def exp(ctrl_cond, tx_conds, metrics_list):
-    return experiment.Experiment(
-        ctrl_cond=ctrl_cond,
-        tx_conds=tx_conds,
-        metrics=metrics_list,
-        event="segment_signup_flow_started",
-        event_prop="context_traits_onboarding_flow_001",
-        start_dt=utils._get_yesterday(),
-    )
-
-@pytest.fixture
-def ctrl_cond():
-    return experiment.Condition("Dec1021InspirationMomentFinalControl")
-
-@pytest.fixture
-def tx_conds():
-    return [
-        experiment.Condition("Dec1021InspirationMomentFinalVideo01"),
-        experiment.Condition("Dec1021InspirationMomentFinalVideo02"),
-        experiment.Condition("Dec1021InspirationMomentFinalCarousel01"),
-        experiment.Condition("Dec1021InspirationMomentFinalCarousel02"),
-        experiment.Condition("Dec1021InspirationMomentFinalCarousel03"),
-        experiment.Condition("Dec1021InspirationMomentFinalCarousel04"),
-    ]
+    return incident_views_metric._get_metric_query(coll)
 
 @pytest.fixture
 def sessions_metric():
-    return metric.Metric(
-        name="User Sessions",
-        table_name="fct_user_sessions",
-        table_col="id",
-    )
+    return METRIC_LOOKUP["user_sessions"]
 
 @pytest.fixture
 def incident_views_metric():
-    return metric.Metric(
-        name="Incident Views",
-        table_name="fct_incident_views",
-        table_col="id",
-    )
+    return METRIC_LOOKUP["incident_views"]
 
 @pytest.fixture
 def metrics_list(sessions_metric, incident_views_metric):
@@ -115,11 +82,11 @@ def dfs(users_df, sessions_df):
 
 @pytest.fixture
 def users_df(conn, users_query):
-    return utils._df_from_cache("users", users_query, conn)
+    return utils.df_from_cache("users", users_query, conn)
 
 @pytest.fixture
 def sessions_df(conn, sessions_query):
-    return utils._df_from_cache("sessions", sessions_query, conn)
+    return utils.df_from_cache("sessions", sessions_query, conn)
 
 @pytest.fixture
 def exp_name():
@@ -129,7 +96,7 @@ def exp_name():
 def desc(coll_w_users_df):
     try:
         return pickle.load(
-            open(os.path.join("tests", f"describer.p"), "rb" )
+            open(utils.get_cache_path("describer"), "rb" )
         )
     except FileNotFoundError:
         coll_w_users_df.collect_data()
@@ -137,7 +104,7 @@ def desc(coll_w_users_df):
             metrics=coll_w_users_df.metrics
         )
         pickle.dump(
-            desc, open(os.path.join("tests", f"describer.p"), "wb" )
+            desc, open(utils.get_cache_path("describer"), "wb" )
         )
         return desc
 
@@ -145,3 +112,16 @@ def desc(coll_w_users_df):
 def cleaned_desc(desc, exp_name):
     desc._clean_data_dfs(exp_name)
     return desc
+
+
+# https://stackoverflow.com/questions/40880259/how-to-pass-arguments-in-pytest-by-command-line
+def pytest_addoption(parser):
+    parser.addoption("--name", action="store", default="default name")
+
+
+def pytest_generate_tests(metafunc):
+    # This is called for every test. Only get/set command line arguments
+    # if the argument is specified in the list of test "fixturenames".
+    option_value = metafunc.config.option.name
+    if 'name' in metafunc.fixturenames and option_value is not None:
+        metafunc.parametrize("name", [option_value])

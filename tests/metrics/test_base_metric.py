@@ -1,27 +1,35 @@
 import pytest
+
 from sqlalchemy.sql import select
 
-from abautomator import get_df
 from tests import utils
 
 
-def test_get_df_from_query(users_query, conn):
-    result = get_df.get_df_from_query(users_query, conn)
-    assert len(result) > 10
+def test_add_exp_cond_to_metric(sessions_metric, users_df, sessions_df):
+    result_df = sessions_metric._add_exp_cond_to_metric(users_df, sessions_df)
 
-def test_get_users_metrics_df(dfs):
-    users_df, sessions_df, = dfs
-    result_df = get_df.get_user_metrics_df(users_df, sessions_df)
     assert len(result_df) > 10
+    assert len(result_df.columns) > len(users_df.columns)
+    assert len(result_df.columns) > len(sessions_df.columns)
 
 
-def test_get_users_metrics_df_counts(old_result, dfs):
+def test_populate_user_metric_df(sessions_metric, coll_w_users_df, conn):
+    sessions_metric.populate_user_metric_df(coll_w_users_df, conn)
+
+    result_df = sessions_metric.user_metric_df
+    assert len(result_df) > 10
+    assert len(result_df.columns) > len(coll_w_users_df.users_df.columns)
+    assert "exp_cond" in list(result_df.columns)
+    assert "n_user_sessions" in list(result_df.columns)
+
+
+def test_populate_user_metric_df_counts(sessions_metric, dfs,  old_result):
     users_df, sessions_df, = dfs
 
     assert len(users_df) > 10
     assert len(sessions_df) > 10
 
-    result_df = get_df.get_user_metrics_df(users_df, sessions_df)
+    result_df = sessions_metric._add_exp_cond_to_metric(users_df, sessions_df)
 
     assert len(result_df) > 10
     assert len(old_result) > 10
@@ -44,4 +52,4 @@ def _get_old_result(conn, sessions_query, users_query):
         ).select_from(
             users_cte.join(session_metric_cte, users_cte.c.echelon_user_id == session_metric_cte.c.echelon_user_id, isouter=True)
     )
-    return utils._df_from_cache("old", user_metrics_query, conn)
+    return utils.df_from_cache("old", user_metrics_query, conn)
