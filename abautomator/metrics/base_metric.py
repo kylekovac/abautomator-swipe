@@ -7,7 +7,7 @@ from sqlalchemy.sql import func, select
 from abautomator import utils
 
 @dataclass
-class Metric:
+class BaseMetric:
     name: str                            # Human-readable name
     table_name: str                      # Where event that the metric is to be derived from lives
     table_col: str                       # Where event that the metric is to be derived from lives

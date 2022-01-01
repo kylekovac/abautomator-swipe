@@ -2,14 +2,14 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import List
 
-from abautomator.metric import Metric
+from abautomator.metrics import BaseMetric
 
 class InvalidColumns(Exception):
     pass
 
 @dataclass
 class Describer:
-    metrics: List[Metric]
+    metrics: List[BaseMetric]
 
     def __post_init__(self):
         self._raise_error_if_columns_dont_contain("exp_cond")

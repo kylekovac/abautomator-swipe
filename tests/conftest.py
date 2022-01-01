@@ -3,7 +3,7 @@ import pickle
 import pytest
 from sqlalchemy import create_engine
 
-from abautomator import config, metric, collector, describer
+from abautomator import config, metrics, collector, describer
 from tests import utils
 
 @pytest.fixture
@@ -65,7 +65,7 @@ def views_query(coll, incident_views_metric):
 
 @pytest.fixture
 def sessions_metric():
-    return metric.Metric(
+    return metrics.BaseMetric(
         name="User Sessions",
         table_name="fct_user_sessions",
         table_col="id",
@@ -73,7 +73,7 @@ def sessions_metric():
 
 @pytest.fixture
 def incident_views_metric():
-    return metric.Metric(
+    return metrics.BaseMetric(
         name="Incident Views",
         table_name="fct_incident_views",
         table_col="id",

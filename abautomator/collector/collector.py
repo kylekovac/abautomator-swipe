@@ -7,14 +7,14 @@ import sqlalchemy
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
 
-from abautomator import metric, utils
+from abautomator import metrics, utils
 
 
 @dataclass
 class Collector:
     engine: sqlalchemy.engine.Engine
     conds: List[str]                  # column values
-    metrics: List[metric.Metric]      # Metric data/metadata
+    metrics: List[metrics.BaseMetric]      # BaseMetric data/metadata
     event: str                        # table/thing user does to become exp participant
     event_prop: str                   # table col with exp_cond info
     start_dt: date
