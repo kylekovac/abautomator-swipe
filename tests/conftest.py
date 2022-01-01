@@ -4,6 +4,7 @@ import pytest
 from sqlalchemy import create_engine
 
 from abautomator import config, metrics, collector, describer
+from abautomator.metrics.metric_lookup import METRIC_LOOKUP
 from tests import utils
 
 @pytest.fixture
@@ -65,19 +66,11 @@ def views_query(coll, incident_views_metric):
 
 @pytest.fixture
 def sessions_metric():
-    return metrics.BaseMetric(
-        name="User Sessions",
-        table_name="fct_user_sessions",
-        table_col="id",
-    )
+    return METRIC_LOOKUP["User Sessions"]
 
 @pytest.fixture
 def incident_views_metric():
-    return metrics.BaseMetric(
-        name="Incident Views",
-        table_name="fct_incident_views",
-        table_col="id",
-    )
+    return METRIC_LOOKUP["Incident Views"]
 
 @pytest.fixture
 def metrics_list(sessions_metric, incident_views_metric):

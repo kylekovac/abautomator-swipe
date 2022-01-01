@@ -2,8 +2,8 @@ import pytest
 
 from sqlalchemy.sql import select
 
-
 from tests import utils
+
 
 def test_add_exp_cond_to_metric(sessions_metric, users_df, sessions_df):
     result_df = sessions_metric._add_exp_cond_to_metric(users_df, sessions_df)
@@ -11,6 +11,7 @@ def test_add_exp_cond_to_metric(sessions_metric, users_df, sessions_df):
     assert len(result_df) > 10
     assert len(result_df.columns) > len(users_df.columns)
     assert len(result_df.columns) > len(sessions_df.columns)
+
 
 def test_populate_user_metric_df(sessions_metric, coll_w_users_df, conn):
     sessions_metric.populate_user_metric_df(coll_w_users_df, conn)
