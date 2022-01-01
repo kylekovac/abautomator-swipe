@@ -18,10 +18,13 @@ class BaseMetric:
         self.pct_label = f"pct_{self.name.lower().replace(' ', '_')}"
     
     def populate_user_metric_df(self, coll, conn):
-        metric_df = utils.get_df_from_query(
+        metric_df = self._get_metric_df(coll, conn)
+        self.user_metric_df = self._add_exp_cond_to_metric(coll.users_df, metric_df)
+    
+    def _get_metric_df(self, coll, conn):
+        return utils.get_df_from_query(
             self._get_metric_query(coll), conn
         )
-        self.user_metric_df = self._add_exp_cond_to_metric(coll.users_df, metric_df)
 
     def _get_metric_query(self, coll):
         table = Table(f'echelon.{self.table_name}', MetaData(bind=coll.engine), autoload=True)
