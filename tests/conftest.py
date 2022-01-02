@@ -1,5 +1,6 @@
 import os
 import pickle
+from abautomator.metrics.general import incident_shares
 import pytest
 from sqlalchemy import create_engine
 
@@ -57,12 +58,20 @@ def cond_strs():
     ]
 
 @pytest.fixture
+def incident_views_query(coll, incident_views_metric):
+    return incident_views_metric._get_metric_query(coll)
+
+@pytest.fixture
 def sessions_query(coll, sessions_metric):
     return sessions_metric._get_metric_query(coll)
 
 @pytest.fixture
 def views_query(coll, incident_views_metric):
     return incident_views_metric._get_metric_query(coll)
+
+@pytest.fixture
+def gen_metric(incident_views_metric):
+    return incident_views_metric
 
 @pytest.fixture
 def sessions_metric():
@@ -83,6 +92,10 @@ def metrics_list(sessions_metric, incident_views_metric):
 @pytest.fixture
 def dfs(users_df, sessions_df):
     return users_df, sessions_df
+
+@pytest.fixture
+def incident_views_df(conn, incident_views_query):
+    return utils.df_from_cache("incident_views", incident_views_query, conn)
 
 @pytest.fixture
 def users_df(conn, users_query):
