@@ -42,8 +42,13 @@ class BaseMetric:
             table.c.echelon_user_id,
         )
         result = utils.add_time_frame(result, table, coll.start_dt, coll.end_dt)
+        result = self.add_where_clause(result, table)
 
         return result
+
+    def add_where_clause(self, query):
+        """ To be overridden as needed in child classes """
+        pass
     
     def _add_exp_cond_to_metric(self, users_df, metric_df):
 

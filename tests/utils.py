@@ -4,7 +4,7 @@ import pickle
 
 from abautomator import utils
 
-def get_yesterday():
+def get_yesterday():    
     return date.today() - timedelta(days=2)
 
 def df_from_cache(file_name, query, conn):
