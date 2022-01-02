@@ -8,8 +8,8 @@ from abautomator.collector import Collector
 
 
 @dataclass
-class ProtectTrialStartsMetric(BaseMetric):
-    name: str = "protect_trial_starts"
+class ProtectCancellationsMetric(BaseMetric):
+    name: str = "protect_cancellations"
     table_name: str = "dim_purchased_subscriptions"
     table_col: str = "transaction_id"
 
@@ -21,6 +21,4 @@ class ProtectTrialStartsMetric(BaseMetric):
             query = query.where(
                 coalesce(table.c.last_cancel_datetime, table.c.last_renewal_failure_datetime) <= coll.end_dt
             )
-        return query.where(
-            table.c.transaction_id == table.c.original_transaction_id
-        )
+        return query

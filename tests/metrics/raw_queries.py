@@ -43,4 +43,12 @@ RAW_QUERIES = {
       event_date >= '{start_dt}'
       and transaction_id = original_transaction_id
     GROUP BY 1""",
+
+    "protect_cancellations": """SELECT
+      echelon_user_id,
+    FROM
+      echelon.dim_purchased_subscriptions dps
+    WHERE
+      DATE(COALESCE(dps.last_cancel_datetime, dps.last_renewal_failure_datetime)) >= '{start_dt}'
+    GROUP BY 1""",
 }

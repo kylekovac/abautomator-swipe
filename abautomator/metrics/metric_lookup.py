@@ -1,5 +1,5 @@
 from abautomator.metrics.general import user_sessions, incident_views, incident_shares, friend_invites
-from abautomator.metrics.protect import trial_starts
+from abautomator.metrics.protect import trial_starts, protect_cancellations
 
 
 METRIC_LOOKUP = {
@@ -8,4 +8,5 @@ METRIC_LOOKUP = {
     "incident_shares": incident_shares.IncidentSharesMetric(),
     "user_sessions": user_sessions.UserSessionsMetric(),
     "trial_starts": trial_starts.TrialStartsMetric(),
+    "protect_cancellations" : protect_cancellations.ProtectCancellationsMetric(),
 }
