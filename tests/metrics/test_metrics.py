@@ -7,14 +7,15 @@
 from sqlalchemy.sql import selectable
 
 from abautomator.metrics.metric_lookup import METRIC_LOOKUP
+from abautomator.utils import get_df_from_query
 from tests import utils
+from tests.metrics.raw_queries import RAW_QUERIES
 
 
 def test_metrics_build_queries(coll, name):
 
     for metric in _get_metrics_to_test(name):
         query = metric._get_metric_query(coll)
-        print(query)
         assert isinstance(query, selectable.Select)
 
 
@@ -32,19 +33,27 @@ def _get_metrics_to_test(name):
 def test_get_metric_df(coll, conn, name):
 
     for metric in _get_metrics_to_test(name):
-        print(coll.start_dt)
         metric_df = metric._get_metric_df(coll, conn)
         utils.cache_obj(metric_df, name)  # speed up test_get_user_metric_df
+        old_df = _get_metric_df_from_old_query(metric, conn, coll.start_dt)
         col_names = list(metric_df.columns)
 
         # print(metric_df.head())
-        print(len(metric_df))
+        # print(len(metric_df))
         
         assert len(metric_df) > 10
+        assert len(metric_df) == len(old_df)
         _assert_items_in_list(
             items=["echelon_user_id", metric.n_label, metric.pct_label],
             list_=col_names,
         )
+
+def _get_metric_df_from_old_query(metric, conn, start_dt):
+    query = RAW_QUERIES[metric.name].format(start_dt=start_dt)
+    old_df = utils.df_from_cache(
+        f"{metric.name}_old_query", query, conn
+    )
+    return old_df
 
 def _assert_items_in_list(items, list_):
     for item in items:

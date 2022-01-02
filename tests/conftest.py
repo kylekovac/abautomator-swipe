@@ -69,6 +69,10 @@ def sessions_metric():
     return METRIC_LOOKUP["user_sessions"]
 
 @pytest.fixture
+def friend_invite_metric():
+    return METRIC_LOOKUP["friend_invites"]
+
+@pytest.fixture
 def incident_views_metric():
     return METRIC_LOOKUP["incident_views"]
 

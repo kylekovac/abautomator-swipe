@@ -3,14 +3,17 @@ from sqlalchemy.schema import Table
 from sqlalchemy.sql.selectable import Selectable
 
 from abautomator.metrics import BaseMetric
+from abautomator.collector import Collector
+from abautomator import utils
 
 @dataclass
 class FriendInvitesMetric(BaseMetric):
-    name: str = "Friend Invites"
+    name: str = "friend_invites"
     table_name: str = "fct_share_completes_installs"
     table_col: str = "id"
 
-    def add_where_clause(self, query: Selectable, table: Table):
+    def add_where_clause(self, query: Selectable, table: Table, coll: Collector):
+        query = utils.add_time_frame(query, table, coll.start_dt, coll.end_dt)
         return query.where(
             table.c.general_type == "Invite"
         )
