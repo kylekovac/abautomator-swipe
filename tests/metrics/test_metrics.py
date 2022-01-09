@@ -37,12 +37,13 @@ def test_get_metric_df(coll, conn, name):
         utils.cache_obj(metric_df, name)  # speed up test_get_user_metric_df
         old_df = _get_metric_df_from_old_query(metric, conn, coll.start_dt)
         col_names = list(metric_df.columns)
-
-        # print(metric_df.head())
-        # print(len(metric_df))
         
         assert len(metric_df) > 10
         assert len(metric_df) == len(old_df)
+
+        print(f"obj len {len(metric_df)}")
+        print(f"old len {len(old_df)}")
+
         _assert_items_in_list(
             items=["echelon_user_id", metric.n_label, metric.pct_label],
             list_=col_names,
@@ -50,6 +51,7 @@ def test_get_metric_df(coll, conn, name):
 
 def _get_metric_df_from_old_query(metric, conn, start_dt):
     query = RAW_QUERIES[metric.name].format(start_dt=start_dt)
+    print(query)
     old_df = utils.df_from_cache(
         f"{metric.name}_old_query", query, conn
     )

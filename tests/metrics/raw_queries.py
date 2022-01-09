@@ -51,4 +51,58 @@ RAW_QUERIES = {
     WHERE
       DATE(COALESCE(dps.last_cancel_datetime, dps.last_renewal_failure_datetime)) >= '{start_dt}'
     GROUP BY 1""",
+
+  "granted_location": """SELECT
+      echelon_user_id,
+    FROM
+      echelon.dim_user_onboardings dps
+    WHERE
+      event_date >= '{start_dt}'
+      AND completed_location_prompt_permission in ('Always', 'While Use the App', 'While Using')
+    GROUP BY 1""",
+  
+  "entered_phone": """SELECT
+      echelon_user_id,
+    FROM
+      echelon.dim_user_onboardings dps
+    WHERE
+      event_date >= '{start_dt}'
+      AND entered_phone_number IS NOT NULL
+    GROUP BY 1""",
+
+  "granted_notifs": """SELECT
+      echelon_user_id,
+    FROM
+      echelon.dim_user_onboardings dps
+    WHERE
+      event_date >= '{start_dt}'
+      AND completed_notification_prompt_permission = 'Granted'
+    GROUP BY 1""",
+
+  "signup_complete": """SELECT
+      echelon_user_id,
+    FROM
+      echelon.dim_user_onboardings dps
+    WHERE
+      event_date >= '{start_dt}'
+      AND signup_completed IS NOT NULL
+    GROUP BY 1""",
+
+  "granted_contacts": """SELECT
+      echelon_user_id,
+    FROM
+      echelon.dim_user_onboardings dps
+    WHERE
+      event_date >= '{start_dt}'
+      AND completed_contacts_preprompt_permission = 'granted'
+    GROUP BY 1""",
+
+  "viewed_SHS": """SELECT
+      echelon_user_id,
+    FROM
+      echelon.dim_user_onboardings dps
+    WHERE
+      event_date >= '{start_dt}'
+      AND viewed_shs IS NOT NULL
+    GROUP BY 1""",
 }
