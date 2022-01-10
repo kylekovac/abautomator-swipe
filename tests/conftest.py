@@ -1,10 +1,8 @@
-import os
 import pickle
-from abautomator.metrics.general import incident_shares
 import pytest
 from sqlalchemy import create_engine
 
-from abautomator import config, metrics, collector, describer
+from abautomator import config, collector, describer
 from abautomator.metrics.metric_lookup import METRIC_LOOKUP
 from tests import utils
 
