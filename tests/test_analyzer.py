@@ -41,9 +41,8 @@ def test_get_basic_confidence_intervals(analy):
 
     print(result.head())
 
-    pickle.dump(
-        result, open(utils.get_cache_path("basic_ci.p"), "wb" )
-    )
+    utils.cache_obj(result, "basic_ci")
+
 
 def test_get_abs_diff_confidence_intervals(analy):
     analy._consolidate_descriptions()
@@ -52,9 +51,7 @@ def test_get_abs_diff_confidence_intervals(analy):
     assert "factor_label" in list(result.columns)
     assert "mean" in list(result.columns)
 
-    pickle.dump(
-        result, open(utils.get_cache_path("abs_diff_ci"), "wb" )
-    )
+    utils.cache_obj(result, "abs_diff_ci")
 
 
 def test_get_rel_diff_confidence_intervals(analy):
@@ -67,6 +64,4 @@ def test_get_rel_diff_confidence_intervals(analy):
     assert "abs_mean" in list(result.columns)
     assert "mean" in list(result.columns)
 
-    pickle.dump(
-        result, open(utils.get_cache_path("rel_diff_ci.p"), "wb" )
-    )
+    utils.cache_obj(result, "rel_diff_ci")

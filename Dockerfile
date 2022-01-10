@@ -11,12 +11,13 @@ WORKDIR /abautomator
 # Base Python packages
 # RUN pip install --upgrade pip
 # RUN pip install --upgrade google-cloud-bigquery-storage
+# RUN pip install sqlalchemy
 # RUN pip install pytest
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 CMD bash

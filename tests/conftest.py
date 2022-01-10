@@ -1,9 +1,8 @@
-import os
 import pickle
 import pytest
 from sqlalchemy import create_engine
 
-from abautomator import config, metrics, collector, describer
+from abautomator import config, collector, describer
 from abautomator.metrics.metric_lookup import METRIC_LOOKUP
 from tests import utils
 
@@ -57,6 +56,10 @@ def cond_strs():
     ]
 
 @pytest.fixture
+def incident_views_query(coll, incident_views_metric):
+    return incident_views_metric._get_metric_query(coll)
+
+@pytest.fixture
 def sessions_query(coll, sessions_metric):
     return sessions_metric._get_metric_query(coll)
 
@@ -65,8 +68,16 @@ def views_query(coll, incident_views_metric):
     return incident_views_metric._get_metric_query(coll)
 
 @pytest.fixture
+def gen_metric(incident_views_metric):
+    return incident_views_metric
+
+@pytest.fixture
 def sessions_metric():
     return METRIC_LOOKUP["user_sessions"]
+
+@pytest.fixture
+def friend_invite_metric():
+    return METRIC_LOOKUP["friend_invites"]
 
 @pytest.fixture
 def incident_views_metric():
@@ -79,6 +90,10 @@ def metrics_list(sessions_metric, incident_views_metric):
 @pytest.fixture
 def dfs(users_df, sessions_df):
     return users_df, sessions_df
+
+@pytest.fixture
+def incident_views_df(conn, incident_views_query):
+    return utils.df_from_cache("incident_views", incident_views_query, conn)
 
 @pytest.fixture
 def users_df(conn, users_query):
@@ -103,9 +118,8 @@ def desc(coll_w_users_df):
         desc = describer.Describer(
             metrics=coll_w_users_df.metrics
         )
-        pickle.dump(
-            desc, open(utils.get_cache_path("describer"), "wb" )
-        )
+        utils.cache_obj(desc, "desc")
+
         return desc
 
 @pytest.fixture

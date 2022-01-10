@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from sqlalchemy.schema import Table
 from sqlalchemy.sql.selectable import Selectable
 import pandas as pd
@@ -18,3 +18,6 @@ def get_df_from_query(query, conn):
   result = pd.read_sql(query, conn)
   result['echelon_user_id'] = result['echelon_user_id'].astype("string")
   return result
+
+def get_yesterday():    
+    return date.today() - timedelta(days=2)
