@@ -42,7 +42,7 @@ class Experiment:
         desc = describer.Describer(
             metrics=coll.metrics
         )
-        desc_dict = desc.describe_data(self.exp_name)
+        outcomes_dict = desc.describe_data(self.exp_name)
 
         # init and run the analyzer
 

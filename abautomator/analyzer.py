@@ -7,38 +7,10 @@ from pandas.core.frame import DataFrame
 
 @dataclass
 class Analyzer:
-    """
-    [ ] 1. Individual descriptions   -> Consolidated desc [exp_cond, metric, mean, est_est, count]
-    [ ] 2. Consolidated descriptions -> Consolidated desc + confidence intervals
-              - Useful for viz for all info to travel together at this point
-    """
     outcomes: dict  # key is [metric name][cond name]
     ctrl_name: str
     base_df: pd.DataFrame=None
 
-    def _get_ci(self):
-        if self.base_desc is None:
-            self._consolidate_descriptions()
-        return self._add_basic_confidence_intervals()
-
-    def _consolidate_descriptions(self):
-        raw_data = []
-        for metric in self.outcomes.keys():
-            cond_dict = self.outcomes[metric]
-            for exp_cond, desc_df in cond_dict.items():
-                for n_or_pct_metric in list(desc_df.columns):
-                    curr_row = {
-                        "exp_cond": exp_cond,
-                        "metric": n_or_pct_metric,
-                        "mean": desc_df[n_or_pct_metric]["mean"],
-                        "std": desc_df[n_or_pct_metric]["std"],
-                        "count": desc_df[n_or_pct_metric]["count"],
-                        "factor_label": (n_or_pct_metric, exp_cond),
-                    }
-                    raw_data.append(curr_row)
-
-        self.base_df = pd.DataFrame(raw_data)
-    
     def get_basic_confidence_intervals(self) -> pd.DataFrame:
 
         df = self.base_df.copy()
@@ -55,6 +27,25 @@ class Analyzer:
         df["lower_95_ci"] = df["mean"] - (2 * df["std"])
 
         return df
+
+    def consolidate_descriptions(self):
+        raw_data = []
+        for metric in self.outcomes.keys():
+            cond_dict = self.outcomes[metric]
+            for exp_cond, desc_df in cond_dict.items():
+                for n_or_pct_metric in list(desc_df.columns):
+                    curr_row = {
+                        "exp_cond": exp_cond,
+                        "metric": n_or_pct_metric,
+                        "mean": desc_df[n_or_pct_metric]["mean"],
+                        "std": desc_df[n_or_pct_metric]["std"],
+                        "count": desc_df[n_or_pct_metric]["count"],
+                        "factor_label": (n_or_pct_metric, exp_cond),
+                    }
+                    raw_data.append(curr_row)
+
+        self.base_df = pd.DataFrame(raw_data)
+
     
     def get_rel_diff_confidence_intervals(self) -> pd.DataFrame:
 

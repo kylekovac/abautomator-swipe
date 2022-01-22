@@ -65,7 +65,7 @@ def test_get_user_metric_df(coll_w_users_df, conn, name):
 
     for metric in _get_metrics_to_test(name):
         query = metric._get_metric_query(coll_w_users_df)
-        metric_df = utils.df_from_cache(metric, query, conn)
+        metric_df = utils.df_from_cache(metric.name, query, conn)
 
         user_metric_df = metric._add_exp_cond_to_metric(
             coll_w_users_df.users_df, metric_df

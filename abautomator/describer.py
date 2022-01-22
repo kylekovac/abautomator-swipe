@@ -63,5 +63,6 @@ class Describer:
             df = metric.user_metric_df
             conds = df["exp_cond"].unique()
             for cond in conds:
+                # both n_/pct_metric in df as separate columns
                 outcomes[metric.name][cond] = df[df["exp_cond"] == cond].describe()
         return outcomes

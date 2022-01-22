@@ -37,7 +37,6 @@ def _check_when_users_metric_df_missing_col(metric):
             metrics=[metric]
         )
 
-
 def test_remove_exp_name_from_exp_cond(desc, exp_name):
 
     metric_df = desc.metrics[0].user_metric_df
