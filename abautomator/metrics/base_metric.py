@@ -5,6 +5,7 @@ from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
 
 from abautomator import utils
+# from abautomator.metrics import metric_lookup
 
 @dataclass
 class BaseMetric:
@@ -16,6 +17,7 @@ class BaseMetric:
     def __post_init__(self):
         self.n_label = f"n_{self.name.lower().replace(' ', '_')}"
         self.pct_label = f"pct_{self.name.lower().replace(' ', '_')}"
+        # assert self.name in metric_lookup.METRIC_LOOKUP.keys(), "Invalid Metric"
     
     def populate_user_metric_df(self, coll, conn):
         metric_df = self._get_metric_df(coll, conn)

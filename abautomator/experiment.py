@@ -4,11 +4,13 @@ from typing import List
 
 from sqlalchemy import create_engine
 
-from abautomator import config, collector, describer, utils, metrics
-from abautomator.metrics.metric_lookup import METRIC_LOOKUP
+from abautomator import config, collector, describer, utils, metrics, analyzer
+from abautomator.metrics import metric_lookup
 
 class InvalidName(Exception):
   pass
+
+
 
 @dataclass
 class Experiment:
@@ -44,6 +46,11 @@ class Experiment:
         )
         outcomes_dict = desc.describe_data(self.exp_name)
 
+        analy = analyzer.Analyzer(
+            outcomes=outcomes_dict,
+            ctrl_name=self.ctrl_name,
+        )
+
         # init and run the analyzer
 
         # dump data into a cache (?) not neccisarily here
@@ -63,8 +70,8 @@ class Experiment:
 
 def get_metrics():
     return [
-        METRIC_LOOKUP["granted_location"],
-        METRIC_LOOKUP["granted_notifs"],
+        metric_lookup.METRIC_LOOKUP["granted_location"],
+        metric_lookup.METRIC_LOOKUP["granted_notifs"],
     ]
 
 # def get_analyzer():
