@@ -11,7 +11,6 @@ class InvalidName(Exception):
   pass
 
 
-
 @dataclass
 class Experiment:
     ctrl_name: str
