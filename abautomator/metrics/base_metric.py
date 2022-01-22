@@ -43,13 +43,13 @@ class BaseMetric:
         ).group_by(
             table.c.echelon_user_id,
         )
-        result = self.add_where_clause(result, table, coll)
+        result = self.add_where_clause(result, table, coll.dt_range)
 
         return result
 
-    def add_where_clause(self, query, table, coll):
+    def add_where_clause(self, query, table, dt_range):
         """ To be overridden as needed in child classes """
-        return utils.add_time_frame(query, table, coll.dt_range)
+        return utils.add_time_frame(query, table, dt_range)
     
     def _add_exp_cond_to_metric(self, users_df, metric_df):
 
