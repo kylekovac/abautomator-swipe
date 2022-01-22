@@ -9,7 +9,7 @@ class InvalidColumns(Exception):
 
 @dataclass
 class Describer:
-    metrics: List[BaseMetric]
+    metrics: List[BaseMetric]  # w/self.ser_metric_df populated by collector
 
     def __post_init__(self):
         self._check_metrics_for_col("exp_cond")
