@@ -1,16 +1,22 @@
 from datetime import date, timedelta
+from dataclasses import dataclass
 from sqlalchemy.schema import Table
 from sqlalchemy.sql.selectable import Selectable
 import pandas as pd
 
-def add_time_frame(query: Selectable, table: Table, start_dt: date = None, end_dt: date = None):
-  if start_dt:
+@dataclass
+class DateRange:
+  start: date
+  end: date = None
+
+def add_time_frame(query: Selectable, table: Table, dt_range: DateRange):
+  if dt_range.start:
     query = query.where(
-      table.c.event_date >= start_dt
+      table.c.event_date >= dt_range.start
     )
-  if end_dt:
+  if dt_range.end:
     query = query.where(
-      table.c.event_date <= end_dt
+      table.c.event_date <= dt_range.end
     )
   return query
 

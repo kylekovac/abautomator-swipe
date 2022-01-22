@@ -18,9 +18,13 @@ class Collector:
     event: str                        # table/thing user does to become exp participant
     event_prop: str                   # table col with exp_cond info
     start_dt: date
-    end_dt: date=None
+    end_dt: date = None
+    dt_range = None
     users_df = None
     devices: List[str]=field(default_factory=lambda: ['android', 'ios'])
+
+    def __post_init__(self):
+        self.dt_range = utils.DateRange(self.start_dt, self.end_dt)
 
     def collect_data(self):
         with self.engine.connect() as conn:
@@ -47,7 +51,7 @@ class Collector:
         )
         # Ommitting first_event_datetime for now
 
-        result = utils.add_time_frame(result, table, self.start_dt, self.end_dt)
+        result = utils.add_time_frame(result, table, self.dt_range)
         return result
     
     def _populate_metric_data_dfs(self, conn):

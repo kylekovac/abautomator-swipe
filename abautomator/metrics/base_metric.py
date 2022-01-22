@@ -25,11 +25,11 @@ class BaseMetric:
     
     def _get_metric_df(self, coll, conn):
         return utils.get_df_from_query(
-            self._get_metric_query(coll), conn
+            self._get_metric_query(coll, coll.engine), conn
         )
 
-    def _get_metric_query(self, coll):
-        table = Table(f'echelon.{self.table_name}', MetaData(bind=coll.engine), autoload=True)
+    def _get_metric_query(self, coll, engine):
+        table = Table(f'echelon.{self.table_name}', MetaData(bind=engine), autoload=True)
 
         result = select(
             table.c.echelon_user_id,
@@ -49,7 +49,7 @@ class BaseMetric:
 
     def add_where_clause(self, query, table, coll):
         """ To be overridden as needed in child classes """
-        return utils.add_time_frame(query, table, coll.start_dt, coll.end_dt)
+        return utils.add_time_frame(query, table, coll.dt_range)
     
     def _add_exp_cond_to_metric(self, users_df, metric_df):
 
