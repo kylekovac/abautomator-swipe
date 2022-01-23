@@ -1,7 +1,7 @@
 import pytest
 
 from abautomator import experiment, utils
-from abautomator.metrics import METRIC_LOOKUP
+from abautomator import metrics
 from tests.utils import get_yesterday
 
 
@@ -19,8 +19,8 @@ def tx_names():
 @pytest.fixture
 def exp_metrics():
     return [
-            METRIC_LOOKUP["granted_location"],
-            METRIC_LOOKUP["granted_notifs"],
+            metrics.ExpMetric("granted_location", "n"),
+            metrics.ExpMetric("granted_notifs", "n"),
         ]
 
 @pytest.fixture
@@ -50,3 +50,23 @@ def test_get_name(exp):
         exp._get_name(
             "Dec1021InspirationMomentFinal", "Dec1021InspirationMomentFinal_OTHERISEMPTY",
         )
+
+
+def test_convert_exp_metrics_to_base_metrics(exp):
+
+    result = exp._convert_exp_metrics_to_base_metrics()
+    assert isinstance(result[0], metrics.BaseMetric)
+    assert len(result) == 2
+
+    exp.metrics = exp_metrics_one_drop()
+    result = exp._convert_exp_metrics_to_base_metrics()
+    assert isinstance(result[0], metrics.BaseMetric)
+    assert len(result) == 2
+
+
+def exp_metrics_one_drop():
+    return [
+            metrics.ExpMetric("granted_location", "n"),
+            metrics.ExpMetric("granted_location", "pct"),
+            metrics.ExpMetric("granted_notifs", "n"),
+        ]

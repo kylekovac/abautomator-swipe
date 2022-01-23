@@ -14,7 +14,7 @@ from abautomator import metrics, utils
 class Collector:
     engine: sqlalchemy.engine.Engine
     conds: List[str]                  # column values
-    metrics: List[metrics.BaseMetric] # BaseMetric data/metadata
+    metrics: List[metrics.BaseMetric] # Naive Metric wrapper
     event: str                        # table/thing user does to become exp participant
     event_prop: str                   # table col with exp_cond info
     start_dt: date
@@ -25,6 +25,7 @@ class Collector:
 
     def __post_init__(self):
         self.dt_range = utils.DateRange(self.start_dt, self.end_dt)
+        assert isinstance(self.metrics[0], metrics.BaseMetric), "Wrong Metric type"
 
     def collect_data(self):
         with self.engine.connect() as conn:
