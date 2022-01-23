@@ -53,10 +53,6 @@ class Describer:
             self._remove_exp_name_from_exp_cond(exp_name, metric.user_metric_df)
     
     def _remove_exp_name_from_exp_cond(self, exp_name, user_metric_df):
-        print(exp_name)
-        print(type(exp_name))
-        print(user_metric_df.head())
-        print(user_metric_df["exp_cond"].unique())
         user_metric_df["exp_cond"] = user_metric_df["exp_cond"].str.replace(
             exp_name, ""
         )
