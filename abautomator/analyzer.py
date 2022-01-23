@@ -7,19 +7,12 @@ from pandas.core.frame import DataFrame
 
 @dataclass
 class Analyzer:
-    """
-    [ ] 1. Individual descriptions   -> Consolidated desc [exp_cond, metric, mean, est_est, count]
-    [ ] 2. Consolidated descriptions -> Consolidated desc + confidence intervals
-              - Useful for viz for all info to travel together at this point
-    """
     outcomes: dict  # key is [metric name][cond name]
     ctrl_name: str
     base_df: pd.DataFrame=None
 
-    def _get_ci(self):
-        if self.base_desc is None:
-            self._consolidate_descriptions()
-        return self._add_basic_confidence_intervals()
+    def __post_init__(self):
+        self._consolidate_descriptions()
 
     def _consolidate_descriptions(self):
         raw_data = []
@@ -38,7 +31,7 @@ class Analyzer:
                     raw_data.append(curr_row)
 
         self.base_df = pd.DataFrame(raw_data)
-    
+
     def get_basic_confidence_intervals(self) -> pd.DataFrame:
 
         df = self.base_df.copy()

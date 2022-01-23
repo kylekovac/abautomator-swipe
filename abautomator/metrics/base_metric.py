@@ -5,6 +5,7 @@ from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
 
 from abautomator import utils
+# from abautomator.metrics import metric_lookup
 
 @dataclass
 class BaseMetric:
@@ -16,18 +17,19 @@ class BaseMetric:
     def __post_init__(self):
         self.n_label = f"n_{self.name.lower().replace(' ', '_')}"
         self.pct_label = f"pct_{self.name.lower().replace(' ', '_')}"
+        # assert self.name in metric_lookup.METRIC_LOOKUP.keys(), "Invalid Metric"
     
     def populate_user_metric_df(self, coll, conn):
-        metric_df = self._get_metric_df(coll, conn)
+        metric_df = self._get_metric_df(coll.engine, conn, coll.dt_range)
         self.user_metric_df = self._add_exp_cond_to_metric(coll.users_df, metric_df)
     
-    def _get_metric_df(self, coll, conn):
+    def _get_metric_df(self, engine, conn, dt_range):
         return utils.get_df_from_query(
-            self._get_metric_query(coll), conn
+            self._get_metric_query(engine, dt_range), conn
         )
 
-    def _get_metric_query(self, coll):
-        table = Table(f'echelon.{self.table_name}', MetaData(bind=coll.engine), autoload=True)
+    def _get_metric_query(self, engine, dt_range):
+        table = Table(f'echelon.{self.table_name}', MetaData(bind=engine), autoload=True)
 
         result = select(
             table.c.echelon_user_id,
@@ -41,13 +43,13 @@ class BaseMetric:
         ).group_by(
             table.c.echelon_user_id,
         )
-        result = self.add_where_clause(result, table, coll)
+        result = self.add_where_clause(result, table, dt_range)
 
         return result
 
-    def add_where_clause(self, query, table, coll):
+    def add_where_clause(self, query, table, dt_range):
         """ To be overridden as needed in child classes """
-        return utils.add_time_frame(query, table, coll.start_dt, coll.end_dt)
+        return utils.add_time_frame(query, table, dt_range)
     
     def _add_exp_cond_to_metric(self, users_df, metric_df):
 

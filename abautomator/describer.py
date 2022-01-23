@@ -9,7 +9,7 @@ class InvalidColumns(Exception):
 
 @dataclass
 class Describer:
-    metrics: List[BaseMetric]
+    metrics: List[BaseMetric]  # w/self.ser_metric_df populated by collector
 
     def __post_init__(self):
         self._check_metrics_for_col("exp_cond")
@@ -44,6 +44,7 @@ class Describer:
         raise InvalidColumns(f"Prefix {prefix} not present")
     
     def describe_data(self, exp_name):
+        assert isinstance(exp_name, str), "exp_name must be a str"
         self._clean_data_dfs(exp_name)
         return self._generate_outcome_desc()
 
@@ -63,5 +64,6 @@ class Describer:
             df = metric.user_metric_df
             conds = df["exp_cond"].unique()
             for cond in conds:
+                # both n_/pct_metric in df as separate columns
                 outcomes[metric.name][cond] = df[df["exp_cond"] == cond].describe()
         return outcomes

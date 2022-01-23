@@ -1,8 +1,9 @@
 from datetime import date, timedelta
 import os
-import pickle
+import dill as pickle
 
 from abautomator import utils
+
 
 def get_yesterday():    
     return date.today() - timedelta(days=2)

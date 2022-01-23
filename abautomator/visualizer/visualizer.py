@@ -34,8 +34,8 @@ def _init_figure(source: ColumnDataSource):
 
 def _get_tool_tips():
     return [
-        ("Rel Pop. Diff. x̄", "@{mean}±@{std}"),
-        ("Abs Pop. Diff. x̄", "@{abs_mean}±@{abs_std}"),
+        ("% Diff. x̄", "@{mean}±@{std}"),
+        ("Absolute Diff. x̄", "@{abs_mean}±@{abs_std}"),
         ("Tx x̄", "@{tx_mean}±@{tx_std}"),
         ("Ctrl x̄", "@{ctrl_mean}±@{ctrl_std}"),
         ("Tx Label", "@{exp_cond}"),
