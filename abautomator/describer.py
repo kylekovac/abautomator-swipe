@@ -66,4 +66,4 @@ class Describer:
             for cond in conds:
                 # both n_/pct_metric in df as separate columns
                 outcomes[metric.name][cond] = df[df["exp_cond"] == cond].describe()
-        return dict(outcomes)
+        return outcomes
