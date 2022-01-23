@@ -57,15 +57,15 @@ def cond_strs():
 
 @pytest.fixture
 def incident_views_query(coll, incident_views_metric):
-    return incident_views_metric._get_metric_query(coll, coll.engine)
+    return incident_views_metric._get_metric_query(coll.engine, coll.dt_range)
 
 @pytest.fixture
 def sessions_query(coll, sessions_metric):
-    return sessions_metric._get_metric_query(coll, coll.engine)
+    return sessions_metric._get_metric_query(coll.engine, coll.dt_range)
 
 @pytest.fixture
 def views_query(coll, incident_views_metric):
-    return incident_views_metric._get_metric_query(coll, coll.engine)
+    return incident_views_metric._get_metric_query(coll.engine, coll.dt_range)
 
 @pytest.fixture
 def gen_metric(incident_views_metric):

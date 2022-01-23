@@ -20,15 +20,15 @@ class BaseMetric:
         # assert self.name in metric_lookup.METRIC_LOOKUP.keys(), "Invalid Metric"
     
     def populate_user_metric_df(self, coll, conn):
-        metric_df = self._get_metric_df(coll, conn)
+        metric_df = self._get_metric_df(coll.engine, conn, coll.dt_range)
         self.user_metric_df = self._add_exp_cond_to_metric(coll.users_df, metric_df)
     
-    def _get_metric_df(self, coll, conn):
+    def _get_metric_df(self, engine, conn, dt_range):
         return utils.get_df_from_query(
-            self._get_metric_query(coll, coll.engine), conn
+            self._get_metric_query(engine, dt_range), conn
         )
 
-    def _get_metric_query(self, coll, engine):
+    def _get_metric_query(self, engine, dt_range):
         table = Table(f'echelon.{self.table_name}', MetaData(bind=engine), autoload=True)
 
         result = select(
@@ -43,7 +43,7 @@ class BaseMetric:
         ).group_by(
             table.c.echelon_user_id,
         )
-        result = self.add_where_clause(result, table, coll.dt_range)
+        result = self.add_where_clause(result, table, dt_range)
 
         return result
 
