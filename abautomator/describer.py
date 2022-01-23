@@ -44,6 +44,7 @@ class Describer:
         raise InvalidColumns(f"Prefix {prefix} not present")
     
     def describe_data(self, exp_name):
+        assert isinstance(exp_name, str), "exp_name must be a str"
         self._clean_data_dfs(exp_name)
         return self._generate_outcome_desc()
 
@@ -52,6 +53,10 @@ class Describer:
             self._remove_exp_name_from_exp_cond(exp_name, metric.user_metric_df)
     
     def _remove_exp_name_from_exp_cond(self, exp_name, user_metric_df):
+        print(exp_name)
+        print(type(exp_name))
+        print(user_metric_df.head())
+        print(user_metric_df["exp_cond"].unique())
         user_metric_df["exp_cond"] = user_metric_df["exp_cond"].str.replace(
             exp_name, ""
         )
@@ -65,4 +70,4 @@ class Describer:
             for cond in conds:
                 # both n_/pct_metric in df as separate columns
                 outcomes[metric.name][cond] = df[df["exp_cond"] == cond].describe()
-        return outcomes
+        return dict(outcomes)

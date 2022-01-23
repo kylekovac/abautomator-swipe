@@ -1,8 +1,9 @@
 import pytest
+from datetime import date
 
 from abautomator import experiment, utils
 from abautomator import metrics
-from tests.utils import get_yesterday
+from tests import utils
 
 
 @pytest.fixture
@@ -70,3 +71,26 @@ def exp_metrics_one_drop():
             metrics.ExpMetric("granted_location", "pct"),
             metrics.ExpMetric("granted_notifs", "n"),
         ]
+
+
+@pytest.fixture
+def rollback_exp():
+    return experiment.Experiment(
+        ctrl_name="Jan1022InspirationMomentControl",
+        tx_names=["Jan1022InspirationMomentTx"],
+        metrics=[
+            metrics.ExpMetric("entered_phone", "pct"),
+            metrics.ExpMetric("granted_contacts", "pct")
+        ],
+        start_dt=date(2022, 1, 10),
+        end_dt=date(2022, 1, 15),
+    )
+
+def test_get_analyzer(rollback_exp):
+
+    coll = rollback_exp.get_collector()
+    coll.collect_data()
+    print(coll.metrics[0].user_metric_df.shape)
+
+    analy = rollback_exp.get_analyzer()
+    utils.cache_obj(analy, "rollback_analy")

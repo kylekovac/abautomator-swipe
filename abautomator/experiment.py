@@ -18,7 +18,7 @@ class Experiment:
     metrics: List[metrics.ExpMetric]
     start_dt: date
     end_dt: date=None
-    exp_name: str=None
+    name: str=None
 
     def __post_init__(self):
         self.name = self._get_name(self.ctrl_name, self.tx_names[0])
@@ -43,19 +43,12 @@ class Experiment:
         desc = describer.Describer(
             metrics=coll.metrics
         )
-        outcomes_dict = desc.describe_data(self.exp_name)
+        outcomes_dict = desc.describe_data(self.name)
 
         return analyzer.Analyzer(
             outcomes=outcomes_dict,
-            ctrl_name=self.ctrl_name,
+            ctrl_name=self.ctrl_name.replace(self.name, ""),
         )
-
-        # init and run the analyzer
-        # result = analy.get_basic_confidence_intervals()
-        # result = analy.get_abs_diff_confidence_intervals()
-        # result = analy.get_rel_diff_confidence_intervals()
-
-        # dump data into a cache (?) not neccisarily here
 
     def get_collector(self):
         return collector.Collector(
@@ -64,7 +57,8 @@ class Experiment:
             metrics=self._convert_exp_metrics_to_base_metrics(),
             event="segment_signup_flow_started",
             event_prop="context_traits_onboarding_flow_001",
-            start_dt=utils.get_yesterday(),
+            start_dt=self.start_dt,
+            end_dt=self.end_dt,
         )
 
     def _get_conds(self) -> List[str]:
