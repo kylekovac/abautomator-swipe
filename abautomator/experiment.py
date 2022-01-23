@@ -34,7 +34,7 @@ class Experiment:
 
         raise InvalidName("Experiment or Condition Name is invalid")    
 
-    def run_experiment(self):
+    def get_analyzer(self):
 
         coll = self.get_collector()
         coll.collect_data()
@@ -45,12 +45,15 @@ class Experiment:
         )
         outcomes_dict = desc.describe_data(self.exp_name)
 
-        analy = analyzer.Analyzer(
+        return analyzer.Analyzer(
             outcomes=outcomes_dict,
             ctrl_name=self.ctrl_name,
         )
 
         # init and run the analyzer
+        # result = analy.get_basic_confidence_intervals()
+        # result = analy.get_abs_diff_confidence_intervals()
+        # result = analy.get_rel_diff_confidence_intervals()
 
         # dump data into a cache (?) not neccisarily here
 

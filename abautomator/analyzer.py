@@ -11,24 +11,10 @@ class Analyzer:
     ctrl_name: str
     base_df: pd.DataFrame=None
 
-    def get_basic_confidence_intervals(self) -> pd.DataFrame:
+    def __post_init__(self):
+        self._consolidate_descriptions()
 
-        df = self.base_df.copy()
-        df = self._calculate_confidence_interval(df)
-
-        return df
-    
-    def _calculate_confidence_interval(self, df):
-        # Precondition: df has "mean" and "std" columns
-        df["upper_68_ci"] = df["mean"] + df["std"]
-        df["lower_68_ci"] = df["mean"] - df["std"]
-
-        df["upper_95_ci"] = df["mean"] + (2 * df["std"])
-        df["lower_95_ci"] = df["mean"] - (2 * df["std"])
-
-        return df
-
-    def consolidate_descriptions(self):
+    def _consolidate_descriptions(self):
         raw_data = []
         for metric in self.outcomes.keys():
             cond_dict = self.outcomes[metric]
@@ -46,6 +32,22 @@ class Analyzer:
 
         self.base_df = pd.DataFrame(raw_data)
 
+    def get_basic_confidence_intervals(self) -> pd.DataFrame:
+
+        df = self.base_df.copy()
+        df = self._calculate_confidence_interval(df)
+
+        return df
+    
+    def _calculate_confidence_interval(self, df):
+        # Precondition: df has "mean" and "std" columns
+        df["upper_68_ci"] = df["mean"] + df["std"]
+        df["lower_68_ci"] = df["mean"] - df["std"]
+
+        df["upper_95_ci"] = df["mean"] + (2 * df["std"])
+        df["lower_95_ci"] = df["mean"] - (2 * df["std"])
+
+        return df
     
     def get_rel_diff_confidence_intervals(self) -> pd.DataFrame:
 
