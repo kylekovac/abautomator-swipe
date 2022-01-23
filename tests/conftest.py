@@ -3,7 +3,7 @@ import pytest
 from sqlalchemy import create_engine
 
 from abautomator import config, collector, describer
-from abautomator.metrics.metric_lookup import METRIC_LOOKUP
+from abautomator.metrics import METRIC_LOOKUP
 from tests import utils
 
 @pytest.fixture

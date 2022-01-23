@@ -1,7 +1,7 @@
 import pytest
 
 from abautomator import experiment, utils
-from abautomator.metrics.metric_lookup import METRIC_LOOKUP
+from abautomator.metrics import METRIC_LOOKUP
 from tests.utils import get_yesterday
 
 

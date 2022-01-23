@@ -5,7 +5,7 @@ from typing import List
 from sqlalchemy import create_engine
 
 from abautomator import config, collector, describer, utils, metrics, analyzer
-from abautomator.metrics import metric_lookup
+
 
 class InvalidName(Exception):
   pass
@@ -69,8 +69,6 @@ class Experiment:
 
 def get_metrics():
     return [
-        metric_lookup.METRIC_LOOKUP["granted_location"],
-        metric_lookup.METRIC_LOOKUP["granted_notifs"],
+        metrics.METRIC_LOOKUP["granted_location"],
+        metrics.METRIC_LOOKUP["granted_notifs"],
     ]
-
-# def get_analyzer():

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from abautomator.metrics import metric_lookup
+from abautomator import metrics
 
 
 @dataclass
@@ -9,5 +9,5 @@ class ExpMetric:
     state: str
 
     def __post_init__(self):
-        assert self.name in metric_lookup.METRIC_LOOKUP.keys(), "Invalid Metric"
+        assert self.name in metrics.METRIC_LOOKUP.keys(), "Invalid Metric"
         assert self.state in ["pct", "n"], "Invalid State (must be pct or n)"

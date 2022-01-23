@@ -6,7 +6,7 @@
 """
 from sqlalchemy.sql import selectable
 
-from abautomator.metrics.metric_lookup import METRIC_LOOKUP
+from abautomator.metrics import METRIC_LOOKUP
 from abautomator.utils import get_df_from_query
 from tests import utils
 from tests.metrics.raw_queries import RAW_QUERIES
