@@ -15,7 +15,7 @@ from tests.metrics.raw_queries import RAW_QUERIES
 def test_metrics_build_queries(coll, name):
 
     for metric in _get_metrics_to_test(name):
-        query = metric._get_metric_query(coll, coll.engine)
+        query = metric._get_metric_query(coll.engine, coll.dt_range)
         assert isinstance(query, selectable.Select)
 
 
@@ -64,7 +64,7 @@ def _assert_items_in_list(items, list_):
 def test_get_user_metric_df(coll_w_users_df, conn, name):
 
     for metric in _get_metrics_to_test(name):
-        query = metric._get_metric_query(coll_w_users_df, coll_w_users_df.engine)
+        query = metric._get_metric_query(coll_w_users_df.engine, coll_w_users_df.dt_range)
         metric_df = utils.df_from_cache(metric.name, query, conn)
 
         user_metric_df = metric._add_exp_cond_to_metric(
