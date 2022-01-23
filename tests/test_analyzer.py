@@ -19,7 +19,7 @@ def analy(outcomes):
     )
 
 
-def test_onsolidate_descriptions(analy):
+def test_consolidate_descriptions(analy):
 
     analy._consolidate_descriptions()
     result = analy.base_df
