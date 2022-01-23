@@ -128,14 +128,32 @@ def cleaned_desc(desc, exp_name):
     return desc
 
 
-# https://stackoverflow.com/questions/40880259/how-to-pass-arguments-in-pytest-by-command-line
 def pytest_addoption(parser):
+    # https://stackoverflow.com/questions/40880259/how-to-pass-arguments-in-pytest-by-command-line
     parser.addoption("--name", action="store", default="default name")
 
+    # https://stackoverflow.com/questions/47559524/pytest-how-to-skip-tests-unless-you-declare-an-option-flag
+    parser.addoption(
+        "--runbuild", action="store_true", default=False, help="run slow tests"
+    )
 
+# name flag accessory function
 def pytest_generate_tests(metafunc):
     # This is called for every test. Only get/set command line arguments
     # if the argument is specified in the list of test "fixturenames".
     option_value = metafunc.config.option.name
     if 'name' in metafunc.fixturenames and option_value is not None:
         metafunc.parametrize("name", [option_value])
+
+# name flag accessory function
+def pytest_configure(config):
+    config.addinivalue_line("markers", "build: mark test as building things")
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--runbuild"):
+        # --runbuild given in cli: do not skip build tests
+        return
+    skip_slow = pytest.mark.skip(reason="need --runbuild option to run")
+    for item in items:
+        if "build" in item.keywords:
+            item.add_marker(skip_slow)
