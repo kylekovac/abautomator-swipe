@@ -16,8 +16,7 @@ class Experiment:
     ctrl_name: str
     tx_names: List[str]
     metrics: List[metrics.ExpMetric]
-    start_dt: date
-    end_dt: date=None
+    dt_range: utils.DateRange
     name: str=None
 
     def __post_init__(self):

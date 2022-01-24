@@ -3,6 +3,7 @@ from datetime import date
 from dataclasses import dataclass, field
 from typing import List
 
+import pandas as pd
 import sqlalchemy
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import select
@@ -17,15 +18,9 @@ class Collector:
     metrics: List[metrics.BaseMetric] # Naive Metric wrapper
     event: str                        # table/thing user does to become exp participant
     event_prop: str                   # table col with exp_cond info
-    start_dt: date
-    end_dt: date = None
-    dt_range = None
-    users_df = None
+    dt_range: utils.DateRange
+    users_df: pd.DataFrame=None
     devices: List[str]=field(default_factory=lambda: ['android', 'ios'])
-
-    def __post_init__(self):
-        self.dt_range = utils.DateRange(self.start_dt, self.end_dt)
-        assert isinstance(self.metrics[0], metrics.BaseMetric), "Wrong Metric type"
 
     def collect_data(self):
         with self.engine.connect() as conn:

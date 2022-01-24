@@ -3,8 +3,9 @@ import pytest
 from sqlalchemy import create_engine
 
 from abautomator import config, collector, describer
+from abautomator.utils import DateRange
 from abautomator.metrics import METRIC_LOOKUP
-from tests import utils
+from tests.utils import utils
 
 @pytest.fixture
 def engine(scope="module"):
@@ -30,7 +31,7 @@ def coll(engine, cond_strs, sessions_metric):
         metrics=[sessions_metric],
         event="segment_signup_flow_started",
         event_prop="context_traits_onboarding_flow_001",
-        start_dt=utils.get_yesterday(),
+        dt_range=DateRange(utils.get_yesterday()),
     )
 
 @pytest.fixture

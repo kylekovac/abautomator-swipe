@@ -1,7 +1,5 @@
-from sqlalchemy.sql import select, selectable
+from sqlalchemy.sql import selectable
 import pytest
-
-from tests import utils
 
 def test_get_users_query(users_query):
     assert isinstance(users_query, selectable.Select)
