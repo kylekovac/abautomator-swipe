@@ -16,12 +16,12 @@ class Experiment:
     ctrl_name: str
     tx_names: List[str]
     metrics: List[metrics.ExpMetric]
-    start_dt: date
-    end_dt: date=None
+    dt_range: utils.DateRange
     name: str=None
 
     def __post_init__(self):
-        self.name = self._get_name(self.ctrl_name, self.tx_names[0])
+        if not self.name:
+            self.name = self._get_name(self.ctrl_name, self.tx_names[0])
 
         assert isinstance(self.metrics[0], metrics.ExpMetric), "Wrong Metric type"
     
@@ -57,8 +57,7 @@ class Experiment:
             metrics=self._convert_exp_metrics_to_base_metrics(),
             event="segment_signup_flow_started",
             event_prop="context_traits_onboarding_flow_001",
-            start_dt=self.start_dt,
-            end_dt=self.end_dt,
+            dt_range=self.dt_range,
         )
 
     def _get_conds(self) -> List[str]:

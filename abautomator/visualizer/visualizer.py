@@ -26,6 +26,7 @@ def _init_figure(source: ColumnDataSource):
     return figure(
         y_range=FactorRange(*list(source.data["factor_label"])),
         height=450,
+        width=700,
         title=f"exp name",
         toolbar_location="right",
         tools=[BoxZoomTool(), ResetTool(), PanTool()],
@@ -98,8 +99,8 @@ def add_core_interval(plot, exp_cond, color, fig_core):
     )
 
 def _set_legend(plot):
-    plot.legend.location = "top_right"
     plot.legend.click_policy="hide"
+    plot.add_layout(plot.legend[0], 'right')
 
 def _set_x_axis(plot):
     plot.xaxis.axis_label = 'Relative difference from control (%)'
