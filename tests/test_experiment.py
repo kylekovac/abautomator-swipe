@@ -3,6 +3,7 @@ from datetime import date
 
 from abautomator import experiment, utils
 from abautomator import metrics
+from abautomator.utils import DateRange
 from tests import utils
 
 
@@ -30,7 +31,7 @@ def exp(tx_names, exp_metrics):
         ctrl_name="Dec1021InspirationMomentFinalControl",
         tx_names=tx_names,
         metrics=exp_metrics,
-        start_dt=utils.get_yesterday()
+        dt_range=DateRange(utils.get_yesterday()),
     )
 
 def test_init(exp):

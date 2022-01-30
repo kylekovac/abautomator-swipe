@@ -2,6 +2,7 @@ import pytest
 from datetime import date
 
 from abautomator import experiment, metrics
+from abautomator.utils import DateRange
 from tests import utils
 
 @pytest.fixture
@@ -13,8 +14,7 @@ def rollback_exp():
             metrics.ExpMetric("entered_phone", "pct"),
             metrics.ExpMetric("granted_contacts", "pct")
         ],
-        start_dt=date(2022, 1, 10),
-        end_dt=date(2022, 1, 15),
+        dt_range=DateRange(date(2022, 1, 10), date(2022, 1, 15)),
     )
 
 @pytest.mark.build
@@ -44,8 +44,8 @@ def inspiration_exp():
             metrics.ExpMetric("entered_phone", "pct"),
             metrics.ExpMetric("granted_contacts", "pct")
         ],
-        start_dt=date(2021, 12, 10),
-        end_dt=date(2022, 1, 4),
+        dt_range=DateRange(date(2021, 12, 10), date(2022, 1, 4)),
+        name="Dec1021InspirationMomentFinal",
     )
 
 @pytest.mark.build
