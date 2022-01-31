@@ -29,7 +29,6 @@ def _clean_exp_conds(df):
     df["metric"] = df["metric"].str.replace("_", " ")
     df["metric"] = df["metric"].str.title()
     df["metric"] = df["metric"].str.replace("Pct", "%")
-    df["metric"] = df["metric"].str.replace("_", " ")
     df["factor_label"] = list(zip(df["metric"], df["exp_cond"]))
     return df
 
