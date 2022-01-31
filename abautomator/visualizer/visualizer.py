@@ -8,6 +8,8 @@ from bokeh.palettes import Colorblind8
 
 
 def get_figure(df):
+    df = df.copy()
+    df = _clean_exp_conds(df)
     source = ColumnDataSource(df)
 
     p = _init_figure(source)
@@ -21,6 +23,15 @@ def get_figure(df):
     _set_y_axis(p)
     
     return p
+
+def _clean_exp_conds(df):
+    print("cleaning")
+    df["metric"] = df["metric"].str.replace("_", " ")
+    df["metric"] = df["metric"].str.title()
+    df["metric"] = df["metric"].str.replace("Pct", "%")
+    df["metric"] = df["metric"].str.replace("_", " ")
+    df["factor_label"] = list(zip(df["metric"], df["exp_cond"]))
+    return df
 
 def _init_figure(source: ColumnDataSource):
     return figure(

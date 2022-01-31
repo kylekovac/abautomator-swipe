@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from abautomator import config, collector, describer
 from abautomator.utils import DateRange
 from abautomator.metrics import METRIC_LOOKUP
-from tests.utils import utils
+from tests import utils
 
 @pytest.fixture
 def engine(scope="module"):
