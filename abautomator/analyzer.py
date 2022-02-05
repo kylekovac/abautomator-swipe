@@ -77,6 +77,17 @@ class Analyzer:
     
     def _add_diff_desc(self, df):
         df["mean"] = df["tx_mean"] - df["ctrl_mean"]
+
+        # generate 2 dfs, 1 for pop means, one for pop proportions
+        pop_mean_df = df[df['metric'].str.startswith("n_")]
+        pop_prop_df = df[df['metric'].str.startswith("pct_")]
+
+        # do seperate std calculations
+        pop_mean_df = self._add_std_for_pop_mean(pop_mean_df)
+        pop_prop_df = self._add_std_for_pop_proportion(pop_prop_df)
+
+
+        # smash them together at the end
         df = self._add_std_for_pop_mean(df)
         return df
     
@@ -99,9 +110,14 @@ class Analyzer:
         df["pooled_count"] = df["ctrl_count"] + df["tx_count"]
         df["pooled_prop"] = df["pooled_succ"] / df["pooled_count"]
 
-        df["std_pooled"] = np.sqrt(
+        df["std"] = np.sqrt(
             ( df["pooled_prop"] * (1 - df["pooled_prop"]) ) \
             / df["pooled_count"] \
+        )
+
+        df = df.drop(
+            ['ctrl_succ', "tx_succ", "pooled_succ", "pooled_count", "pooled_prop"],
+            axis=1,
         )
 
         return df
