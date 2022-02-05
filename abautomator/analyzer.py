@@ -92,10 +92,16 @@ class Analyzer:
     
     def _add_std_for_pop_proportion(self, df):
         # https://stats.libretexts.org/Bookshelves/Applied_Statistics/Book%3A_Business_Statistics_(OpenStax)/10%3A_Hypothesis_Testing_with_Two_Samples/10.04%3A_Comparing_Two_Independent_Population_Proportions
+        
+        df["ctrl_succ"] = df["ctrl_mean"] * df["ctrl_count"]
+        df["tx_succ"] = df["tx_mean"] * df["tx_count"]
+        df["pooled_succ"] = df["ctrl_succ"] + df["tx_succ"]
+        df["pooled_count"] = df["ctrl_count"] + df["tx_count"]
+        df["pooled_prop"] = df["pooled_succ"] / df["pooled_count"]
 
-        df["std"] = np.sqrt(
-            ( df["tx_mean"] * (1-df["tx_mean"]) / df["tx_count"] ) \
-            + ( df["ctrl_mean"] * (1-df["ctrl_mean"]) / df["ctrl_count"] ) \
+        df["std_pooled"] = np.sqrt(
+            ( df["pooled_prop"] * (1 - df["pooled_prop"]) ) \
+            / df["pooled_count"] \
         )
 
         return df
@@ -103,7 +109,7 @@ class Analyzer:
     def _get_ctrl_df(self, df):
         ctrl_df = df[df["exp_cond"] == self.ctrl_name]
         ctrl_df = self._add_prefix_to_stat_cols(ctrl_df, "ctrl")
-        ctrl_df = ctrl_df.drop(['exp_cond', 'factor_label'], axis=1)
+        ctrl_df = ctrl_df.drop(['exp_cond'], axis=1)
         return ctrl_df
     
     def _add_prefix_to_stat_cols(self, df, prefix):
