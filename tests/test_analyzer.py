@@ -1,5 +1,3 @@
-import os
-import pickle
 import pytest
 
 from abautomator import analyzer, describer
@@ -50,6 +48,7 @@ def test_get_abs_diff_confidence_intervals(analy):
     result = analy.get_abs_diff_confidence_intervals()
 
     assert "mean" in list(result.columns)
+    assert "std" in list(result.columns)
 
     utils.cache_obj(result, "abs_diff_ci")
 
@@ -62,5 +61,6 @@ def test_get_rel_diff_confidence_intervals(analy):
 
     assert "abs_mean" in list(result.columns)
     assert "mean" in list(result.columns)
+    assert "std" in list(result.columns)
 
     utils.cache_obj(result, "rel_diff_ci")

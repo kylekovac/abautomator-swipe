@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import numpy as np
 
 import pandas as pd
-from pandas.core.frame import DataFrame
+from abautomator.analyzer import stat
 
 
 @dataclass
@@ -78,13 +78,9 @@ class Analyzer:
     def _add_diff_desc(self, df):
         df["mean"] = df["tx_mean"] - df["ctrl_mean"]
 
-        pop_mean_df = df[df['metric'].str.startswith("n_")].copy()
-        pop_prop_df = df[df['metric'].str.startswith("pct_")].copy()
+        df['std'] = df.apply(stat.get_std_for_pop_mean_or_proportion, axis=1)
 
-        pop_mean_df = self._add_std_for_pop_mean(pop_mean_df)
-        pop_prop_df = self._add_std_for_pop_proportion(pop_prop_df)
-
-        return pd.concat([pop_mean_df, pop_prop_df])
+        return df
 
     
     def _add_std_for_pop_mean(self, df):
@@ -98,7 +94,6 @@ class Analyzer:
         return df
     
     def _add_std_for_pop_proportion(self, df):
-        # https://stats.libretexts.org/Bookshelves/Applied_Statistics/Book%3A_Business_Statistics_(OpenStax)/10%3A_Hypothesis_Testing_with_Two_Samples/10.04%3A_Comparing_Two_Independent_Population_Proportions
         
         df["ctrl_succ"] = df["ctrl_mean"] * df["ctrl_count"]
         df["tx_succ"] = df["tx_mean"] * df["tx_count"]
