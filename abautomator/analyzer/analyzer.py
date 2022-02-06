@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import numpy as np
 
 import pandas as pd
-from pandas.core.frame import DataFrame
+from abautomator.analyzer import stat
 
 
 @dataclass
@@ -75,35 +75,10 @@ class Analyzer:
 
         return result_df
     
-    def _add_diff_desc(self, df):
-        df["mean"] = df["tx_mean"] - df["ctrl_mean"]
-        df = self._add_std_for_pop_mean(df)
-        return df
-    
-    def _add_std_for_pop_mean(self, df):
-        # https://online.stat.psu.edu/stat500/book/export/html/576#:~:text=As%20with%20comparing%20two%20population,is%20%CE%BC%201%20%E2%88%92%20%CE%BC%202%20.
-
-        df["std"] = np.sqrt(
-            ( df["tx_std"]**2 / df["tx_count"] ) \
-            + ( df["ctrl_std"]**2 / df["ctrl_count"] )
-        )
-
-        return df
-    
-    def _add_std_for_pop_proportion(self, df):
-        # https://stats.libretexts.org/Bookshelves/Applied_Statistics/Book%3A_Business_Statistics_(OpenStax)/10%3A_Hypothesis_Testing_with_Two_Samples/10.04%3A_Comparing_Two_Independent_Population_Proportions
-
-        df["std"] = np.sqrt(
-            ( df["tx_mean"] * (1-df["tx_mean"]) / df["tx_count"] ) \
-            + ( df["ctrl_mean"] * (1-df["ctrl_mean"]) / df["ctrl_count"] ) \
-        )
-
-        return df
-    
     def _get_ctrl_df(self, df):
         ctrl_df = df[df["exp_cond"] == self.ctrl_name]
         ctrl_df = self._add_prefix_to_stat_cols(ctrl_df, "ctrl")
-        ctrl_df = ctrl_df.drop(['exp_cond', 'factor_label'], axis=1)
+        ctrl_df = ctrl_df.drop(["exp_cond"], axis=1)
         return ctrl_df
     
     def _add_prefix_to_stat_cols(self, df, prefix):
@@ -119,3 +94,9 @@ class Analyzer:
         tx_df = df[df["exp_cond"] != self.ctrl_name]
         tx_df = self._add_prefix_to_stat_cols(tx_df, "tx")
         return tx_df
+    
+    def _add_diff_desc(self, df):
+        df["mean"] = df["tx_mean"] - df["ctrl_mean"]
+        df["std"] = df.apply(stat.get_std_for_pop_mean_or_proportion, axis=1)
+
+        return df
