@@ -25,7 +25,7 @@ class Visualizer:
 
         _add_bars(fig, source)
 
-        _set_legend(fig)
+        # _set_legend(fig)
         _set_x_axis(fig, self.x_axis_label)
         _set_y_axis(fig)
         
@@ -51,25 +51,26 @@ def _init_figure(source: ColumnDataSource, tool_tips):
         tooltips= tool_tips,
     )
 
-
-
 def _add_zero_span(fig):
     zero_span = Span(
         location=0, dimension='height', line_color='grey', line_dash='dashed', line_alpha=0.8, line_width=1.5
     )
     fig.add_layout(zero_span)
 
-def _add_bars(p, source):
+def _add_bars(fig, source):
     colors = itertools.cycle(Colorblind8)
 
     for exp_cond, color in zip(np.unique(source.data["exp_cond"]), colors):
-        bools = [True if exp_cond == filter_cond else False for filter_cond in source.data['exp_cond']]
+        bools = [
+            True if exp_cond == filter_cond else False
+            for filter_cond in source.data['exp_cond']
+        ]
         view = CDSView(source=source, filters=[BooleanFilter(bools)])
-        
-        fig_core = (p, source, view)
-        
+
+        fig_core = (fig, source, view)
+
         lower_eb, upper_eb = add_error_bars(fig_core)
-        core_interval = add_core_interval(p, exp_cond, color, fig_core)
+        core_interval = add_core_interval(fig, exp_cond, color, fig_core)
 
         core_interval.js_link('visible', lower_eb, 'visible')
         core_interval.js_link('visible', upper_eb, 'visible')
