@@ -81,37 +81,6 @@ class Analyzer:
         df['std'] = df.apply(stat.get_std_for_pop_mean_or_proportion, axis=1)
 
         return df
-
-    
-    def _add_std_for_pop_mean(self, df):
-        # https://online.stat.psu.edu/stat500/book/export/html/576#:~:text=As%20with%20comparing%20two%20population,is%20%CE%BC%201%20%E2%88%92%20%CE%BC%202%20.
-
-        df["std"] = np.sqrt(
-            ( df["tx_std"]**2 / df["tx_count"] ) \
-            + ( df["ctrl_std"]**2 / df["ctrl_count"] )
-        )
-
-        return df
-    
-    def _add_std_for_pop_proportion(self, df):
-        
-        df["ctrl_succ"] = df["ctrl_mean"] * df["ctrl_count"]
-        df["tx_succ"] = df["tx_mean"] * df["tx_count"]
-        df["pooled_succ"] = df["ctrl_succ"] + df["tx_succ"]
-        df["pooled_count"] = df["ctrl_count"] + df["tx_count"]
-        df["pooled_prop"] = df["pooled_succ"] / df["pooled_count"]
-
-        df["std"] = np.sqrt(
-            ( df["pooled_prop"] * (1 - df["pooled_prop"]) ) \
-            / df["pooled_count"] \
-        )
-
-        df = df.drop(
-            ['ctrl_succ', "tx_succ", "pooled_succ", "pooled_count", "pooled_prop"],
-            axis=1,
-        )
-
-        return df
     
     def _get_ctrl_df(self, df):
         ctrl_df = df[df["exp_cond"] == self.ctrl_name]
