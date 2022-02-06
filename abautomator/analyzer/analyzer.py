@@ -75,17 +75,10 @@ class Analyzer:
 
         return result_df
     
-    def _add_diff_desc(self, df):
-        df["mean"] = df["tx_mean"] - df["ctrl_mean"]
-
-        df['std'] = df.apply(stat.get_std_for_pop_mean_or_proportion, axis=1)
-
-        return df
-    
     def _get_ctrl_df(self, df):
         ctrl_df = df[df["exp_cond"] == self.ctrl_name]
         ctrl_df = self._add_prefix_to_stat_cols(ctrl_df, "ctrl")
-        ctrl_df = ctrl_df.drop(['exp_cond'], axis=1)
+        ctrl_df = ctrl_df.drop(["exp_cond"], axis=1)
         return ctrl_df
     
     def _add_prefix_to_stat_cols(self, df, prefix):
@@ -101,3 +94,9 @@ class Analyzer:
         tx_df = df[df["exp_cond"] != self.ctrl_name]
         tx_df = self._add_prefix_to_stat_cols(tx_df, "tx")
         return tx_df
+    
+    def _add_diff_desc(self, df):
+        df["mean"] = df["tx_mean"] - df["ctrl_mean"]
+        df["std"] = df.apply(stat.get_std_for_pop_mean_or_proportion, axis=1)
+
+        return df

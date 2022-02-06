@@ -7,57 +7,57 @@ from bokeh.models import BoxZoomTool, ResetTool, PanTool
 from bokeh.palettes import Colorblind8
 
 
-def get_figure(df):
-    df = df.copy()
-    df = _clean_exp_conds(df)
-    source = ColumnDataSource(df)
+class Visualizer:
+    """ Parent object. Not to be initiated directly """
 
-    p = _init_figure(source)
+    def __init__(self, df, x_axis_label):
+        self.df = df
+        self.x_axis_label = x_axis_label
 
-    _add_zero_span(p)
+    def get_figure(self):
+        df = self.df.copy()
+        df = _clean_exp_conds(df)
+        source = ColumnDataSource(df)
 
-    _add_bars(p, source)
+        fig = _init_figure(source, self._get_tool_tips())
 
-    _set_legend(p)
-    _set_x_axis(p)
-    _set_y_axis(p)
+        _add_zero_span(fig)
+
+        _add_bars(fig, source)
+
+        _set_legend(fig)
+        _set_x_axis(fig, self.x_axis_label)
+        _set_y_axis(fig)
+        
+        return fig
     
-    return p
+    def _get_tool_tips(self):
+        pass  # To be implemented by children
 
 def _clean_exp_conds(df):
-    print("cleaning")
     df["metric"] = df["metric"].str.replace("_", " ")
     df["metric"] = df["metric"].str.title()
     df["metric"] = df["metric"].str.replace("Pct", "%")
     df["factor_label"] = list(zip(df["metric"], df["exp_cond"]))
     return df
 
-def _init_figure(source: ColumnDataSource):
+def _init_figure(source: ColumnDataSource, tool_tips):
     return figure(
         y_range=FactorRange(*list(source.data["factor_label"])),
         height=450,
         width=700,
-        title=f"exp name",
         toolbar_location="right",
         tools=[BoxZoomTool(), ResetTool(), PanTool()],
-        tooltips= _get_tool_tips(),
+        tooltips= tool_tips,
     )
 
-def _get_tool_tips():
-    return [
-        ("% Diff. x̄", "@{mean}±@{std}"),
-        ("Absolute Diff. x̄", "@{abs_mean}±@{abs_std}"),
-        ("Tx x̄", "@{tx_mean}±@{tx_std}"),
-        ("Ctrl x̄", "@{ctrl_mean}±@{ctrl_std}"),
-        ("Tx Label", "@{exp_cond}"),
-        ("Ctrl/Tx n", "@{ctrl_count}/@{tx_count}"),
-    ]
 
-def _add_zero_span(plot):
+
+def _add_zero_span(fig):
     zero_span = Span(
         location=0, dimension='height', line_color='grey', line_dash='dashed', line_alpha=0.8, line_width=1.5
     )
-    plot.add_layout(zero_span)
+    fig.add_layout(zero_span)
 
 def _add_bars(p, source):
     colors = itertools.cycle(Colorblind8)
@@ -82,8 +82,8 @@ def add_error_bars(fig_core):
     
     
 def _get_error_bar(left_label, right_label, fig_core):
-    plot, source, view = fig_core
-    return plot.segment(
+    fig, source, view = fig_core
+    return fig.segment(
         right_label,
         "factor_label",
         left_label,
@@ -93,9 +93,9 @@ def _get_error_bar(left_label, right_label, fig_core):
         view=view,
     )
 
-def add_core_interval(plot, exp_cond, color, fig_core):
-    plot, source, view = fig_core
-    return plot.hbar(
+def add_core_interval(fig, exp_cond, color, fig_core):
+    fig, source, view = fig_core
+    return fig.hbar(
         y='factor_label',
         right="upper_68_ci",
         left="lower_68_ci",
@@ -108,20 +108,21 @@ def add_core_interval(plot, exp_cond, color, fig_core):
         view=view,
     )
 
-def _set_legend(plot):
-    plot.legend.click_policy="hide"
-    plot.add_layout(plot.legend[0], 'right')
+def _set_legend(fig):
+    fig.legend.click_policy="hide"
+    fig.add_layout(fig.legend[0], 'right')
 
-def _set_x_axis(plot):
-    plot.xaxis.axis_label = 'Relative difference from control (%)'
+def _set_x_axis(fig, label):
+    fig.xaxis.axis_label = label
+    # 'Relative difference from control (%)'
 
-def _set_y_axis(plot):
-    plot.yaxis.major_label_text_alpha = 0.0
-    plot.yaxis.major_tick_in = 0
-    plot.yaxis.major_tick_out = 0
-    plot.yaxis.major_label_text_font_size = '1px'
+def _set_y_axis(fig):
+    fig.yaxis.major_label_text_alpha = 0.0
+    fig.yaxis.major_tick_in = 0
+    fig.yaxis.major_tick_out = 0
+    fig.yaxis.major_label_text_font_size = '1px'
     
-    plot.yaxis.group_label_orientation = "horizontal"
-    plot.yaxis.separator_line_alpha = 0
-    plot.yaxis.minor_tick_line_color = "yellow"
-    plot.ygrid.grid_line_color = None
+    fig.yaxis.group_label_orientation = "horizontal"
+    fig.yaxis.separator_line_alpha = 0
+    fig.yaxis.minor_tick_line_color = "yellow"
+    fig.ygrid.grid_line_color = None
