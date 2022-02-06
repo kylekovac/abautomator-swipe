@@ -78,18 +78,14 @@ class Analyzer:
     def _add_diff_desc(self, df):
         df["mean"] = df["tx_mean"] - df["ctrl_mean"]
 
-        # generate 2 dfs, 1 for pop means, one for pop proportions
-        pop_mean_df = df[df['metric'].str.startswith("n_")]
-        pop_prop_df = df[df['metric'].str.startswith("pct_")]
+        pop_mean_df = df[df['metric'].str.startswith("n_")].copy()
+        pop_prop_df = df[df['metric'].str.startswith("pct_")].copy()
 
-        # do seperate std calculations
         pop_mean_df = self._add_std_for_pop_mean(pop_mean_df)
         pop_prop_df = self._add_std_for_pop_proportion(pop_prop_df)
 
+        return pd.concat([pop_mean_df, pop_prop_df])
 
-        # smash them together at the end
-        df = self._add_std_for_pop_mean(df)
-        return df
     
     def _add_std_for_pop_mean(self, df):
         # https://online.stat.psu.edu/stat500/book/export/html/576#:~:text=As%20with%20comparing%20two%20population,is%20%CE%BC%201%20%E2%88%92%20%CE%BC%202%20.
