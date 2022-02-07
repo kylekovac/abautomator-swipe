@@ -1,11 +1,10 @@
-""" Statisical functionality of the analyzer """
+""" Standard Deviation functionality of the analyzer """
 import numpy as np
 import logging
 
 LOGGER = logging.getLogger()
 
 def get_std_for_pop_mean_or_proportion(row):
-    # https://stats.libretexts.org/Bookshelves/Applied_Statistics/Book%3A_Business_Statistics_(OpenStax)/10%3A_Hypothesis_Testing_with_Two_Samples/10.04%3A_Comparing_Two_Independent_Population_Proportions
     if row["metric"].startswith("n_"):
         return _get_std_for_pop_mean(row)
     return _get_std_for_pop_proportion(row)
@@ -34,6 +33,7 @@ def _get_std_for_pop_mean_w_unequal_variance(row):
     )
 
 def _get_std_for_pop_proportion(row):
+    # https://stats.libretexts.org/Bookshelves/Applied_Statistics/Book%3A_Business_Statistics_(OpenStax)/10%3A_Hypothesis_Testing_with_Two_Samples/10.04%3A_Comparing_Two_Independent_Population_Proportions
     _check_sample_size(row)
 
     ctrl_succ = row["ctrl_mean"] * row["ctrl_count"]

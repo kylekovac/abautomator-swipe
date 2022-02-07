@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import numpy as np
 
 import pandas as pd
-from abautomator.analyzer import stat
+from abautomator.analyzer import std, sig
 
 
 @dataclass
@@ -97,6 +97,7 @@ class Analyzer:
     
     def _add_diff_desc(self, df):
         df["mean"] = df["tx_mean"] - df["ctrl_mean"]
-        df["std"] = df.apply(stat.get_std_for_pop_mean_or_proportion, axis=1)
+        df["std"] = df.apply(std.get_std_for_pop_mean_or_proportion, axis=1)
+        df["p_value"] = df.apply(sig.get_pvalue_for_pop_mean_or_proportion, axis=1)
 
         return df
