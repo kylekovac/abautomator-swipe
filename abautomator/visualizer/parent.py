@@ -3,7 +3,7 @@ import numpy as np
 
 from bokeh.plotting import figure
 from bokeh.models import CDSView, ColumnDataSource, FactorRange, BooleanFilter, Span
-from bokeh.models import BoxZoomTool, ResetTool, PanTool
+from bokeh.models import BoxZoomTool, ResetTool, PanTool, HBar
 from bokeh.palettes import Colorblind8
 
 
@@ -58,9 +58,8 @@ def _add_zero_span(fig):
     fig.add_layout(zero_span)
 
 def _add_bars(fig, source):
-    colors = itertools.cycle(Colorblind8)
 
-    for exp_cond, color in zip(np.unique(source.data["exp_cond"]), colors):
+    for exp_cond, color in _cond_to_color_mapper(source).items():
         bools = [
             True if exp_cond == filter_cond else False
             for filter_cond in source.data['exp_cond']
@@ -72,8 +71,12 @@ def _add_bars(fig, source):
         lower_eb, upper_eb = add_error_bars(fig_core)
         core_interval = add_core_interval(fig, exp_cond, color, fig_core)
 
-        core_interval.js_link('visible', lower_eb, 'visible')
-        core_interval.js_link('visible', upper_eb, 'visible')
+        core_interval.js_link('muted', lower_eb, 'muted')
+        core_interval.js_link('muted', upper_eb, 'muted')
+
+def _cond_to_color_mapper(source):
+    colors = itertools.cycle(Colorblind8)
+    return {exp_cond: color for exp_cond, color in zip(np.unique(source.data["exp_cond"]), colors)}
 
 def add_error_bars(fig_core):
     upper_eb = _get_error_bar("upper_68_ci", "upper_95_ci", fig_core)
@@ -90,24 +93,41 @@ def _get_error_bar(left_label, right_label, fig_core):
         left_label,
         "factor_label",
         color="black",
+        muted_color="black",
+        muted_alpha=0.2,
         source=source,
         view=view,
     )
 
-def add_core_interval(fig, exp_cond, color, fig_core):
+def add_core_interval(fig, exp_cond, color, fig_core, add_legend=True):
     fig, source, view = fig_core
-    return fig.hbar(
+    renderer = fig.hbar(
         y='factor_label',
         right="upper_68_ci",
         left="lower_68_ci",
-        legend_label=exp_cond,
+        legend_label=exp_cond if add_legend else None,
         fill_color=color,
         line_color=None,
-        height=0.6,
         fill_alpha=0.8,
+        muted_color=color,
+        muted_alpha=0.2,
+        height=0.6,
         source=source,
         view=view,
     )
+    # renderer.selection_glyph = HBar(
+    #     fill_color=color, 
+    #     line_color=None,
+    #     fill_alpha=0.8,
+    # )
+    # renderer.nonselection_glyph = HBar(
+    #     fill_color=color,
+    #     line_color=None,
+    #     fill_alpha=0.1,
+    # )
+    return renderer
+
+
 
 def _set_legend(fig):
     fig.legend.click_policy="hide"
