@@ -10,10 +10,7 @@ def get_stat_sig_btn(renderers):
                 var stat_sig_visible = glyph.visible;
             }
         }
-        console.log("SIG");
-        console.log(stat_sig_visible);
-        console.log("SIG");
-        
+
         if (stat_sig_visible) {
             var muted = false;
         } else {
