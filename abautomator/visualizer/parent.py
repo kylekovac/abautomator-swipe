@@ -2,11 +2,12 @@ import itertools
 import numpy as np
 
 from bokeh.plotting import figure
+from bokeh.layouts import column
 from bokeh.models import CDSView, ColumnDataSource, FactorRange, BooleanFilter, Span
-from bokeh.models import BoxZoomTool, ResetTool, PanTool, HBar
+from bokeh.models import BoxZoomTool, ResetTool, PanTool, Button, CustomJS
 from bokeh.palettes import Colorblind8
 
-from abautomator.visualizer import core, sig
+from abautomator.visualizer import core, sig, btn
 
 
 class Visualizer:
@@ -17,25 +18,45 @@ class Visualizer:
         self.x_axis_label = x_axis_label
 
     def get_figure(self):
+        source = self._get_source()
+
+        plot = _init_plot(source, self._get_tool_tips())
+
+        _add_zero_span(plot)
+
+        _add_core_bars(plot, source)
+
+        _set_legend(plot)
+        _set_x_axis(plot, self.x_axis_label)
+        _set_y_axis(plot)
+        
+        return plot
+    
+    def _get_source(self):
         df = self.df.copy()
         df = _clean_exp_conds(df)
-        source = ColumnDataSource(df)
-
-        fig = _init_figure(source, self._get_tool_tips())
-
-        _add_zero_span(fig)
-
-        _add_core_bars(fig, source)
-        _add_sig_bars(fig, source)
-
-        _set_legend(fig)
-        _set_x_axis(fig, self.x_axis_label)
-        _set_y_axis(fig)
-        
-        return fig
+        return ColumnDataSource(df)
     
     def _get_tool_tips(self):
         pass  # To be implemented by children
+
+class StatSigVisualizer(Visualizer):
+
+    def get_figure(self):
+        source = self._get_source()
+
+        plot = _init_plot(source, self._get_tool_tips())
+
+        _add_zero_span(plot)
+
+        _add_core_bars(plot, source)
+        _add_sig_bars(plot, source)
+
+        _set_legend(plot)
+        _set_x_axis(plot, self.x_axis_label)
+        _set_y_axis(plot)
+        
+        return column(plot, btn.get_stat_sig_btn(plot.renderers))
 
 def _clean_exp_conds(df):
     df["metric"] = df["metric"].str.replace("_", " ")
@@ -44,7 +65,7 @@ def _clean_exp_conds(df):
     df["factor_label"] = list(zip(df["metric"], df["exp_cond"]))
     return df
 
-def _init_figure(source: ColumnDataSource, tool_tips):
+def _init_plot(source: ColumnDataSource, tool_tips):
     return figure(
         y_range=FactorRange(*list(source.data["factor_label"])),
         height=450,
@@ -133,5 +154,3 @@ def _set_y_axis(fig):
     fig.yaxis.separator_line_alpha = 0
     fig.yaxis.minor_tick_line_color = "yellow"
     fig.ygrid.grid_line_color = None
-
-

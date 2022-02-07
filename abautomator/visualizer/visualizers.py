@@ -1,4 +1,4 @@
-from .parent import Visualizer
+from .parent import Visualizer, StatSigVisualizer
 
 class BasicVisualizer(Visualizer):
 
@@ -11,7 +11,9 @@ class BasicVisualizer(Visualizer):
             ("N", "@{count}"),
         ]
 
-class AbsDiffVisualizer(Visualizer):
+
+
+class AbsDiffVisualizer(StatSigVisualizer):
 
     def __init__(self, df):
         super().__init__(df, "Tx - Ctrl Population (Absolute Diff.)")
@@ -26,7 +28,7 @@ class AbsDiffVisualizer(Visualizer):
             ("Ctrl/Tx n", "@{ctrl_count}/@{tx_count}"),
         ]
 
-class RelDiffVisualizer(Visualizer):
+class RelDiffVisualizer(StatSigVisualizer):
 
     def __init__(self, df):
         super().__init__(df, "Relative Diff. of Tx Pop vs Ctrl Pop (%)")
