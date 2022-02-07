@@ -43,8 +43,8 @@ class Analyzer:
         df["upper_68_ci"] = df["mean"] + df["std"]
         df["lower_68_ci"] = df["mean"] - df["std"]
 
-        df["upper_95_ci"] = df["mean"] + (2 * df["std"])
-        df["lower_95_ci"] = df["mean"] - (2 * df["std"])
+        df["upper_95_ci"] = df["mean"] + (1.96 * df["std"])
+        df["lower_95_ci"] = df["mean"] - (1.96 * df["std"])
 
         return df
     

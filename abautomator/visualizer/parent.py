@@ -6,6 +6,8 @@ from bokeh.models import CDSView, ColumnDataSource, FactorRange, BooleanFilter, 
 from bokeh.models import BoxZoomTool, ResetTool, PanTool, HBar
 from bokeh.palettes import Colorblind8
 
+from abautomator.visualizer import core, sig
+
 
 class Visualizer:
     """ Parent object. Not to be initiated directly """
@@ -23,9 +25,10 @@ class Visualizer:
 
         _add_zero_span(fig)
 
-        _add_bars(fig, source)
+        _add_core_bars(fig, source)
+        _add_sig_bars(fig, source)
 
-        # _set_legend(fig)
+        _set_legend(fig)
         _set_x_axis(fig, self.x_axis_label)
         _set_y_axis(fig)
         
@@ -57,7 +60,7 @@ def _add_zero_span(fig):
     )
     fig.add_layout(zero_span)
 
-def _add_bars(fig, source):
+def _add_core_bars(fig, source):
 
     for exp_cond, color in _cond_to_color_mapper(source).items():
         bools = [
@@ -68,8 +71,8 @@ def _add_bars(fig, source):
 
         fig_core = (fig, source, view)
 
-        lower_eb, upper_eb = add_error_bars(fig_core)
-        core_interval = add_core_interval(fig, exp_cond, color, fig_core)
+        lower_eb, upper_eb = add_error_bars(fig_core, core.get_error_bar)
+        core_interval = core.add_interval(fig, exp_cond, color, fig_core)
 
         core_interval.js_link('muted', lower_eb, 'muted')
         core_interval.js_link('muted', upper_eb, 'muted')
@@ -78,64 +81,47 @@ def _cond_to_color_mapper(source):
     colors = itertools.cycle(Colorblind8)
     return {exp_cond: color for exp_cond, color in zip(np.unique(source.data["exp_cond"]), colors)}
 
-def add_error_bars(fig_core):
+def add_error_bars(fig_core, _get_error_bar):
     upper_eb = _get_error_bar("upper_68_ci", "upper_95_ci", fig_core)
     lower_eb = _get_error_bar("lower_95_ci", "lower_68_ci", fig_core)
     
     return lower_eb, upper_eb
+
+
+def _add_sig_bars(fig, source):
+
+    for exp_cond, color in _cond_to_color_mapper(source).items():
+        bools = _get_bools_for_sig(source, exp_cond)
+        view = CDSView(source=source, filters=[BooleanFilter(bools)])
+
+        fig_core = (fig, source, view)
+
+        lower_eb, upper_eb = add_error_bars(fig_core, sig.get_error_bar)
+        sig_interval = sig.add_interval(fig, exp_cond, color, fig_core)
+
+        sig_interval.js_link('visible', lower_eb, 'visible')
+        sig_interval.js_link('visible', upper_eb, 'visible')
+        sig_interval.visible = False
+        lower_eb.visible = False
+        upper_eb.visible = False
+        sig_interval.tags = ["stat_sig"]
+
+def _get_bools_for_sig(source, exp_cond):
+    bools = []        
+    for p_value, filter_cond in zip(source.data['p_value'], source.data['exp_cond']):
+        if exp_cond == filter_cond and p_value <= 0.05:
+            bools.append(True)
+        else:
+            bools.append(False)
     
+    return bools
     
-def _get_error_bar(left_label, right_label, fig_core):
-    fig, source, view = fig_core
-    return fig.segment(
-        right_label,
-        "factor_label",
-        left_label,
-        "factor_label",
-        color="black",
-        muted_color="black",
-        muted_alpha=0.2,
-        source=source,
-        view=view,
-    )
-
-def add_core_interval(fig, exp_cond, color, fig_core, add_legend=True):
-    fig, source, view = fig_core
-    renderer = fig.hbar(
-        y='factor_label',
-        right="upper_68_ci",
-        left="lower_68_ci",
-        legend_label=exp_cond if add_legend else None,
-        fill_color=color,
-        line_color=None,
-        fill_alpha=0.8,
-        muted_color=color,
-        muted_alpha=0.2,
-        height=0.6,
-        source=source,
-        view=view,
-    )
-    # renderer.selection_glyph = HBar(
-    #     fill_color=color, 
-    #     line_color=None,
-    #     fill_alpha=0.8,
-    # )
-    # renderer.nonselection_glyph = HBar(
-    #     fill_color=color,
-    #     line_color=None,
-    #     fill_alpha=0.1,
-    # )
-    return renderer
-
-
-
 def _set_legend(fig):
-    fig.legend.click_policy="hide"
+    fig.legend.click_policy="mute"
     fig.add_layout(fig.legend[0], 'right')
 
 def _set_x_axis(fig, label):
     fig.xaxis.axis_label = label
-    # 'Relative difference from control (%)'
 
 def _set_y_axis(fig):
     fig.yaxis.major_label_text_alpha = 0.0
@@ -147,3 +133,5 @@ def _set_y_axis(fig):
     fig.yaxis.separator_line_alpha = 0
     fig.yaxis.minor_tick_line_color = "yellow"
     fig.ygrid.grid_line_color = None
+
+
