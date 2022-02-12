@@ -22,6 +22,12 @@ docker run -ti --rm                             \
     abauto
 ```
 
+To run the test suite from scratch:
+
+```bash
+clear && rm tests/cache/*.py && pytest -v tests/
+```
+
 ### Jupyter
 
 Useful for working on visualization stuff
@@ -30,6 +36,12 @@ Useful for working on visualization stuff
 docker run -p 8888:8888                    \
     -v ${PWD}:/home/jovyan/work            \
     jupyter/scipy-notebook:33add21fab64 
+```
+
+To pickle the analysis object used to build the jupyter visualz:
+
+```bash
+clear && pytest tests/test_get_analy.py --runbuild
 ```
 
 JupyterLab terminal:
