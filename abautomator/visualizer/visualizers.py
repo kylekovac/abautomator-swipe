@@ -11,8 +11,6 @@ class BasicVisualizer(Visualizer):
             ("N", "@{count}"),
         ]
 
-
-
 class AbsDiffVisualizer(StatSigVisualizer):
 
     def __init__(self, df):
