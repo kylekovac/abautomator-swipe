@@ -6,16 +6,14 @@ from abautomator.visualizer import core, sig, btn, utils, bars
 class Visualizer:
     """ Parent object. Not to be initiated directly """
 
-    def __init__(self, df, x_axis_label):
-        self.df = df
+    def __init__(self, source, x_axis_label):
+        self.source = source
         self.x_axis_label = x_axis_label
 
     def get_figure(self):
-        source = utils.convert_df_to_source(self.df)
-
-        fig = utils.init_fig(source, self._get_tool_tips())
+        fig = utils.init_fig(self.source, self._get_tool_tips())
         
-        bars.add_core_bars(fig, source)
+        bars.add_core_bars(fig, self.source)
 
         self._setup_fig(fig)
         
@@ -34,14 +32,17 @@ class Visualizer:
 class StatSigVisualizer(Visualizer):
 
     def get_figure(self):
-        source = utils.convert_df_to_source(self.df)
 
-        fig = utils.init_fig(source, self._get_tool_tips())
+        fig = utils.init_fig(self.source, self._get_tool_tips())
 
-        bars.add_core_bars(fig, source)
-        bars.add_sig_bars(fig, source)
+        bars.add_core_bars(fig, self.source)
+        bars.add_sig_bars(fig, self.source)
 
         self._setup_fig(fig)
+
+        return fig
+    
+    def get_layout(fig):
         
         return column(fig, btn.get_stat_sig_btn(fig.renderers))
 
