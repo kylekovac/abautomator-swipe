@@ -1,7 +1,7 @@
-from bokeh.models import Button, CustomJS
+from bokeh.models import Toggle, CustomJS
 
 def get_stat_sig_btn(renderers):
-    button = Button(label="Toggle Stat Sig", button_type="danger")
+    button = Toggle(label="Toggle Stat Sig", button_type="danger")
     callback = CustomJS(
         args=dict(glyphs=renderers),
         code="""

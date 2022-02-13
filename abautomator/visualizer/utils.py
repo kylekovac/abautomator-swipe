@@ -10,15 +10,21 @@ def convert_df_to_source(df):
 
 
 def _clean_analyzed_df(df):
-    df["metric"] = df["metric"].str.replace("_", " ")
-    df["metric"] = df["metric"].str.title()
-    df["metric"] = df["metric"].str.replace("Pct", "%")
-    df["factor_label"] = list(zip(df["metric"], df["exp_cond"]))
+    df["display_metric"] = df["metric"].str.replace("_", " ")
+    df["display_metric"] = df["display_metric"].str.title()
+    df["display_metric"] = df["display_metric"].str.replace("Pct", "%")
+    df["factor_label"] = list(zip(df["display_metric"], df["exp_cond"]))
     return df
 
-def init_fig(source: ColumnDataSource, tool_tips):
+def get_cleaned_metrics(metric_list):
+    return [
+        item.replace("_", " ").title().replace("Pct", "%")
+        for item in metric_list
+    ]
+
+def init_fig(cat_order, tool_tips):
     return figure(
-        y_range=FactorRange(*list(source.data["factor_label"])),
+        y_range=FactorRange(*cat_order),
         height=450,
         width=700,
         toolbar_location="right",
@@ -48,4 +54,4 @@ def set_y_axis(fig):
 
 def set_legend(fig):
     fig.legend.click_policy="mute"
-    fig.add_layout(fig.legend[0], 'right')
+    # fig.add_layout(fig.legend[0], 'right')
