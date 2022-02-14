@@ -36,7 +36,7 @@ def init_fig(cat_order, tool_tips):
     return figure(
         y_range=FactorRange(*cat_order),
         height=450,
-        width=700,
+        width=650,
         toolbar_location="right",
         tools=[BoxZoomTool(), ResetTool(), PanTool()],
         tooltips= tool_tips,
