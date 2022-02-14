@@ -1,6 +1,7 @@
-from bokeh.layouts import column
+import numpy as np
+from bokeh.layouts import column, row
 
-from abautomator.visualizer import core, sig, btn, utils, bars
+from abautomator.visualizer import widgets, utils, bars
 
 
 class Visualizer:
@@ -45,7 +46,27 @@ class StatSigVisualizer(Visualizer):
 
         return fig
     
-    def get_layout(fig):
-        
-        return column(fig, btn.get_stat_sig_btn(fig.renderers))
+    def get_layout(self):
 
+        fig = self.get_figure()
+
+        metric_options = utils.get_cleaned_metrics(np.unique(self.source.data["metric"]))
+        cond_options = list(np.unique(self.source.data["exp_cond"]))
+
+        metric_widget, cond_widget = widgets.get_multichoice_widgets(
+            fig.y_range, self.source, metric_options, cond_options
+        )
+
+        return row(
+            column( 
+                    fig,
+                ),
+                column(
+                    column(
+                        metric_widget,
+                        cond_widget,
+                        widgets.get_stat_sig_btn(fig.renderers),
+                        widgets.get_multichoice_reset_btn(metric_widget, cond_widget)
+                    ),
+                )
+            )
