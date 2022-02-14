@@ -6,7 +6,7 @@ from abautomator.visualizer import core, sig, btn, utils, bars
 class Visualizer:
     """ Parent object. Not to be initiated directly """
 
-    def __init__(self, x_axis_label, source):
+    def __init__(self, source, x_axis_label):
         self.source = source
         self.x_axis_label = x_axis_label
 

@@ -3,6 +3,16 @@ from bokeh.models import ColumnDataSource, FactorRange, Span
 from bokeh.models import BoxZoomTool, ResetTool, PanTool
 
 
+def order_categories(df, metric_order, cond_order):
+    metric_order_mapping = {item: i for i, item in enumerate(metric_order)}
+    cond_order_mapping = {item: i for i, item in enumerate(cond_order)}
+
+    df["metric_order"] = df['metric'].map(metric_order_mapping)
+    df["cond_order"] = df['exp_cond'].map(cond_order_mapping)
+    df = df.sort_values(by=['metric_order', 'cond_order'], ascending=(False, False))
+    
+    return df   
+
 def convert_df_to_source(df):
     df = df.copy()
     df = _clean_analyzed_df(df)
