@@ -8,17 +8,17 @@ from abautomator.visualizer import core, sig
 
 def add_core_bars(fig, source):
 
-    for exp_cond, color in _cond_to_color_mapper(source).items():
+    for cond_to_show, color in _cond_to_color_mapper(source).items():
         bools = [
-            True if exp_cond == filter_cond else False
-            for filter_cond in source.data['exp_cond']
+            True if cond_to_show == exp_cond else False
+            for exp_cond in source.data['exp_cond']
         ]
         view = CDSView(source=source, filters=[BooleanFilter(bools)])
 
         fig_core = (fig, source, view)
 
         lower_eb, upper_eb = add_error_bars(fig_core, core.get_error_bar)
-        core_interval = core.add_interval(fig, exp_cond, color, fig_core)
+        core_interval = core.add_interval(fig, cond_to_show, color, fig_core)
 
         core_interval.js_link('muted', lower_eb, 'muted')
         core_interval.js_link('muted', upper_eb, 'muted')

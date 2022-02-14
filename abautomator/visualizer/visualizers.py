@@ -2,8 +2,8 @@ from .parent import Visualizer, StatSigVisualizer
 
 class BasicVisualizer(Visualizer):
 
-    def __init__(self, df):
-        super().__init__(df, "Population Mean/Proportion (x̄/p̂)")
+    def __init__(self, source):
+        super().__init__(source, "Population Mean/Proportion (x̄/p̂)")
     
     def _get_tool_tips(self):
         return [
@@ -13,8 +13,8 @@ class BasicVisualizer(Visualizer):
 
 class AbsDiffVisualizer(StatSigVisualizer):
 
-    def __init__(self, df):
-        super().__init__(df, "Tx - Ctrl Population (Absolute Diff.)")
+    def __init__(self, source):
+        super().__init__(source, "Tx - Ctrl Population (Absolute Diff.)")
     
     def _get_tool_tips(self):
         return [
@@ -28,8 +28,8 @@ class AbsDiffVisualizer(StatSigVisualizer):
 
 class RelDiffVisualizer(StatSigVisualizer):
 
-    def __init__(self, df):
-        super().__init__(df, "Relative Diff. of Tx Pop vs Ctrl Pop (%)")
+    def __init__(self, source):
+        super().__init__(source, "Relative Diff. of Tx Pop vs Ctrl Pop (%)")
     
     def _get_tool_tips(self):
         return [
