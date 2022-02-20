@@ -25,7 +25,7 @@ docker run -ti --rm                             \
 To run the test suite from scratch:
 
 ```bash
-clear && rm tests/cache/*.py && pytest -v tests/
+rm tests/cache/*.p && clear && pytest -v tests/
 ```
 
 ### Jupyter
