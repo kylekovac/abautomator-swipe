@@ -15,7 +15,7 @@ A/B testing at the press of a button
 gcloud auth login
 gcloud auth application-default login
 
-docker build -t abauto .
+docker build -f Dockerfile.abautomator -t abauto .
 docker run -ti --rm                             \
     -v ${PWD}:/abautomator                       \
     -v=$HOME/.config/gcloud:/root/.config/gcloud  \
@@ -38,7 +38,7 @@ docker run -p 8888:8888                    \
     jupyter/scipy-notebook:33add21fab64 
 ```
 
-To pickle the analysis object used to build the jupyter visualz:
+To pickle the analysis object used to build the jupyter viz:
 
 ```bash
 clear && pytest tests/test_get_analy.py --runbuild
