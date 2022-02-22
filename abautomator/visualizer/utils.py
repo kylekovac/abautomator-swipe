@@ -1,6 +1,7 @@
 from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource, FactorRange, Span
-from bokeh.models import BoxZoomTool, ResetTool, PanTool
+from bokeh.models import BoxZoomTool, ResetTool, PanTool, WheelZoomTool, SaveTool
+import numpy as np
 
 
 def order_categories(df, metric_order, cond_order):
@@ -15,18 +16,28 @@ def order_categories(df, metric_order, cond_order):
 
 def convert_df_to_source(df):
     df = df.copy()
-    df = _clean_analyzed_df(df)
+    df = _transform_analyzed_df(df)
     return ColumnDataSource(df)
 
 
-def _clean_analyzed_df(df):
+def _transform_analyzed_df(df):
     df["display_metric"] = df["metric"].str.replace("_", " ")
     df["display_metric"] = df["display_metric"].str.title()
     df["display_metric"] = df["display_metric"].str.replace("Pct", "%")
     df["factor_label"] = list(zip(df["display_metric"], df["exp_cond"]))
     return df
 
-def get_cleaned_metrics(metric_list):
+def get_metric_options(full_metric_list: np.ndarray):
+    result = _get_ordered_metrics(full_metric_list)
+    return _get_cleaned_metrics(result)
+
+
+def _get_ordered_metrics(full_metric_list: np.ndarray):
+    _, indexes = np.unique(full_metric_list, return_index=True)
+    indexes.sort()
+    return full_metric_list[indexes[::-1]]
+
+def _get_cleaned_metrics(metric_list):
     return [
         item.replace("_", " ").title().replace("Pct", "%")
         for item in metric_list
@@ -38,7 +49,7 @@ def init_fig(cat_order, tool_tips):
         height=450,
         width=650,
         toolbar_location="right",
-        tools=[BoxZoomTool(), ResetTool(), PanTool()],
+        tools=[BoxZoomTool(), WheelZoomTool(), PanTool(), ResetTool(), SaveTool()],
         tooltips= tool_tips,
     )
 

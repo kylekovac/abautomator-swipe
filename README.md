@@ -8,14 +8,14 @@ A/B testing at the press of a button
 
 ## Setup
 
-### Local Development 
+### Local Backend Development 
 
 ```bash
-# Should only keep to run these gcloud commands once
+# Should only need to run these gcloud commands once
 gcloud auth login
 gcloud auth application-default login
 
-docker build -t abauto .
+docker build -f Dockerfile.abautomator -t abauto .
 docker run -ti --rm                             \
     -v ${PWD}:/abautomator                       \
     -v=$HOME/.config/gcloud:/root/.config/gcloud  \
@@ -25,7 +25,18 @@ docker run -ti --rm                             \
 To run the test suite from scratch:
 
 ```bash
-clear && rm tests/cache/*.py && pytest -v tests/
+rm tests/cache/*.p && clear && pytest -v tests/
+```
+
+### Local web development
+
+```bash
+docker build -f Dockerfile.app -t app .
+docker run -p 8000:5000                 \
+    -v ${PWD}:/abautomator                       \
+    -v=$HOME/.config/gcloud:/root/.config/gcloud  \
+    -e FLASK_ENV=development                       \
+    app
 ```
 
 ### Jupyter
@@ -38,7 +49,7 @@ docker run -p 8888:8888                    \
     jupyter/scipy-notebook:33add21fab64 
 ```
 
-To pickle the analysis object used to build the jupyter visualz:
+To pickle the analysis object used to build the jupyter viz:
 
 ```bash
 clear && pytest tests/test_get_analy.py --runbuild

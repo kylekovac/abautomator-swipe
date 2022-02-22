@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block body_content %}
+  <div class="row mb-4 justify-content-center">
+    <div class="col-10">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          {% if url_for(request.endpoint) == '/relative' %}
+          <a class="nav-link active" aria-current="page">Relative</a>
+          {% else %}
+          <a class="nav-link" href="{{ url_for('relative') }}">Relative</a>
+          {% endif %}
+        </li>
+        <li class="nav-item">
+          {% if url_for(request.endpoint) == '/absolute' %}
+          <a class="nav-link active" aria-current="page">Absolute</a>
+          {% else %}
+          <a class="nav-link" href="{{ url_for('absolute') }}">Absolute</a>
+          {% endif %}
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Base</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-10">
+      {{ bokeh_div|safe }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {{ bokeh_script|safe }}        
+  <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.2.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.2.min.js" crossorigin="anonymous"></script>
+{% endblock %}

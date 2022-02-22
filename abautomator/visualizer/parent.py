@@ -50,7 +50,7 @@ class StatSigVisualizer(Visualizer):
 
         fig = self.get_figure()
 
-        metric_options = utils.get_cleaned_metrics(np.unique(self.source.data["metric"]))
+        metric_options = utils.get_metric_options(self.source.data["metric"])
         cond_options = list(np.unique(self.source.data["exp_cond"]))
 
         metric_widget, cond_widget = widgets.get_multichoice_widgets(
@@ -58,15 +58,11 @@ class StatSigVisualizer(Visualizer):
         )
 
         return row(
-            column( 
-                    fig,
-                ),
-                column(
-                    column(
-                        metric_widget,
-                        cond_widget,
-                        widgets.get_stat_sig_btn(fig.renderers),
-                        widgets.get_multichoice_reset_btn(metric_widget, cond_widget)
-                    ),
-                )
-            )
+            fig,
+            column(
+                metric_widget,
+                cond_widget,
+                widgets.get_stat_sig_btn(fig.renderers),
+                widgets.get_multichoice_reset_btn(metric_widget, cond_widget)
+            ),
+        )
