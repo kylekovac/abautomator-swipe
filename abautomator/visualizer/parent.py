@@ -58,15 +58,11 @@ class StatSigVisualizer(Visualizer):
         )
 
         return row(
-            column( 
-                    fig,
-                ),
-                column(
-                    column(
-                        metric_widget,
-                        cond_widget,
-                        widgets.get_stat_sig_btn(fig.renderers),
-                        widgets.get_multichoice_reset_btn(metric_widget, cond_widget)
-                    ),
-                )
-            )
+            fig,
+            column(
+                metric_widget,
+                cond_widget,
+                widgets.get_stat_sig_btn(fig.renderers),
+                widgets.get_multichoice_reset_btn(metric_widget, cond_widget)
+            ),
+        )

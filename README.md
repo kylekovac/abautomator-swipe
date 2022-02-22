@@ -32,7 +32,7 @@ rm tests/cache/*.p && clear && pytest -v tests/
 
 ```bash
 docker build -f Dockerfile.app -t app .
-docker run -d -p 8000:5000                 \
+docker run -p 8000:5000                 \
     -v ${PWD}:/abautomator                       \
     -v=$HOME/.config/gcloud:/root/.config/gcloud  \
     -e FLASK_ENV=development                       \
