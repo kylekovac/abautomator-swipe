@@ -8,10 +8,10 @@ A/B testing at the press of a button
 
 ## Setup
 
-### Local Development 
+### Local Backend Development 
 
 ```bash
-# Should only keep to run these gcloud commands once
+# Should only need to run these gcloud commands once
 gcloud auth login
 gcloud auth application-default login
 
@@ -26,6 +26,17 @@ To run the test suite from scratch:
 
 ```bash
 rm tests/cache/*.p && clear && pytest -v tests/
+```
+
+### Local web development
+
+```bash
+docker build -f Dockerfile.app -t app .
+docker run -d --rm -p 8000:5000                 \
+    -v ${PWD}:/abautomator                       \
+    -v=$HOME/.config/gcloud:/root/.config/gcloud  \
+    -e FLASK_ENV=development                       \
+    app
 ```
 
 ### Jupyter

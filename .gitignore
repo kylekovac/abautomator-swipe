@@ -1,6 +1,8 @@
 # Cached test files
 tests/*.p
 
+.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
