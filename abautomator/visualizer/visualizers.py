@@ -9,7 +9,7 @@ class BasicVisualizer(Visualizer):
         return [
             ("x̄", "@{mean}±@{std}"),
             ("N", "@{count}"),
-        ]
+        ]   
 
 class AbsDiffVisualizer(StatSigVisualizer):
 
@@ -29,7 +29,7 @@ class AbsDiffVisualizer(StatSigVisualizer):
 class RelDiffVisualizer(StatSigVisualizer):
 
     def __init__(self, source):
-        super().__init__(source, "Relative Diff. of Tx Pop vs Ctrl Pop (%)")
+        super().__init__(source, "Relative Difference of Tx vs Ctrl Population (%)")
     
     def _get_tool_tips(self):
         return [

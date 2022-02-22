@@ -1,6 +1,6 @@
 from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource, FactorRange, Span
-from bokeh.models import BoxZoomTool, ResetTool, PanTool
+from bokeh.models import BoxZoomTool, ResetTool, PanTool, SaveTool
 import numpy as np
 
 
@@ -49,7 +49,7 @@ def init_fig(cat_order, tool_tips):
         height=450,
         width=650,
         toolbar_location="right",
-        tools=[BoxZoomTool(), ResetTool(), PanTool()],
+        tools=[BoxZoomTool(), ResetTool(), PanTool(), SaveTool()],
         tooltips= tool_tips,
     )
 
