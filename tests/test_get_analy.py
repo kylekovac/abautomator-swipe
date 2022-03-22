@@ -14,6 +14,8 @@ def rollback_exp():
             metrics.ExpMetric("entered_phone", "pct"),
             metrics.ExpMetric("granted_contacts", "pct")
         ],
+        event="segment_signup_flow_started",
+        event_prop="context_traits_onboarding_flow_001",
         dt_range=DateRange(date(2022, 1, 10), date(2022, 1, 15)),
     )
 

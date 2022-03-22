@@ -16,8 +16,12 @@ class Experiment:
     ctrl_name: str
     tx_names: List[str]
     metrics: List[metrics.ExpMetric]
+    event: str
+    event_prop: str
     dt_range: utils.DateRange
     name: str=None
+    custom_users_query: str=None
+
 
     def __post_init__(self):
         if not self.name:
@@ -55,9 +59,10 @@ class Experiment:
             engine=create_engine(f'bigquery://{config.GCP_PROJECT_ID}'),
             conds=self._get_conds(),
             metrics=self._convert_exp_metrics_to_base_metrics(),
-            event="segment_signup_flow_started",
-            event_prop="context_traits_onboarding_flow_001",
+            event=self.event,
+            event_prop=self.event_prop,
             dt_range=self.dt_range,
+            custom_users_query=self.custom_users_query,
         )
 
     def _get_conds(self) -> List[str]:
@@ -69,9 +74,3 @@ class Experiment:
         return [
             metrics.METRIC_LOOKUP[name] for name in metric_name_set
         ]
-
-def get_metrics():
-    return [
-        metrics.METRIC_LOOKUP["granted_location"],
-        metrics.METRIC_LOOKUP["granted_notifs"],
-    ]

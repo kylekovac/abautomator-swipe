@@ -19,8 +19,9 @@ class Collector:
     event: str                        # table/thing user does to become exp participant
     event_prop: str                   # table col with exp_cond info
     dt_range: utils.DateRange
+    custom_users_query: str=None
     users_df: pd.DataFrame=None
-    devices: List[str]=field(default_factory=lambda: ['android', 'ios'])
+
 
     def collect_data(self):
         with self.engine.connect() as conn:
@@ -30,7 +31,7 @@ class Collector:
     def _populate_users_df(self, conn):
         if self.users_df is None:
             self.users_df = utils.get_df_from_query(
-                self._get_users_query(), conn,
+                self.custom_users_query or self._get_users_query(), conn,
             )
 
     def _get_users_query(self):
