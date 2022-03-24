@@ -29,5 +29,5 @@ class PushDrivenSessionsMetric(AllSessionsMetric):
     def add_where_clause(self, query: Selectable, table: Table, dt_range: utils.DateRange):
         query = utils.add_time_frame(query, table, dt_range)
         return query.where(
-            table.c.is_push_driven == False
+            table.c.is_push_driven == True
         )

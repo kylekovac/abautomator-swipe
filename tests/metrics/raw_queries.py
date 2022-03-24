@@ -27,6 +27,24 @@ RAW_QUERIES = {
       event_date >= '{start_dt}'
     GROUP BY 1""",
 
+    "organic_sessions": """SELECT
+      echelon_user_id
+    FROM
+      echelon.fct_user_sessions
+    WHERE
+      event_date >= '{start_dt}'
+      and not is_push_driven
+    GROUP BY 1""",
+
+    "push_driven_sessions": """SELECT
+      echelon_user_id
+    FROM
+      echelon.fct_user_sessions
+    WHERE
+      event_date >= '{start_dt}'
+      and is_push_driven
+    GROUP BY 1""",
+
     "incident_views": """SELECT
       echelon_user_id
     FROM
