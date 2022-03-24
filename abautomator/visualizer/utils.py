@@ -70,9 +70,10 @@ def set_x_axis(fig, label, col_data_source):
     fig.xaxis.axis_label = label
     l_limit, r_limit = min(col_data_source.data["lower_95_ci"]), max(col_data_source.data["upper_95_ci"])
     span = r_limit - l_limit
+    margin = span * 0.1
     fig.x_range = Range1d(
-        min(0, l_limit),
-        max(0, r_limit)
+        min(0, l_limit) - margin,
+        max(0, r_limit) + margin,
     )
 
 def set_y_axis(fig):
