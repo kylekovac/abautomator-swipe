@@ -19,7 +19,7 @@ RAW_QUERIES = {
         and general_type = 'Incident Shares'
     GROUP BY 1""",
 
-    "user_sessions": """SELECT
+    "all_sessions": """SELECT
       echelon_user_id
     FROM
       echelon.fct_user_sessions

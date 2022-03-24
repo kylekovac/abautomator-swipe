@@ -33,9 +33,9 @@ def _get_metrics_to_test(name):
 def test_get_metric_df(coll, conn, name):
 
     for metric in _get_metrics_to_test(name):
-        metric_df = metric._get_metric_df(coll, conn)
+        metric_df = metric._get_metric_df(coll.engine, conn, coll.dt_range)
         utils.cache_obj(metric_df, name)  # speed up test_get_user_metric_df
-        old_df = _get_metric_df_from_old_query(metric, conn, coll.start_dt)
+        old_df = _get_metric_df_from_old_query(metric, conn, coll.dt_range.start)
         col_names = list(metric_df.columns)
         
         assert len(metric_df) > 10

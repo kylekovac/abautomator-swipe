@@ -11,7 +11,9 @@ METRIC_LOOKUP = {
     "friend_invites": friend_invites.FriendInvitesMetric(),
     "incident_shares": incident_shares.IncidentSharesMetric(),
     "incident_views": incident_views.IncidentViewsMetric(),
-    "user_sessions": user_sessions.UserSessionsMetric(),
+    "all_sessions": user_sessions.AllSessionsMetric(),
+    "organic_sessions": user_sessions.OrganicSessionsMetric(),
+    "push_driven_sessions": user_sessions.PushDrivenSessionsMetric(),
 
     # protect
     "protect_cancellations" : protect_cancellations.ProtectCancellationsMetric(),

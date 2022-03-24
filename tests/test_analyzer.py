@@ -24,8 +24,8 @@ def test_consolidate_descriptions(analy):
 
     assert "Control" in result["exp_cond"].unique()
     assert "Video01" in result["exp_cond"].unique()
-    assert "n_user_sessions" in result["metric"].unique()
-    assert "pct_user_sessions" in result["metric"].unique()
+    assert "n_all_sessions" in result["metric"].unique()
+    assert "pct_all_sessions" in result["metric"].unique()
     assert "mean" in list(result.columns)
     assert "std" in list(result.columns)
     assert "count" in list(result.columns)

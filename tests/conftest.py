@@ -74,7 +74,7 @@ def gen_metric(incident_views_metric):
 
 @pytest.fixture
 def sessions_metric():
-    return METRIC_LOOKUP["user_sessions"]
+    return METRIC_LOOKUP["all_sessions"]
 
 @pytest.fixture
 def friend_invite_metric():
