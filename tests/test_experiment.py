@@ -31,6 +31,8 @@ def exp(tx_names, exp_metrics):
         ctrl_name="Dec1021InspirationMomentFinalControl",
         tx_names=tx_names,
         metrics=exp_metrics,
+        event="segment_signup_flow_started",
+        event_prop="context_traits_onboarding_flow_001",
         dt_range=DateRange(utils.get_yesterday()),
     )
 
