@@ -10,7 +10,7 @@ RAW_QUERIES = {
         and general_type = 'Invite'
     GROUP BY 1""",
 
-    "incident_shares": """SELECT
+    "incident_share_completes": """SELECT
         echelon_user_id
     FROM
         echelon.fct_share_completes_installs

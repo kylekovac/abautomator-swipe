@@ -49,7 +49,7 @@ def test_get_homescreen_one_anal(engine):
             'iOSHomescreenTx02092022',
         ],
         metrics=[
-            metrics.METRIC_LOOKUP["incident_shares"],
+            metrics.METRIC_LOOKUP["incident_share_completes"],
             metrics.METRIC_LOOKUP["incident_views"],
             metrics.METRIC_LOOKUP["all_sessions"],
             metrics.METRIC_LOOKUP["organic_sessions"],

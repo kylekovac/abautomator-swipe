@@ -6,8 +6,8 @@ from abautomator.metrics import BaseMetric
 from abautomator import utils
 
 @dataclass
-class IncidentSharesMetric(BaseMetric):
-    name: str = "incident_shares"
+class IncidentShareCompletesMetric(BaseMetric):
+    name: str = "incident_share_completes"
     table_name: str = "fct_share_completes_installs"
     table_col: str = "id"
 
