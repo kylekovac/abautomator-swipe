@@ -19,6 +19,17 @@ RAW_QUERIES = {
         and general_type = 'Incident Shares'
     GROUP BY 1""",
 
+    "incident_share_attempts": """SELECT
+        echelon_user_id
+    FROM
+        echelon.fct_share_attempts
+    WHERE
+        event_date >= '{start_dt}'
+        AND (
+          general_type = 'Screenshot' OR general_type LIKE '%Shared Button%'
+        )
+    GROUP BY 1""",
+
     "all_sessions": """SELECT
       echelon_user_id
     FROM
