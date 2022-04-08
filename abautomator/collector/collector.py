@@ -48,7 +48,7 @@ class Collector:
         )
         # Ommitting first_event_datetime for now
 
-        result = utils.add_time_frame(result, table, self.dt_range)
+        result = utils.add_inclusive_time_frame(result, table, self.dt_range)
         return result
     
     def _populate_metric_data_dfs(self, conn):

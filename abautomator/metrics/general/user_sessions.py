@@ -17,7 +17,7 @@ class OrganicSessionsMetric(AllSessionsMetric):
     name: str = "organic_sessions"
 
     def add_where_clause(self, query: Selectable, table: Table, dt_range: utils.DateRange):
-        query = utils.add_time_frame(query, table, dt_range)
+        query = utils.add_inclusive_time_frame(query, table, dt_range)
         return query.where(
             table.c.is_push_driven == False
         )
@@ -27,7 +27,7 @@ class PushDrivenSessionsMetric(AllSessionsMetric):
     name: str = "push_driven_sessions"
 
     def add_where_clause(self, query: Selectable, table: Table, dt_range: utils.DateRange):
-        query = utils.add_time_frame(query, table, dt_range)
+        query = utils.add_inclusive_time_frame(query, table, dt_range)
         return query.where(
             table.c.is_push_driven == True
         )
