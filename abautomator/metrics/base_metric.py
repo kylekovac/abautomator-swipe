@@ -8,16 +8,25 @@ from abautomator import utils
 # from abautomator.metrics import metric_lookup
 
 @dataclass
-class BaseMetric:
+class MetricInfo:
     name: str                            # Human-readable name
     table_name: str                      # Where event that the metric is to be derived from lives
     table_col: str                       # Where event that the metric is to be derived from lives
+
+@dataclass
+class BaseMetric(MetricInfo):
     user_metric_df: pd.DataFrame = None  # To be populated. Per user exp_cond + metric quantity data
 
     def __post_init__(self):
-        self.n_label = f"n_{self.name.lower().replace(' ', '_')}"
-        self.pct_label = f"pct_{self.name.lower().replace(' ', '_')}"
+        self.n_label = f"n_{self._cleaned_name()}"
+        self.pct_label = f"pct_{self._cleaned_name()}"
         # assert self.name in metric_lookup.METRIC_LOOKUP.keys(), "Invalid Metric"
+    
+    def _cleaned_name(self):
+        return self._clean(self.name)
+    
+    def _clean(self, str_):
+         return str_.lower().replace(' ', '_')
     
     def populate_user_metric_df(self, coll, conn):
         metric_df = self._get_metric_df(coll.engine, conn, coll.dt_range)
@@ -29,7 +38,11 @@ class BaseMetric:
         )
 
     def _get_metric_query(self, engine, dt_range):
-        table = Table(f'echelon.{self.table_name}', MetaData(bind=engine), autoload=True)
+        table = Table(
+            f'echelon.{self.table_name}',
+            MetaData(bind=engine),
+            autoload=True,
+        )
 
         result = select(
             table.c.echelon_user_id,
@@ -65,3 +78,23 @@ def _fill_nan_metrics_with_zeros(df):
     if col not in ["echelon_user_id", "exp_cond"]:
       df[col] = df[col].fillna(0)
   return df
+
+@dataclass
+class SegMetric(BaseMetric):
+    segment_col: str = None
+    segment_value: str = None
+    
+    def _cleaned_name(self, str_):
+        return "_".join(
+            [
+                self._clean(self.name),
+                self._clean(self.segment_col),
+                self._clean(self.segment_value)
+            ]
+        )
+
+    def add_where_clause(self, query, table, dt_range):
+        query = query.where(
+            getattr(table.c, self.segment_col) == self.segment_value
+        )
+        return utils.add_inclusive_time_frame(query, table, dt_range)

@@ -6,7 +6,7 @@ from abautomator import utils
 
 
 def get_yesterday():    
-    return date.today() - timedelta(days=2)
+    return date.today() - timedelta(days=3)
 
 def df_from_cache(file_name, query, conn):
     try:

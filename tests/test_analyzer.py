@@ -11,10 +11,12 @@ def outcomes(cleaned_desc):
 
 @pytest.fixture
 def analy(outcomes):
+    print(outcomes)
     return analyzer.Analyzer(
         outcomes=outcomes,
         ctrl_name="Control"
     )
+)
 
 
 def test_consolidate_descriptions(analy):
