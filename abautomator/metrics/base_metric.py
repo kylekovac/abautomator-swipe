@@ -83,15 +83,7 @@ def _fill_nan_metrics_with_zeros(df):
 class SegMetric(BaseMetric):
     segment_col: str = None
     segment_value: str = None
-    
-    def _cleaned_name(self, str_):
-        return "_".join(
-            [
-                self._clean(self.name),
-                self._clean(self.segment_col),
-                self._clean(self.segment_value)
-            ]
-        )
+
 
     def add_where_clause(self, query, table, dt_range):
         query = query.where(

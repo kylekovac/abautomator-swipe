@@ -23,7 +23,7 @@ class Collector:
     users_df: pd.DataFrame=None
 
 
-    def collect_data(self):
+    def collect_data(self) -> None:
         with self.engine.connect() as conn:
             self._populate_users_df(conn)
             self._populate_metric_data_dfs(conn)

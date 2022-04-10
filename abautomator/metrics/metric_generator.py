@@ -64,13 +64,26 @@ class SegMetricGenerator:
     def __post_init__(self):
         self.segment_getter = SegmentGetter(self.segment_info.table_name, self.segment_info.segment_col)
 
-
     def generate(self):
         result = []
         for segment in self.segment_getter.get_segments(self.engine, self.conn, self.dt_range):
-            result.append(segment)
+
+            print(self._get_seg_full_name(segment))
+
+            result.append(
+                metrics.SegMetric(
+                    name=self._get_seg_full_name(segment),
+                    table_name=self.segment_info.table_name,
+                    table_col=self.segment_info.table_col,
+                    segment_col=self.segment_info.segment_col,
+                    segment_value=segment
+                )
+            )
         
         return result
+    
+    def _get_seg_full_name(self, segment):
+        return f"{self.segment_info.name}\n({segment})"
     
     def get_segments(self, segmented_metric):
         pass
