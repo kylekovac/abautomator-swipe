@@ -40,6 +40,7 @@ class SegmentGetter():
         result_df =  utils.get_df_from_query(
             self._get_segment_query(engine, dt_range), conn
         )
+        print(result_df)
         result_df = result_df[result_df["count"] > 300]  # TODO make logic less arbitrary
 
         return result_df[self.segment_col].tolist()
@@ -67,9 +68,6 @@ class SegMetricGenerator:
     def generate(self):
         result = []
         for segment in self.segment_getter.get_segments(self.engine, self.conn, self.dt_range):
-
-            print(self._get_seg_full_name(segment))
-
             result.append(
                 metrics.SegMetric(
                     name=self._get_seg_full_name(segment),

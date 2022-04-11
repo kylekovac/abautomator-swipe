@@ -16,7 +16,6 @@ def analy(outcomes):
         outcomes=outcomes,
         ctrl_name="Control"
     )
-)
 
 
 def test_consolidate_descriptions(analy):
