@@ -14,7 +14,7 @@ def analy(outcomes):
     print(outcomes)
     return analyzer.Analyzer(
         outcomes=outcomes,
-        ctrl_name="Control"
+        ctrl_name="Control" 
     )
 
 
