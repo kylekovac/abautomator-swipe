@@ -20,7 +20,7 @@ def test_populate_user_metric_df(sessions_metric, coll_w_users_df, conn):
     assert len(result_df) > 10
     assert len(result_df.columns) > len(coll_w_users_df.users_df.columns)
     assert "exp_cond" in list(result_df.columns)
-    assert "n_user_sessions" in list(result_df.columns)
+    assert "n_all_sessions" in list(result_df.columns)
 
 
 def test_populate_user_metric_df_counts(sessions_metric, dfs,  old_result):
@@ -48,7 +48,7 @@ def _get_old_result(conn, sessions_query, users_query):
     user_metrics_query = select(
         users_cte.c.echelon_user_id,
         users_cte.c.exp_cond,
-        session_metric_cte.c.n_user_sessions,
+        session_metric_cte.c.n_all_sessions,
         ).select_from(
             users_cte.join(session_metric_cte, users_cte.c.echelon_user_id == session_metric_cte.c.echelon_user_id, isouter=True)
     )

@@ -10,7 +10,7 @@ def test_get_metric_data(desc):
     result_df = desc.metrics[0].user_metric_df
     assert len(result_df) > 10
     assert "exp_cond" in list(result_df.columns)
-    assert "n_user_sessions" in list(result_df.columns)
+    assert "n_all_sessions" in list(result_df.columns)
 
 
 def test_when_users_metric_df_is_none(gen_metric):
@@ -51,8 +51,8 @@ def test_generate_outcome_desc(cleaned_desc):
     assert "Control" in cleaned_desc.metrics[0].user_metric_df["exp_cond"].unique()
     result = cleaned_desc._generate_outcome_desc()
 
-    outcome_df = result["user_sessions"]["Control"]
+    outcome_df = result["all_sessions"]["Control"]
 
     assert isinstance(outcome_df, pd.DataFrame)
     assert "mean" in list(outcome_df.index)
-    assert "n_user_sessions" in outcome_df.columns
+    assert "n_all_sessions" in outcome_df.columns

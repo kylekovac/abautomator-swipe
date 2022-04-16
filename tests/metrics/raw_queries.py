@@ -10,7 +10,7 @@ RAW_QUERIES = {
         and general_type = 'Invite'
     GROUP BY 1""",
 
-    "incident_shares": """SELECT
+    "incident_share_completes": """SELECT
         echelon_user_id
     FROM
         echelon.fct_share_completes_installs
@@ -19,12 +19,41 @@ RAW_QUERIES = {
         and general_type = 'Incident Shares'
     GROUP BY 1""",
 
-    "user_sessions": """SELECT
+    "incident_share_attempts": """SELECT
+        echelon_user_id
+    FROM
+        echelon.fct_share_attempts
+    WHERE
+        event_date >= '{start_dt}'
+        AND (
+          general_type = 'Screenshot' OR general_type LIKE '%Shared Button%'
+        )
+    GROUP BY 1""",
+
+    "all_sessions": """SELECT
       echelon_user_id
     FROM
       echelon.fct_user_sessions
     WHERE
       event_date >= '{start_dt}'
+    GROUP BY 1""",
+
+    "organic_sessions": """SELECT
+      echelon_user_id
+    FROM
+      echelon.fct_user_sessions
+    WHERE
+      event_date >= '{start_dt}'
+      and not is_push_driven
+    GROUP BY 1""",
+
+    "push_driven_sessions": """SELECT
+      echelon_user_id
+    FROM
+      echelon.fct_user_sessions
+    WHERE
+      event_date >= '{start_dt}'
+      and is_push_driven
     GROUP BY 1""",
 
     "incident_views": """SELECT

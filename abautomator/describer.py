@@ -9,7 +9,7 @@ class InvalidColumns(Exception):
 
 @dataclass
 class Describer:
-    metrics: List[BaseMetric]  # w/self.ser_metric_df populated by collector
+    metrics: List[BaseMetric]  # w/self.user_metric_df populated by collector
 
     def __post_init__(self):
         self._check_metrics_for_col("exp_cond")
@@ -25,7 +25,7 @@ class Describer:
 
     def _raise_error_if_metric_cols_missing(self, metric, col_name):
         if col_name not in self._get_cols(metric.user_metric_df):
-            raise InvalidColumns(f"{col_name} not present")
+            raise InvalidColumns(f"{col_name} not present for metric {metric}")
     
     def _get_cols(self, df):
         return list(self.metrics[0].user_metric_df)
@@ -44,6 +44,7 @@ class Describer:
         raise InvalidColumns(f"Prefix {prefix} not present")
     
     def describe_data(self, exp_name):
+        # exp_name is to be removed from cond_strs
         assert isinstance(exp_name, str), "exp_name must be a str"
         self._clean_data_dfs(exp_name)
         return self._generate_outcome_desc()

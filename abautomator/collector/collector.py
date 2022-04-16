@@ -19,10 +19,11 @@ class Collector:
     event: str                        # table/thing user does to become exp participant
     event_prop: str                   # table col with exp_cond info
     dt_range: utils.DateRange
+    custom_users_query: str=None
     users_df: pd.DataFrame=None
-    devices: List[str]=field(default_factory=lambda: ['android', 'ios'])
 
-    def collect_data(self):
+
+    def collect_data(self) -> None:
         with self.engine.connect() as conn:
             self._populate_users_df(conn)
             self._populate_metric_data_dfs(conn)
@@ -30,7 +31,7 @@ class Collector:
     def _populate_users_df(self, conn):
         if self.users_df is None:
             self.users_df = utils.get_df_from_query(
-                self._get_users_query(), conn,
+                self.custom_users_query or self._get_users_query(), conn,
             )
 
     def _get_users_query(self):
@@ -47,7 +48,7 @@ class Collector:
         )
         # Ommitting first_event_datetime for now
 
-        result = utils.add_time_frame(result, table, self.dt_range)
+        result = utils.add_inclusive_time_frame(result, table, self.dt_range)
         return result
     
     def _populate_metric_data_dfs(self, conn):

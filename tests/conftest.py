@@ -31,7 +31,7 @@ def coll(engine, cond_strs, sessions_metric):
         metrics=[sessions_metric],
         event="segment_signup_flow_started",
         event_prop="context_traits_onboarding_flow_001",
-        dt_range=DateRange(utils.get_yesterday()),
+        dt_range=DateRange(utils.get_date_n_days_ago(3)),
     )
 
 @pytest.fixture
@@ -74,7 +74,7 @@ def gen_metric(incident_views_metric):
 
 @pytest.fixture
 def sessions_metric():
-    return METRIC_LOOKUP["user_sessions"]
+    return METRIC_LOOKUP["all_sessions"]
 
 @pytest.fixture
 def friend_invite_metric():

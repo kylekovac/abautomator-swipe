@@ -1,5 +1,5 @@
 from bokeh.plotting import figure
-from bokeh.models import ColumnDataSource, FactorRange, Span
+from bokeh.models import ColumnDataSource, FactorRange, Span, Range1d
 from bokeh.models import BoxZoomTool, ResetTool, PanTool, WheelZoomTool, SaveTool
 import numpy as np
 
@@ -12,7 +12,12 @@ def order_categories(df, metric_order, cond_order):
     df["cond_order"] = df['exp_cond'].map(cond_order_mapping)
     df = df.sort_values(by=['metric_order', 'cond_order'], ascending=(False, False))
     
-    return df   
+    return df
+
+
+def remove_categories_w_no_order(df):
+    return df.dropna(subset=['metric_order', 'cond_order'])
+
 
 def convert_df_to_source(df):
     df = df.copy()
@@ -26,6 +31,7 @@ def _transform_analyzed_df(df):
     df["display_metric"] = df["display_metric"].str.replace("Pct", "%")
     df["factor_label"] = list(zip(df["display_metric"], df["exp_cond"]))
     return df
+
 
 def get_metric_options(full_metric_list: np.ndarray):
     result = _get_ordered_metrics(full_metric_list)
@@ -50,7 +56,7 @@ def init_fig(cat_order, tool_tips):
         width=650,
         toolbar_location="right",
         tools=[BoxZoomTool(), WheelZoomTool(), PanTool(), ResetTool(), SaveTool()],
-        tooltips= tool_tips,
+        tooltips=tool_tips,
     )
 
 def add_zero_span(fig):
@@ -59,8 +65,16 @@ def add_zero_span(fig):
     )
     fig.add_layout(zero_span)
 
-def set_x_axis(fig, label):
+def set_x_axis(fig, label, col_data_source):
     fig.xaxis.axis_label = label
+    fig.xaxis.axis_label = label
+    l_limit, r_limit = min(col_data_source.data["lower_95_ci"]), max(col_data_source.data["upper_95_ci"])
+    span = r_limit - l_limit
+    margin = span * 0.1
+    fig.x_range = Range1d(
+        min(0, l_limit) - margin,
+        max(0, r_limit) + margin,
+    )
 
 def set_y_axis(fig):
     fig.yaxis.major_label_text_alpha = 0.0

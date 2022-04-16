@@ -26,6 +26,7 @@ class Analyzer:
                         "mean": desc_df[n_or_pct_metric]["mean"],
                         "std": desc_df[n_or_pct_metric]["std"],
                         "count": desc_df[n_or_pct_metric]["count"],
+                        # "quant": desc_df[n_or_pct_metric]["mean"] * desc_df[n_or_pct_metric]["count"],
                     }
                     raw_data.append(curr_row)
 

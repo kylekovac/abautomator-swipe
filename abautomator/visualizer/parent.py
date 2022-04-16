@@ -26,7 +26,7 @@ class Visualizer:
     def _setup_fig(self, fig):
         utils.add_zero_span(fig)
         utils.set_legend(fig)
-        utils.set_x_axis(fig, self.x_axis_label)
+        utils.set_x_axis(fig, self.x_axis_label, self.source)
         utils.set_y_axis(fig)
     
     def _get_tool_tips(self):

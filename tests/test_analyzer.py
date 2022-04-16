@@ -13,7 +13,7 @@ def outcomes(cleaned_desc):
 def analy(outcomes):
     return analyzer.Analyzer(
         outcomes=outcomes,
-        ctrl_name="Control"
+        ctrl_name="Control" 
     )
 
 
@@ -24,13 +24,11 @@ def test_consolidate_descriptions(analy):
 
     assert "Control" in result["exp_cond"].unique()
     assert "Video01" in result["exp_cond"].unique()
-    assert "n_user_sessions" in result["metric"].unique()
-    assert "pct_user_sessions" in result["metric"].unique()
+    assert "n_all_sessions" in result["metric"].unique()
+    assert "pct_all_sessions" in result["metric"].unique()
     assert "mean" in list(result.columns)
     assert "std" in list(result.columns)
     assert "count" in list(result.columns)
-
-    print(result.head())
 
 
 def test_get_basic_confidence_intervals(analy):
@@ -38,8 +36,6 @@ def test_get_basic_confidence_intervals(analy):
 
     assert "upper_68_ci" in list(result.columns)
     assert "lower_95_ci" in list(result.columns)
-
-    print(result.head())
 
     utils.cache_obj(result, "basic_ci")
 
@@ -55,9 +51,6 @@ def test_get_abs_diff_confidence_intervals(analy):
 
 def test_get_rel_diff_confidence_intervals(analy):
     result = analy.get_rel_diff_confidence_intervals()
-
-    print(result)
-    print(result.columns)
 
     assert "abs_mean" in list(result.columns)
     assert "mean" in list(result.columns)

@@ -26,7 +26,7 @@ def get_multichoice_widgets(y_range, source, metric_options, cond_options):
 
 
 def get_multichoice_reset_btn(metric_widget, cond_widget):
-    button = Button(label="Rest Metrics/Conditions", button_type="success")
+    button = Button(label="Reset Metrics/Conditions", button_type="success")
     callback = CustomJS(
         args=dict(metricWidget=metric_widget, condWidget=cond_widget),
         code="""
