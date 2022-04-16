@@ -22,7 +22,7 @@ def add_inclusive_time_frame(query: Selectable, table: Table, dt_range: DateRang
 
 def get_df_from_query(query, conn):
     result = pd.read_sql(query, conn)
-    if 'echelon_user_id' in result.columns:
+    if 'echelon_user_id' in result.columns:  # Not present in SegmentGetter logic
         result['echelon_user_id'] = result['echelon_user_id'].astype("string")
     return result
 
