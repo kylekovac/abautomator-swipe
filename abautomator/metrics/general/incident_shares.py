@@ -32,13 +32,3 @@ class IncidentShareAttemptsMetric(BaseMetric):
                 table.c.general_type.contains('Shared Button')
             )
         )
-
-
-# @dataclass
-# class SegmentedIncidentShareAttemptsMetric(SegmentedMetric):
-#     name: str = "incident_share_attempts"
-#     table_name: str = "fct_share_attempts"
-#     table_col: str = "id"
-#     segment_col: str = "general_type"
-
-        
