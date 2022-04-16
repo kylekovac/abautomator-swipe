@@ -13,7 +13,6 @@ METRIC_LOOKUP = {
     "incident_share_completes": incident_shares.IncidentShareCompletesMetric(),
     "incident_share_attempts": incident_shares.IncidentShareAttemptsMetric(),
     "incident_views": incident_views.IncidentViewsMetric(),
-    # "segmented_incident_share_attempts": incident_shares.SegmentedIncidentShareAttemptsMetric(),
 
     "all_sessions": user_sessions.AllSessionsMetric(),
     "organic_sessions": user_sessions.OrganicSessionsMetric(),
