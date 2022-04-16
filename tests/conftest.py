@@ -84,10 +84,6 @@ def friend_invite_metric():
 def incident_views_metric():
     return METRIC_LOOKUP["incident_views"]
 
-# @pytest.fixture
-# def segmented_shares_attempt_metric():
-#     return METRIC_LOOKUP["segmented_incident_share_attempts"]
-
 @pytest.fixture
 def metrics_list(sessions_metric, incident_views_metric):
     return [sessions_metric, incident_views_metric]
