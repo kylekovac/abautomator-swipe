@@ -2,7 +2,7 @@ import pytest
 from datetime import date
 
 from abautomator import describer, metrics, collector, metrics, analyzer
-from abautomator.utils import DateRange, get_yesterday
+from abautomator.utils import DateRange, get_date_n_days_ago
 from tests import utils
 
 CUSTOM_QUERIES = {

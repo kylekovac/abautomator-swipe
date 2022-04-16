@@ -3,7 +3,7 @@ sys.path.append(".")
 from datetime import date
 
 from abautomator import describer, metrics, collector, metrics, analyzer, config
-from abautomator.utils import DateRange, get_yesterday
+from abautomator.utils import DateRange
 from tests import utils
 from sqlalchemy import create_engine
 

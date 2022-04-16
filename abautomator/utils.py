@@ -25,6 +25,3 @@ def get_df_from_query(query, conn):
     if 'echelon_user_id' in result.columns:  # Not present in SegmentGetter logic
         result['echelon_user_id'] = result['echelon_user_id'].astype("string")
     return result
-
-def get_yesterday():    
-    return date.today() - timedelta(days=2)

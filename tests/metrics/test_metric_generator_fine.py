@@ -120,7 +120,7 @@ def test_metric_concate(seg_metric_generator):
 def test_get_segment_query(engine, seg_getter):
 
     output = seg_getter._get_segment_query(
-        engine, DateRange(utils.get_yesterday())
+        engine, DateRange(utils.get_date_n_days_ago(3))
     )
 
     assert isinstance(output, sqlalchemy.sql.selectable.Select)
@@ -135,7 +135,7 @@ def seg_getter():
 def test_get_segments(engine, conn, seg_getter):
 
     output = seg_getter.get_segments(
-        engine, conn, DateRange(utils.get_yesterday())
+        engine, conn, DateRange(utils.get_date_n_days_ago(3))
     )
 
     assert len(output) > 0
