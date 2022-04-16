@@ -11,7 +11,6 @@ def outcomes(cleaned_desc):
 
 @pytest.fixture
 def analy(outcomes):
-    print(outcomes)
     return analyzer.Analyzer(
         outcomes=outcomes,
         ctrl_name="Control" 
@@ -31,16 +30,12 @@ def test_consolidate_descriptions(analy):
     assert "std" in list(result.columns)
     assert "count" in list(result.columns)
 
-    print(result.head())
-
 
 def test_get_basic_confidence_intervals(analy):
     result = analy.get_basic_confidence_intervals()
 
     assert "upper_68_ci" in list(result.columns)
     assert "lower_95_ci" in list(result.columns)
-
-    print(result.head())
 
     utils.cache_obj(result, "basic_ci")
 
@@ -56,9 +51,6 @@ def test_get_abs_diff_confidence_intervals(analy):
 
 def test_get_rel_diff_confidence_intervals(analy):
     result = analy.get_rel_diff_confidence_intervals()
-
-    print(result)
-    print(result.columns)
 
     assert "abs_mean" in list(result.columns)
     assert "mean" in list(result.columns)
