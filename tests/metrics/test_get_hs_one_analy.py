@@ -6,7 +6,7 @@ from abautomator.utils import DateRange
 from abautomator import collector, describer, analyzer, metrics
 
 from tests import utils
-from tests.test_get_hs_one import CUSTOM_QUERIES
+from tests.metrics.custom_queries import IOS_HS_ONE_QUERY, ANDROID_HS_ONE_QUERY
 
 
 def test_basic(seg_metric_generator):
@@ -52,7 +52,7 @@ def test_use_android_seg_metric(android_seg_metric_coll):
         ctrl_name='Ctrl02112022',
     )
 
-    utils.cache_obj(analy, f"homescreen_analy_android_fine")
+    utils.cache_obj(analy, f"homescreen_analy_android")
 
 @pytest.fixture
 def android_seg_metric_coll(engine, seg_metric_generator):
@@ -63,13 +63,17 @@ def android_seg_metric_coll(engine, seg_metric_generator):
             'AndroidHomescreenTx02112022',
         ],
         metrics=[
+            # metrics.METRIC_LOOKUP["all_sessions"],
+            # metrics.METRIC_LOOKUP["organic_sessions"],
+            # metrics.METRIC_LOOKUP["push_driven_sessions"],
+            # metrics.METRIC_LOOKUP["incident_views"],
             metrics.METRIC_LOOKUP["incident_share_attempts"],
             *seg_metric_generator.generate(),
         ],
         event="segment_app_open_2",
         event_prop="context_traits_homescreen_v_1_001",
         dt_range=DateRange(date(2022, 2, 26), date(2022, 3, 23)),
-        custom_users_query=CUSTOM_QUERIES['android'],
+        custom_users_query=ANDROID_HS_ONE_QUERY,
     )
 
 def test_use_ios_seg_metric(ios_seg_metric_coll):
@@ -91,7 +95,7 @@ def test_use_ios_seg_metric(ios_seg_metric_coll):
         ctrl_name='Ctrl02092022',
     )
 
-    utils.cache_obj(analy, f"homescreen_analy_ios_fine")
+    utils.cache_obj(analy, f"homescreen_analy_ios")
 
 @pytest.fixture
 def ios_seg_metric_coll(engine, seg_metric_generator):
@@ -102,13 +106,17 @@ def ios_seg_metric_coll(engine, seg_metric_generator):
             'iOSHomescreenTx02092022',
         ],
         metrics=[
+            # metrics.METRIC_LOOKUP["all_sessions"],
+            # metrics.METRIC_LOOKUP["organic_sessions"],
+            # metrics.METRIC_LOOKUP["push_driven_sessions"],
+            # metrics.METRIC_LOOKUP["incident_views"],
             metrics.METRIC_LOOKUP["incident_share_attempts"],
             *seg_metric_generator.generate(),
         ],
         event="segment_app_open_2",
         event_prop="context_traits_homescreen_v_1_001",
         dt_range=DateRange(date(2022, 2, 26), date(2022, 3, 23)),
-        custom_users_query=CUSTOM_QUERIES['ios'],
+        custom_users_query=IOS_HS_ONE_QUERY,
     )
 
 def test_metric_concate(seg_metric_generator):
