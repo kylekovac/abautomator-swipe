@@ -78,15 +78,3 @@ def _fill_nan_metrics_with_zeros(df):
     if col not in ["echelon_user_id", "exp_cond"]:
       df[col] = df[col].fillna(0)
   return df
-
-@dataclass
-class GroupMetric(BaseMetric):
-    segment_col: str = None
-    segment_value: str = None
-
-
-    def add_where_clause(self, query, table, dt_range):
-        query = query.where(
-            getattr(table.c, self.segment_col) == self.segment_value
-        )
-        return utils.add_inclusive_time_frame(query, table, dt_range)

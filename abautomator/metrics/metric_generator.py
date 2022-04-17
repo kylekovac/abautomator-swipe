@@ -77,7 +77,7 @@ class GroupMetricGenerator:
                     segment_value=segment
                 )
             )
-        
+
         return result
     
     def _get_seg_full_name(self, segment):
@@ -85,5 +85,3 @@ class GroupMetricGenerator:
     
     def get_segments(self, segmented_metric):
         pass
-
-
