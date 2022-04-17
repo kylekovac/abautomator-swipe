@@ -11,7 +11,7 @@ from abautomator import metrics, utils
 
 
 @dataclass
-class SegmentGetter():
+class GroupGetter():
     table_name: str
     segment_col: str
 
@@ -47,7 +47,7 @@ class SegmentGetter():
 
 
 @dataclass
-class SegmentInfo:
+class GroupInfo:
     name: str                            # Human-readable name
     table_name: str                      # Where event that the metric is to be derived from lives
     table_col: str                       # Where event that the metric is to be derived from lives
@@ -55,21 +55,21 @@ class SegmentInfo:
 
 
 @dataclass
-class SegMetricGenerator:
+class GroupMetricGenerator:
     engine: sqlalchemy.engine.Engine
     conn: sqlalchemy.engine.Connection
     dt_range: utils.DateRange
-    segment_info: SegmentInfo
-    segment_getter: SegmentGetter = None
+    segment_info: GroupInfo
+    segment_getter: GroupGetter = None
 
     def __post_init__(self):
-        self.segment_getter = SegmentGetter(self.segment_info.table_name, self.segment_info.segment_col)
+        self.segment_getter = GroupGetter(self.segment_info.table_name, self.segment_info.segment_col)
 
     def generate(self):
         result = []
         for segment in self.segment_getter.get_segments(self.engine, self.conn, self.dt_range):
             result.append(
-                metrics.SegMetric(
+                metrics.GroupMetric(
                     name=self._get_seg_full_name(segment),
                     table_name=self.segment_info.table_name,
                     table_col=self.segment_info.table_col,

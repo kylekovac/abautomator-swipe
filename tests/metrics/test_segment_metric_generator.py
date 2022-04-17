@@ -17,8 +17,8 @@ def test_metric_concate(seg_metric_generator):
     test = [metrics.METRIC_LOOKUP["incident_share_attempts"], *seg_metric_generator.generate(),]
 
     assert isinstance(test[0], metrics.BaseMetric)
-    assert not isinstance(test[0], metrics.SegMetric)
-    assert isinstance(test[1], metrics.SegMetric)
+    assert not isinstance(test[0], metrics.GroupMetric)
+    assert isinstance(test[1], metrics.GroupMetric)
 
 def test_get_segment_query(engine, seg_getter):
 
@@ -30,7 +30,7 @@ def test_get_segment_query(engine, seg_getter):
 
 @pytest.fixture
 def seg_getter():
-    return metrics.metric_generator.SegmentGetter(
+    return metrics.metric_generator.GroupGetter(
         table_name="fct_share_attempts",
         segment_col="type"
     )

@@ -80,7 +80,7 @@ def _fill_nan_metrics_with_zeros(df):
   return df
 
 @dataclass
-class SegMetric(BaseMetric):
+class GroupMetric(BaseMetric):
     segment_col: str = None
     segment_value: str = None
 
