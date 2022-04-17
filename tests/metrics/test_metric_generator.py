@@ -27,10 +27,10 @@ def seg_metric_generator(engine, conn, seg_info):
 @pytest.fixture
 def seg_info():
     return SegmentInfo(
-        name="Incident Share Attempts",
+        name="Share Attempts",
         table_name="fct_share_attempts",
         table_col="id",
-        segment_col="general_type",
+        segment_col="type",
     )
 
 def test_use_android_seg_metric(android_seg_metric_coll):
@@ -52,7 +52,7 @@ def test_use_android_seg_metric(android_seg_metric_coll):
         ctrl_name='Ctrl02112022',
     )
 
-    utils.cache_obj(analy, f"homescreen_analy_android")
+    utils.cache_obj(analy, f"homescreen_analy_android_fine")
 
 @pytest.fixture
 def android_seg_metric_coll(engine, seg_metric_generator):
@@ -91,7 +91,7 @@ def test_use_ios_seg_metric(ios_seg_metric_coll):
         ctrl_name='Ctrl02092022',
     )
 
-    utils.cache_obj(analy, f"homescreen_analy_ios")
+    utils.cache_obj(analy, f"homescreen_analy_ios_fine")
 
 @pytest.fixture
 def ios_seg_metric_coll(engine, seg_metric_generator):
@@ -129,7 +129,7 @@ def test_get_segment_query(engine, seg_getter):
 def seg_getter():
     return SegmentGetter(
         table_name="fct_share_attempts",
-        segment_col="general_type"
+        segment_col="type"
     )
 
 def test_get_segments(engine, conn, seg_getter):
