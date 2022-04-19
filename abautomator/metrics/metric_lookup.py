@@ -1,5 +1,6 @@
 from abautomator.metrics.general import user_sessions, incident_views, incident_shares, friend_invites
 from abautomator.metrics.protect import trial_starts, protect_cancellations
+from abautomator.metrics.exploration import feed
 from abautomator.metrics.activation import (
     granted_location, entered_phone, granted_notifs, signup_complete, granted_contacts,
     viewed_shs,
@@ -18,6 +19,11 @@ METRIC_LOOKUP = {
     "organic_sessions": user_sessions.OrganicSessionsMetric(),
     "push_driven_sessions": user_sessions.PushDrivenSessionsMetric(),
 
+    # explore
+    "feed_impressions": feed.FeedImpressionsMetric(),
+    "feed_taps": feed.FeedTapsMetric,
+    "feed_shares": feed.FeedSharesMetric(),
+    
     # protect
     "protect_cancellations" : protect_cancellations.ProtectCancellationsMetric(),
     "trial_starts": trial_starts.TrialStartsMetric(),

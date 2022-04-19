@@ -134,4 +134,31 @@ RAW_QUERIES = {
       event_date >= '{start_dt}'
       AND viewed_shs IS NOT NULL
     GROUP BY 1""",
+
+  "feed_impressions": """SELECT
+      echelon_user_id,
+    FROM
+      echelon.segment_viewed_feed_item
+    WHERE
+      event_date >= '{start_dt}'
+      AND section in ('mostImportant', 'forYou')
+    GROUP BY 1""",
+
+  "feed_taps": """SELECT
+      echelon_user_id,
+    FROM
+      echelon.segment_tapped_feed_item
+    WHERE
+      event_date >= '{start_dt}'
+      AND section in ('mostImportant', 'forYou')
+    GROUP BY 1""",
+
+  "feed_shares": """SELECT
+      echelon_user_id,
+    FROM
+      echelon.segment_shared_feed_item
+    WHERE
+      event_date >= '{start_dt}'
+      AND section in ('mostImportant', 'forYou')
+    GROUP BY 1""",
 }

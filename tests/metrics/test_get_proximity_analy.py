@@ -27,7 +27,7 @@ def test_get_proximity_analy(proximity_coll):
         ctrl_name='baseline_algo',
     )
 
-    utils.cache_obj(analy, f"homescreen_analy_android")
+    utils.cache_obj(analy, f"proximity_analy")
 
 @pytest.fixture
 def proximity_coll(engine):
@@ -46,5 +46,5 @@ def proximity_coll(engine):
         ],
         event="segment_viewed_feed_item_cohorted",
         event_prop="context_traits_explore_algo_version_001",
-        dt_range=DateRange(date(2022, 4, 13),
+        dt_range=DateRange(date(2022, 4, 13)),
     )
