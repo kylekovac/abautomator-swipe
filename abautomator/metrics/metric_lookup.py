@@ -22,7 +22,9 @@ METRIC_LOOKUP = {
     # explore
     "feed_views": feed.FeedViewsMetric(),
     "feed_taps": feed.FeedTapsMetric(),
-    "feed_shares": feed.FeedSharesMetric(),
+    "all_feed_shares": feed.AllFeedSharesMetric(),
+    "direct_feed_shares": feed.DirectFeedSharesMetric(),
+    "indirect_feed_shares": feed.IndirectFeedSharesMetric(),
     
     # protect
     "protect_cancellations" : protect_cancellations.ProtectCancellationsMetric(),

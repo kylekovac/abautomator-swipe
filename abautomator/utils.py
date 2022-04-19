@@ -9,14 +9,16 @@ class DateRange:
   start: date
   end: date = None
 
-def add_inclusive_time_frame(query: Selectable, table: Table, dt_range: DateRange):
+def add_inclusive_time_frame(
+        query: Selectable, table: Table, dt_range: DateRange, date_col="event_date",
+    ):
     if dt_range.start:
         query = query.where(
-            table.c.event_date >= dt_range.start
+            getattr(table.c, date_col) >= dt_range.start
         )
     if dt_range.end:
         query = query.where(
-            table.c.event_date <= dt_range.end
+            getattr(table.c, date_col) <= dt_range.end
         )
     return query
 

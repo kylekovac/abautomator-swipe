@@ -161,4 +161,33 @@ RAW_QUERIES = {
       event_date >= '{start_dt}'
       AND section in ('mostImportant', 'forYou')
     GROUP BY 1""",
+
+  "all_feed_shares": """SELECT
+      echelon_user_id,
+    FROM
+      {dataset}.fct_homescreen_shares
+    WHERE
+      tap_date >= '{start_dt}'
+      AND section in ('mostImportant', 'forYou')
+    GROUP BY 1""",
+
+  "direct_feed_shares": """SELECT
+      echelon_user_id,
+    FROM
+      {dataset}.fct_homescreen_shares
+    WHERE
+      tap_date >= '{start_dt}'
+      AND section in ('mostImportant', 'forYou')
+      AND share_source = 'Direct From Feed'
+    GROUP BY 1""",
+
+  "indirect_feed_shares": """SELECT
+      echelon_user_id,
+    FROM
+      {dataset}.fct_homescreen_shares
+    WHERE
+      tap_date >= '{start_dt}'
+      AND section in ('mostImportant', 'forYou')
+      AND share_source != 'Direct From Feed'
+    GROUP BY 1""",
 }
