@@ -190,4 +190,13 @@ RAW_QUERIES = {
       AND section in ('mostImportant', 'forYou')
       AND share_source != 'Direct From Feed'
     GROUP BY 1""",
+
+  "chats": """SELECT
+      echelon_user_id,
+    FROM
+      {dataset}.dim_incident_chats
+    WHERE
+      event_date >= '{start_dt}'
+      AND is_deleted = False
+    GROUP BY 1""",
 }

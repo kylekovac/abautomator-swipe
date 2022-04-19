@@ -38,6 +38,7 @@ def proximity_coll(engine):
             'proximity_weighted_algo',
         ],
         metrics=[
+            # Primary metrics
             metrics.METRIC_LOOKUP["all_sessions"],
             metrics.METRIC_LOOKUP["organic_sessions"],
             metrics.METRIC_LOOKUP["push_driven_sessions"],
@@ -48,6 +49,11 @@ def proximity_coll(engine):
             metrics.METRIC_LOOKUP["all_feed_shares"],
             metrics.METRIC_LOOKUP["direct_feed_shares"],
             metrics.METRIC_LOOKUP["indirect_feed_shares"],
+
+            # Guardrail matrics
+            metrics.METRIC_LOOKUP["chats"],
+            metrics.METRIC_LOOKUP["friend_invites"],
+            metrics.METRIC_LOOKUP["trial_starts"],
         ],
         event="segment_viewed_feed_item_cohorted",
         event_prop="context_traits_explore_algo_version_001",
