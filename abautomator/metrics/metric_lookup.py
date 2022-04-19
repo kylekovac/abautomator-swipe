@@ -20,7 +20,7 @@ METRIC_LOOKUP = {
     "push_driven_sessions": user_sessions.PushDrivenSessionsMetric(),
 
     # explore
-    "feed_impressions": feed.FeedImpressionsMetric(),
+    "feed_views": feed.FeedViewsMetric(),
     "feed_taps": feed.FeedTapsMetric(),
     "feed_shares": feed.FeedSharesMetric(),
     

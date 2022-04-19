@@ -135,7 +135,7 @@ RAW_QUERIES = {
       AND viewed_shs IS NOT NULL
     GROUP BY 1""",
 
-  "feed_impressions": """SELECT
+  "feed_views": """SELECT
       echelon_user_id,
     FROM
       {dataset}.segment_viewed_feed_item

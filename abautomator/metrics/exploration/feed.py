@@ -7,8 +7,8 @@ from abautomator.metrics import BaseMetric
 from abautomator import utils
 
 @dataclass
-class FeedImpressionsMetric(BaseMetric):
-    name: str = "feed_impressions"
+class FeedViewsMetric(BaseMetric):
+    name: str = "feed_views"
     table_name: str = "segment_viewed_feed_item"
     table_col: str = "id"
 
