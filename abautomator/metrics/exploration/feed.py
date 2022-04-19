@@ -8,14 +8,14 @@ from abautomator import utils
 
 @dataclass
 class FeedImpressionsMetric(BaseMetric):
-    name: str = "feed_impresssions"
+    name: str = "feed_impressions"
     table_name: str = "segment_viewed_feed_item"
     table_col: str = "id"
 
     def add_where_clause(self, query: Selectable, table: Table, dt_range: utils.DateRange):
         query = utils.add_inclusive_time_frame(query, table, dt_range)
         return query.where(
-            table.c.section.contains("forYou", "mostImportant")
+            table.c.section.in_(("forYou", "mostImportant")),
         )
 
 @dataclass
@@ -27,7 +27,7 @@ class FeedTapsMetric(BaseMetric):
     def add_where_clause(self, query: Selectable, table: Table, dt_range: utils.DateRange):
         query = utils.add_inclusive_time_frame(query, table, dt_range)
         return query.where(
-            table.c.section.contains("forYou", "mostImportant")
+            table.c.section.in_(("forYou", "mostImportant")),
         )
 
 @dataclass
@@ -39,5 +39,5 @@ class FeedSharesMetric(BaseMetric):
     def add_where_clause(self, query: Selectable, table: Table, dt_range: utils.DateRange):
         query = utils.add_inclusive_time_frame(query, table, dt_range)
         return query.where(
-            table.c.section.contains("forYou", "mostImportant")
+            table.c.section.in_(("forYou", "mostImportant")),
         )

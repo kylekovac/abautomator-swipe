@@ -21,7 +21,7 @@ METRIC_LOOKUP = {
 
     # explore
     "feed_impressions": feed.FeedImpressionsMetric(),
-    "feed_taps": feed.FeedTapsMetric,
+    "feed_taps": feed.FeedTapsMetric(),
     "feed_shares": feed.FeedSharesMetric(),
     
     # protect
