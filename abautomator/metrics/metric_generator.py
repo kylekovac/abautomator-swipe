@@ -7,7 +7,7 @@ from sqlalchemy import distinct
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
 
-from abautomator import metrics, utils
+from abautomator import metrics, utils, config
 
 
 @dataclass
@@ -17,7 +17,7 @@ class GroupGetter():
 
     def _get_segment_query(self, engine, dt_range):
         table = Table(
-            f'echelon.{self.table_name}',
+            f'{config.GCP_DATASET}.{self.table_name}',
             MetaData(bind=engine),
             autoload=True,
         )

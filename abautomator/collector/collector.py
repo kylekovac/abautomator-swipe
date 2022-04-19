@@ -8,7 +8,7 @@ import sqlalchemy
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import select
 
-from abautomator import metrics, utils
+from abautomator import metrics, utils, config
 
 
 @dataclass
@@ -35,7 +35,7 @@ class Collector:
             )
 
     def _get_users_query(self):
-        table = Table(f'echelon.{self.event}', MetaData(bind=self.engine), autoload=True)
+        table = Table(f'{config.GCP_DATASET}.{self.event}', MetaData(bind=self.engine), autoload=True)
 
         result = select(
             table.c.echelon_user_id,

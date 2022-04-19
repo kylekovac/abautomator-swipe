@@ -4,7 +4,7 @@ import sqlalchemy
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import func, select
 
-from abautomator import utils
+from abautomator import utils, config
 # from abautomator.metrics import metric_lookup
 
 @dataclass
@@ -39,7 +39,7 @@ class BaseMetric(MetricInfo):
 
     def _get_metric_query(self, engine, dt_range):
         table = Table(
-            f'echelon.{self.table_name}',
+            f'{config.GCP_DATASET}.{self.table_name}',
             MetaData(bind=engine),
             autoload=True,
         )
