@@ -19,12 +19,12 @@ def test_get_proximity_analy(proximity_coll):
     desc = describer.Describer(
         metrics=proximity_coll.metrics
     )
-    outcomes_dict = desc.describe_data(exp_name="AndroidHomescreen")
+    outcomes_dict = desc.describe_data(exp_name="")
 
     print("analyzing data")
     analy =  analyzer.Analyzer(
         outcomes=outcomes_dict,
-        ctrl_name='Ctrl02112022',
+        ctrl_name='baseline_algo',
     )
 
     utils.cache_obj(analy, f"homescreen_analy_android")
@@ -34,8 +34,8 @@ def proximity_coll(engine):
     return collector.Collector(
         engine=engine,
         conds=[
-            'AndroidHomescreenCtrl02112022',
-            'AndroidHomescreenTx02112022',
+            'baseline_algo',
+            'proximity_weighted_algo',
         ],
         metrics=[
             # metrics.METRIC_LOOKUP["all_sessions"],
@@ -44,8 +44,7 @@ def proximity_coll(engine):
             # metrics.METRIC_LOOKUP["incident_views"],
             metrics.METRIC_LOOKUP["incident_share_attempts"],
         ],
-        event="segment_app_open_2",
-        event_prop="context_traits_homescreen_v_1_001",
-        dt_range=DateRange(date(2022, 2, 26), date(2022, 3, 23)),
-        custom_users_query=ANDROID_HS_ONE_QUERY,
+        event="segment_viewed_feed_item_cohorted",
+        event_prop="context_traits_explore_algo_version_001",
+        dt_range=DateRange(date(2022, 4, 13),
     )
