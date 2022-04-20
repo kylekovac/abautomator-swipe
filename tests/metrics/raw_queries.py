@@ -211,5 +211,6 @@ RAW_QUERIES = {
       AND DATETIME_DIFF(b.event_datetime, a.join_datetime, MINUTE) BETWEEN 0 AND 1440
     WHERE
       join_date >= '{start_dt}'
+    GROUP BY 1
     """,
 }

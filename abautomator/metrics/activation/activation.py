@@ -46,12 +46,18 @@ class SignupActicationMetric(BaseMetric):
                     func.date_diff(
                         incident_views.c.event_datetime, signups.c.join_date,
                         text('MINUTE'),
-                    ) >= 1440,
-                    incident_views.c.event_datetime >= dt_range.start,
-                )
+                    ) <= 1440,
+                    func.date_diff(
+                        incident_views.c.event_datetime, signups.c.join_date,
+                        text('MINUTE'),
+                    ) >= 0,
+                ),
+                isouter=True,
             )
         ).group_by(
             signups.c.echelon_user_id,
         )
 
-        return utils.add_inclusive_time_frame(query, signups, dt_range)
+        return utils.add_inclusive_time_frame(
+            query, signups, dt_range, date_col="join_date",
+        )
