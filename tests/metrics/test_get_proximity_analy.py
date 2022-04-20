@@ -39,16 +39,20 @@ def proximity_coll(engine):
         ],
         metrics=[
             # Primary metrics
-            metrics.METRIC_LOOKUP["all_sessions"],
-            metrics.METRIC_LOOKUP["organic_sessions"],
-            metrics.METRIC_LOOKUP["push_driven_sessions"],
-            metrics.METRIC_LOOKUP["incident_views"],
-            metrics.METRIC_LOOKUP["incident_share_attempts"],
             metrics.METRIC_LOOKUP["feed_views"],
             metrics.METRIC_LOOKUP["feed_taps"],
             metrics.METRIC_LOOKUP["all_feed_shares"],
             metrics.METRIC_LOOKUP["direct_feed_shares"],
             metrics.METRIC_LOOKUP["indirect_feed_shares"],
+
+            # Feed Share Breakdown
+
+            # Secondary metrics
+            metrics.METRIC_LOOKUP["all_sessions"],
+            metrics.METRIC_LOOKUP["organic_sessions"],
+            metrics.METRIC_LOOKUP["push_driven_sessions"],
+            metrics.METRIC_LOOKUP["incident_views"],
+            metrics.METRIC_LOOKUP["incident_share_attempts"],          
 
             # Guardrail matrics
             metrics.METRIC_LOOKUP["chats"],

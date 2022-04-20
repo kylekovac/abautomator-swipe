@@ -3,7 +3,7 @@ from abautomator.metrics.protect import trial_starts, protect_cancellations
 from abautomator.metrics.exploration import feed, chat
 from abautomator.metrics.activation import (
     granted_location, entered_phone, granted_notifs, signup_complete, granted_contacts,
-    viewed_shs,
+    viewed_shs, activation
 )
 
 
@@ -39,5 +39,7 @@ METRIC_LOOKUP = {
     "signup_complete": signup_complete.SignupCompleteMetric(),
     "granted_contacts": granted_contacts.GrantedContactsMetric(),
     "viewed_SHS": viewed_shs.ViewedShsMetric(),
+
+    "signup_activation": activation.SignupActicationMetric(),
 
 }

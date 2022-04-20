@@ -199,4 +199,17 @@ RAW_QUERIES = {
       event_date >= '{start_dt}'
       AND is_deleted = False
     GROUP BY 1""",
+
+  "signup_activation": """SELECT
+      a.echelon_user_id,
+    FROM
+      {dataset}.fct_user_signups a
+    LEFT JOIN
+      {dataset}.fct_incident_views b
+    ON
+      a.echelon_user_id = b.echelon_user_id
+      AND DATETIME_DIFF(b.event_datetime, a.join_datetime, MINUTE) BETWEEN 0 AND 1440
+    WHERE
+      join_date >= '{start_dt}'
+    """,
 }
