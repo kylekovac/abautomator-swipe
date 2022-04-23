@@ -1,6 +1,6 @@
 import pytest
 
-from abautomator import analyzer, describer
+from abautomator.analyzer import Analyzer, std
 from tests import utils
 
 
@@ -11,11 +11,14 @@ def outcomes(cleaned_desc):
 
 @pytest.fixture
 def analy(outcomes):
-    return analyzer.Analyzer(
+    return Analyzer(
         outcomes=outcomes,
         ctrl_name="Control" 
     )
 
+def test_incalcuable_std(analy):
+    df = analy._get_abs_diff_desc()
+    print(df)
 
 def test_consolidate_descriptions(analy):
 
