@@ -5,8 +5,8 @@ import dill as pickle
 from abautomator import utils
 
 
-def get_date_n_days_ago(3):    
-    return date.today() - timedelta(days=3)
+def get_date_n_days_ago(n):    
+    return date.today() - timedelta(days=n)
 
 def df_from_cache(file_name, query, conn):
     try:

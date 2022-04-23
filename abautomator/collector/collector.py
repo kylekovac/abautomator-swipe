@@ -8,7 +8,7 @@ import sqlalchemy
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import select
 
-from abautomator import metrics, utils
+from abautomator import metrics, utils, config
 
 
 @dataclass
@@ -35,15 +35,17 @@ class Collector:
             )
 
     def _get_users_query(self):
-        table = Table(f'echelon.{self.event}', MetaData(bind=self.engine), autoload=True)
+        table = Table(f'{config.GCP_DATASET}.{self.event}', MetaData(bind=self.engine), autoload=True)
 
         result = select(
             table.c.echelon_user_id,
+            table.c.device_type,
             getattr(table.c, self.event_prop).label("exp_cond"),
         ).where(
             getattr(table.c, self.event_prop).in_(self.conds)
         ).group_by(
             table.c.echelon_user_id, 
+            table.c.device_type,
             getattr(table.c, self.event_prop),
         )
         # Ommitting first_event_datetime for now

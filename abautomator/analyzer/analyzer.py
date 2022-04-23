@@ -9,7 +9,7 @@ from abautomator.analyzer import std, sig
 class Analyzer:
     outcomes: dict  # key is [metric name][cond name]
     ctrl_name: str
-    base_df: pd.DataFrame=None
+    base_df: pd.DataFrame=None  # populated by post_init
 
     def __post_init__(self):
         self._consolidate_descriptions()

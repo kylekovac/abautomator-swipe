@@ -6,6 +6,7 @@
 """
 from sqlalchemy.sql import selectable
 
+from abautomator import config
 from abautomator.metrics import METRIC_LOOKUP
 from abautomator.utils import get_df_from_query
 from tests import utils
@@ -50,7 +51,10 @@ def test_get_metric_df(coll, conn, name):
         )
 
 def _get_metric_df_from_old_query(metric, conn, start_dt):
-    query = RAW_QUERIES[metric.name].format(start_dt=start_dt)
+    query = RAW_QUERIES[metric.name].format(
+        dataset=config.GCP_DATASET,
+        start_dt=start_dt,
+    )
     print(query)
     old_df = utils.df_from_cache(
         f"{metric.name}_old_query", query, conn
