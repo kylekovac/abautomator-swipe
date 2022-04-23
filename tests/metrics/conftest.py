@@ -10,20 +10,20 @@ def proximity_generator(engine, conn, feed_share_seg_info):
         engine,
         conn,
         DateRange(date(2022, 4, 13)),
-        segment_info=seg_info,
+        segment_info=group_info,
     )
 
 @pytest.fixture
-def group_metric_generator(engine, conn, seg_info):
+def group_metric_generator(engine, conn, group_info):
     return GroupMetricGenerator(
         engine,
         conn,
         DateRange(date(2022, 2, 26), date(2022, 3, 23)),
-        segment_info=seg_info,
+        segment_info=group_info,
     )
 
 @pytest.fixture
-def seg_info():
+def group_info():
     return GroupInfo(
         name="Share Attempts",
         table_name="fct_share_attempts",
