@@ -2,6 +2,9 @@ from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource, FactorRange, Span, Range1d
 from bokeh.models import BoxZoomTool, ResetTool, PanTool, WheelZoomTool, SaveTool
 import numpy as np
+import logging
+
+LOGGER = logging.getLogger()
 
 
 def order_categories(df, metric_order, cond_order):
@@ -16,8 +19,21 @@ def order_categories(df, metric_order, cond_order):
 
 
 def remove_categories_w_no_order(df):
+    _check_for_nan_in_cols(df, ["metric_order", "cond_order"])
     return df.dropna(subset=['metric_order', 'cond_order'])
 
+def _check_for_nan_in_cols(df, list_of_cols):
+    for col in list_of_cols:
+        _check_for_nan_in_col(df, col)
+
+def _check_for_nan_in_col(df, col):
+    nan_df = df[np.isnan(df[col])]
+    if not nan_df.empty:
+        LOGGER.warning(f"NaN values found: {nan_df}")
+
+def remove_ungraphable_rows(df):
+    _check_for_nan_in_cols(df, ["p_value", "std"])
+    return df.dropna(subset=['p_value', 'std'])
 
 def convert_df_to_source(df):
     df = df.copy()

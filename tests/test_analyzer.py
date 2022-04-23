@@ -20,6 +20,9 @@ def test_incalcuable_std(analy):
     df = analy._get_abs_diff_desc()
     print(df)
 
+    utils.cache_obj(analy, "nan_analy")
+
+
 def test_consolidate_descriptions(analy):
 
     analy._consolidate_descriptions()
