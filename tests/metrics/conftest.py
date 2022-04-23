@@ -5,7 +5,7 @@ from abautomator.metrics.metric_generator import GroupMetricGenerator, GroupInfo
 from abautomator.utils import DateRange
 
 @pytest.fixture
-def proximity_generator(engine, conn, feed_share_seg_info):
+def proximity_generator(engine, conn, feed_share_group_info):
     return GroupMetricGenerator(
         engine,
         conn,
@@ -32,7 +32,7 @@ def group_info():
     )
 
 @pytest.fixture
-def feed_share_seg_info():
+def feed_share_group_info():
     return GroupInfo(
         name="Feed Shares",
         table_name="fct_homescreen_shares",
