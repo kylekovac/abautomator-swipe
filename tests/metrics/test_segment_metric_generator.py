@@ -7,14 +7,14 @@ from abautomator import metrics
 from tests import utils
 
 
-def test_basic(seg_metric_generator):
+def test_basic(group_metric_generator):
 
-    output = seg_metric_generator.generate()
+    output = group_metric_generator.generate()
 
     assert len(output) > 0
 
-def test_metric_concate(seg_metric_generator):
-    test = [metrics.METRIC_LOOKUP["incident_share_attempts"], *seg_metric_generator.generate(),]
+def test_metric_concate(group_metric_generator):
+    test = [metrics.METRIC_LOOKUP["incident_share_attempts"], *group_metric_generator.generate(),]
 
     assert isinstance(test[0], metrics.BaseMetric)
     assert not isinstance(test[0], metrics.GroupMetric)

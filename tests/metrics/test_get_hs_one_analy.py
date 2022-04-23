@@ -30,7 +30,7 @@ def test_get_android_seg_metric_analy(android_seg_metric_coll):
     utils.cache_obj(analy, f"homescreen_analy_android")
 
 @pytest.fixture
-def android_seg_metric_coll(engine, seg_metric_generator):
+def android_seg_metric_coll(engine, group_metric_generator):
     return collector.Collector(
         engine=engine,
         conds=[
@@ -43,7 +43,7 @@ def android_seg_metric_coll(engine, seg_metric_generator):
             # metrics.METRIC_LOOKUP["push_driven_sessions"],
             # metrics.METRIC_LOOKUP["incident_views"],
             metrics.METRIC_LOOKUP["incident_share_attempts"],
-            *seg_metric_generator.generate(),
+            *group_metric_generator.generate(),
         ],
         event="segment_app_open_2",
         event_prop="context_traits_homescreen_v_1_001",
@@ -74,7 +74,7 @@ def test_get_ios_seg_metric_analy(ios_seg_metric_coll):
     utils.cache_obj(analy, f"homescreen_analy_ios")
 
 @pytest.fixture
-def ios_seg_metric_coll(engine, seg_metric_generator):
+def ios_seg_metric_coll(engine, group_metric_generator):
     return collector.Collector(
         engine=engine,
         conds=[
@@ -87,7 +87,7 @@ def ios_seg_metric_coll(engine, seg_metric_generator):
             # metrics.METRIC_LOOKUP["push_driven_sessions"],
             # metrics.METRIC_LOOKUP["incident_views"],
             metrics.METRIC_LOOKUP["incident_share_attempts"],
-            *seg_metric_generator.generate(),
+            *group_metric_generator.generate(),
         ],
         event="segment_app_open_2",
         event_prop="context_traits_homescreen_v_1_001",

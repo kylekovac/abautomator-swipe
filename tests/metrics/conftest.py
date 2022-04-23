@@ -14,7 +14,7 @@ def proximity_generator(engine, conn, feed_share_seg_info):
     )
 
 @pytest.fixture
-def seg_metric_generator(engine, conn, seg_info):
+def group_metric_generator(engine, conn, seg_info):
     return GroupMetricGenerator(
         engine,
         conn,
