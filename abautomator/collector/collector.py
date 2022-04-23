@@ -39,11 +39,13 @@ class Collector:
 
         result = select(
             table.c.echelon_user_id,
+            table.c.device_type,
             getattr(table.c, self.event_prop).label("exp_cond"),
         ).where(
             getattr(table.c, self.event_prop).in_(self.conds)
         ).group_by(
             table.c.echelon_user_id, 
+            table.c.device_type,
             getattr(table.c, self.event_prop),
         )
         # Ommitting first_event_datetime for now

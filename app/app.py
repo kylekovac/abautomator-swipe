@@ -23,7 +23,7 @@ def relative():
         )
 
 def _get_rel_source():
-    name = "inspiration_analy"
+    name = "proximity_analy"
     analy = pickle.load(
         open(os.path.join("..", "tests", "cache", f"{name}.p"), "rb" )
     )
@@ -48,7 +48,7 @@ def absolute():
     )
 
 def _get_abs_source():
-    name = "inspiration_analy"
+    name = "proximity_analy"
     analy = pickle.load(
         open(os.path.join("..", "tests", "cache", f"{name}.p"), "rb" )
     )

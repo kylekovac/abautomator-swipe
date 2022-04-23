@@ -14,6 +14,9 @@ def test_get_proximity_analy(proximity_coll):
     assert len(proximity_coll.metrics) > 0
     assert len(proximity_coll.metrics[0].user_metric_df) > 0
 
+    for metric in proximity_coll.metrics:
+        metric.user_metric_df = metric.user_metric_df[metric.user_metric_df["device_type"] == 'android']
+
     print("describing data")
     # init and run the describer
     desc = describer.Describer(
@@ -27,7 +30,7 @@ def test_get_proximity_analy(proximity_coll):
         ctrl_name='baseline_algo',
     )
 
-    utils.cache_obj(analy, f"proximity_analy")
+    utils.cache_obj(analy, f"proximity_analy_android")
 
 @pytest.fixture
 def proximity_coll(engine):
@@ -44,6 +47,7 @@ def proximity_coll(engine):
             metrics.METRIC_LOOKUP["all_feed_shares"],
             metrics.METRIC_LOOKUP["direct_feed_shares"],
             metrics.METRIC_LOOKUP["indirect_feed_shares"],
+            metrics.METRIC_LOOKUP["signup_activation"],
 
             # Feed Share Breakdown
 
