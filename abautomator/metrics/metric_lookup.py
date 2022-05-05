@@ -1,7 +1,7 @@
 from abautomator.metrics.general import user_sessions, incident_views, incident_shares, friend_invites
 from abautomator.metrics.protect import trial_starts, protect_cancellations
 from abautomator.metrics.exploration import feed, chat
-from abautomator.metrics.activation import (
+from abautomator.metrics.onboarding import (
     granted_location, entered_phone, granted_notifs, signup_complete, granted_contacts,
     viewed_shs, activation
 )
