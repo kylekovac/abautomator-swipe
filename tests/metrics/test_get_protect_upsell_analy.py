@@ -6,41 +6,48 @@ from abautomator import collector, describer, analyzer, metrics
 from tests import utils
 from tests.metrics.custom_queries import IOS_HS_ONE_QUERY, ANDROID_HS_ONE_QUERY
 
+EXP_NAME = "ProtedtUpSellExp20224023_"
+CTRL_NAME = 'ctrl'
+CONDS = [
+    'ProtedtUpSellExp20224023_ctrl',
+    'ProtedtUpSellExp20224023_tx_w_protect_upsell',
+]
+EVENT = "segment_viewed_feed_item_cohorted"
+EVENT_PROP = "context_homescreen_curated_cards_config_001"
+DT_RANGE = DateRange(date(2022, 4, 23))
 
 @pytest.mark.build
-def test_get_proximity_analy(proximity_coll):
+def test_get_analy(local_coll):
+    
+    local_coll.collect_data()
+    assert len(local_coll.metrics) > 0
+    assert len(local_coll.metrics[0].user_metric_df) > 0
 
-    proximity_coll.collect_data()
-    assert len(proximity_coll.metrics) > 0
-    assert len(proximity_coll.metrics[0].user_metric_df) > 0
+    local_coll.engine = None
+    utils.cache_obj(local_coll, f"{EXP_NAME}_coll")
 
-    # for metric in proximity_coll.metrics:
+    # for metric in local_coll.metrics:
     #     metric.user_metric_df = metric.user_metric_df[metric.user_metric_df["device_type"] == 'android']
 
-    print("describing data")
-    # init and run the describer
-    desc = describer.Describer(
-        metrics=proximity_coll.metrics
-    )
-    outcomes_dict = desc.describe_data(exp_name="")
+    # print("describing data")
+    # # init and run the describer
+    # desc = describer.Describer(
+    #     metrics=local_coll.metrics
+    # )
+    # outcomes_dict = desc.describe_data(exp_name=EXP_NAME)
 
-    print("analyzing data")
-    analy =  analyzer.Analyzer(
-        outcomes=outcomes_dict,
-        ctrl_name='ProtedtUpSellExp20224023_ctrl',
-    )
-
-    utils.cache_obj(proximity_coll, "proximity_coll")
-    utils.cache_obj(analy, "proximity_analy")
+    # print("analyzing data")
+    # analy =  analyzer.Analyzer(
+    #     outcomes=outcomes_dict,
+    #     ctrl_name=CTRL_NAME,
+    # )
+    # utils.cache_obj(analy, f"{EXP_NAME}_analy")
 
 @pytest.fixture
-def proximity_coll(engine):
+def local_coll(engine):
     return collector.Collector(
         engine=engine,
-        conds=[
-            'ProtedtUpSellExp20224023_ctrl',
-            'ProtedtUpSellExp20224023_tx_w_protect_upsell',
-        ],
+        conds=CONDS,
         metrics=[
             # Primary metrics
             metrics.METRIC_LOOKUP["feed_views"],
@@ -64,7 +71,7 @@ def proximity_coll(engine):
             metrics.METRIC_LOOKUP["friend_invites"],
             metrics.METRIC_LOOKUP["trial_starts"],
         ],
-        event="segment_viewed_feed_item_cohorted",
-        event_prop="context_homescreen_curated_cards_config_001",
-        dt_range=DateRange(date(2022, 4, 23)),
+        event=EVENT,
+        event_prop=EVENT_PROP,
+        dt_range=DT_RANGE,
     )

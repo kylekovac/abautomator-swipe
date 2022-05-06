@@ -1,5 +1,5 @@
 from bokeh.plotting import figure
-from bokeh.models import ColumnDataSource, FactorRange, Span, Range1d
+from bokeh.models import ColumnDataSource, FactorRange, Span, Range1d, Label, Title
 from bokeh.models import BoxZoomTool, ResetTool, PanTool, WheelZoomTool, SaveTool
 import numpy as np
 import logging
@@ -106,3 +106,7 @@ def set_y_axis(fig):
 def set_legend(fig):
     fig.legend.click_policy="mute"
     # fig.add_layout(fig.legend[0], 'right')
+
+def set_fig_title(fig, title):
+    if title:
+        fig.add_layout(Title(text=title, align="center"), "above")
