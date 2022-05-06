@@ -43,10 +43,19 @@ docker run -p 8000:5000                 \
 
 Useful for working on visualization stuff
 
+From base jupyter image:
 ```bash
 docker run -p 8888:8888                    \
     -v ${PWD}:/home/jovyan/work            \
     jupyter/scipy-notebook:33add21fab64 
+```
+
+Trying to run abautomator from within jupyter env:
+```bash
+docker build -f Dockerfile.app -t jupyter .
+docker run -p 8888:8888                    \
+    -v ${PWD}:/home/jovyan/work            \
+    jupyter
 ```
 
 To pickle the analysis object used to build the jupyter viz:
