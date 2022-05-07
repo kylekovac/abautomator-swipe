@@ -29,7 +29,7 @@ def _check_for_nan_in_cols(df, list_of_cols):
 def _check_for_nan_in_col(df, col):
     nan_df = df[np.isnan(df[col])]
     if not nan_df.empty:
-        LOGGER.warning(f"NaN values found: {nan_df}")
+        LOGGER.warning(f"NaN values found!")
 
 def remove_ungraphable_rows(df):
     _check_for_nan_in_cols(df, ["p_value", "std"])
