@@ -39,7 +39,7 @@ class SignupActicationMetric(BaseMetric):
                 else_=0,
                 ).label(self.pct_label),
         ).select_from(
-            signups.join(
+            signups.outerjoin(
                 incident_views,
                 and_(
                     signups.c.echelon_user_id == incident_views.c.echelon_user_id,
@@ -52,7 +52,7 @@ class SignupActicationMetric(BaseMetric):
                         text('MINUTE'),
                     ) >= 0,
                 ),
-                isouter=True,
+                # isouter=True,
             )
         ).group_by(
             signups.c.echelon_user_id,
