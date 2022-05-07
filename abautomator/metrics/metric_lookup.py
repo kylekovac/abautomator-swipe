@@ -32,7 +32,7 @@ METRIC_LOOKUP = {
     "protect_cancellations" : protect_cancellations.ProtectCancellationsMetric(),
     "trial_starts": trial_starts.TrialStartsMetric(),
 
-    # activation
+    # onboarding
     "granted_location": granted_location.GrantedLocationMetric(),
     "entered_phone": entered_phone.EnteredPhoneMetric(),
     "granted_notifs": granted_notifs.GrantedNotifsMetric(),

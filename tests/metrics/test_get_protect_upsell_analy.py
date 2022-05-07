@@ -56,8 +56,8 @@ def local_coll(engine):
             metrics.METRIC_LOOKUP["direct_feed_shares"],
             metrics.METRIC_LOOKUP["indirect_feed_shares"],
             metrics.METRIC_LOOKUP["signup_activation"],
-
-            # Feed Share Breakdown
+            metrics.METRIC_LOOKUP["trial_starts"],
+            metrics.METRIC_LOOKUP["protect_cancellations"],
 
             # Secondary metrics
             metrics.METRIC_LOOKUP["all_sessions"],

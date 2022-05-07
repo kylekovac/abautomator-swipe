@@ -53,8 +53,8 @@ class Collector:
             event.c.device_type,
             getattr(event.c, self.event_prop).label("exp_cond"),
             case(
-                [(signups.c.join_date >= self.dt_range.start, "New User")],
-                else_= "Existing User"
+                [(signups.c.join_date >= self.dt_range.start, "new")],
+                else_= "existing"
             ).label("user_type"),
         ).select_from(
             event.outerjoin(
