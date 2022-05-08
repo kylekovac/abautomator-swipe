@@ -24,6 +24,7 @@ class AbsDiffVisualizer(StatSigVisualizer):
             ("Ctrl x̄", "@{ctrl_mean}±@{ctrl_std}"),
             ("Tx x̄", "@{tx_mean}±@{tx_std}"),
             ("Ctrl/Tx n", "@{ctrl_count}/@{tx_count}"),
+            ("Ctrl/Tx Metric Total", "@{ctrl_sum}/@{tx_sum}"),
         ]
 
 class RelDiffVisualizer(StatSigVisualizer):
@@ -40,4 +41,5 @@ class RelDiffVisualizer(StatSigVisualizer):
             ("Ctrl x̄", "@{ctrl_mean}±@{ctrl_std}"),
             ("Tx x̄", "@{tx_mean}±@{tx_std}"),
             ("Ctrl/Tx n", "@{ctrl_count}/@{tx_count}"),
+            ("Ctrl/Tx Metric Total", "@{ctrl_sum}/@{tx_sum}"),
         ]
