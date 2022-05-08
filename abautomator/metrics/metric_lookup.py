@@ -29,7 +29,8 @@ METRIC_LOOKUP = {
     "chats": chat.ChatsMetric(),
     
     # protect
-    "protect_cancellations" : protect_cancellations.ProtectCancellationsMetric(),
+    "protect_cancellations": protect_cancellations.ProtectCancellationsMetric(),
+    "protect_payment_successful": trial_starts.ProtectPaymentSuccessfulMetric(),
     "trial_starts": trial_starts.TrialStartsMetric(),
 
     # onboarding

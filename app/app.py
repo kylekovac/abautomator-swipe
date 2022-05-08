@@ -1,61 +1,40 @@
 import os
-import pickle
+import dill as pickle
 
 from bokeh.embed import components
 from flask import Flask
 from flask import render_template
 
-from abautomator.visualizer import utils, RelDiffVisualizer, AbsDiffVisualizer
+from abautomator.visualizer import RelDiffVisualizer, AbsDiffVisualizer
+from abautomator.exp_config import PRIMARY_METRIC_LIST, SECONDARY_METRIC_LIST, GUARDRAIL_METRIC_LIST
+from app import utils
 
 app = Flask(__name__)
 
 @app.route('/')
-@app.route('/relative')
-def relative():
+@app.route('/primary')
+def primary():
+    return render_specific_metrics(PRIMARY_METRIC_LIST, "primary metrics")
 
-    vis = RelDiffVisualizer(_get_rel_source())
-    layout = vis.get_layout()
-    bokeh_script, bokeh_div = components(layout)
+
+def render_specific_metrics(metric_list, metric_label):
+
+    layouts = utils._get_layouts(RelDiffVisualizer, metric_list, metric_label)
+    scripts, divs = [], []
+    for layout in layouts:
+        bokeh_script, bokeh_div = components(layout)
+        scripts.append(bokeh_script)
+        divs.append(bokeh_div)
     return render_template(
         'index.html',
-        bokeh_script=bokeh_script,
-        bokeh_div=bokeh_div,
+        scripts=scripts,
+        divs=divs,
         )
 
-def _get_rel_source():
-    name = "proximity_analy"
-    analy = pickle.load(
-        open(os.path.join("..", "tests", "cache", f"{name}.p"), "rb" )
-    )
-    metric_order = ['n_entered_phone', 'pct_entered_phone', 'n_granted_contacts', 'pct_granted_contacts']
-    cond_order = ['Video01', 'Carousel01', 'Carousel02', 'Carousel03', 'Carousel04']
+@app.route('/secondary')
+def secondary():
+    return render_specific_metrics(SECONDARY_METRIC_LIST, "secondary metrics")
 
-    df = analy.get_rel_diff_confidence_intervals()
-
-    df = utils.order_categories(df, metric_order, cond_order)
-    return utils.convert_df_to_source(df)
-
-@app.route('/absolute')
-def absolute():
-
-    vis = AbsDiffVisualizer(_get_abs_source())
-    layout = vis.get_layout()
-    bokeh_script, bokeh_div = components(layout)
-    return render_template(
-        'index.html',
-        bokeh_script=bokeh_script,
-        bokeh_div=bokeh_div,
-    )
-
-def _get_abs_source():
-    name = "proximity_analy"
-    analy = pickle.load(
-        open(os.path.join("..", "tests", "cache", f"{name}.p"), "rb" )
-    )
-    metric_order = ['n_entered_phone', 'pct_entered_phone', 'n_granted_contacts', 'pct_granted_contacts']
-    cond_order = ['Video01', 'Carousel01', 'Carousel02', 'Carousel03', 'Carousel04']
-
-    df = analy.get_abs_diff_confidence_intervals()
-
-    df = utils.order_categories(df, metric_order, cond_order)
-    return utils.convert_df_to_source(df)
+@app.route('/guardrail')
+def guardrail():
+    return render_specific_metrics(GUARDRAIL_METRIC_LIST, "guardrail metrics")

@@ -1,5 +1,7 @@
 # Cached test files
 tests/*.p
+notebooks/*.p
+notebooks/*.html
 
 .DS_Store
 

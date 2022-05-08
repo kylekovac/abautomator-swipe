@@ -73,6 +73,14 @@ RAW_QUERIES = {
       and transaction_id = original_transaction_id
     GROUP BY 1""",
 
+    "protect_payment_successful": """SELECT
+      echelon_user_id
+    FROM
+      {dataset}.segment_protect_landing_page_payment_successful
+    WHERE
+      event_date >= '{start_dt}'
+    GROUP BY 1""",
+
     "protect_cancellations": """SELECT
       echelon_user_id,
     FROM

@@ -5,21 +5,25 @@
     <div class="col-10">
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          {% if url_for(request.endpoint) == '/relative' %}
-          <a class="nav-link active" aria-current="page">Relative</a>
+          {% if url_for(request.endpoint) == '/primary' %}
+          <a class="nav-link active" aria-current="page">Primary</a>
           {% else %}
-          <a class="nav-link" href="{{ url_for('relative') }}">Relative</a>
+          <a class="nav-link" href="{{ url_for('primary') }}">Primary</a>
           {% endif %}
         </li>
         <li class="nav-item">
-          {% if url_for(request.endpoint) == '/absolute' %}
-          <a class="nav-link active" aria-current="page">Absolute</a>
+          {% if url_for(request.endpoint) == '/secondary' %}
+          <a class="nav-link active" aria-current="page">Secondary</a>
           {% else %}
-          <a class="nav-link" href="{{ url_for('absolute') }}">Absolute</a>
+          <a class="nav-link" href="{{ url_for('secondary') }}">Secondary</a>
           {% endif %}
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Base</a>
+          {% if url_for(request.endpoint) == '/guardrail' %}
+          <a class="nav-link active" aria-current="page">Guardrail</a>
+          {% else %}
+          <a class="nav-link" href="{{ url_for('guardrail') }}">Guardrail</a>
+          {% endif %}
         </li>
       </ul>
     </div>
@@ -27,14 +31,20 @@
 
   <div class="row justify-content-center">
     <div class="col-10">
-      {{ bokeh_div|safe }}
+      {% for bokeh_div in divs %}
+        {{ bokeh_div|safe }}
+      {% endfor %}
     </div>
   </div>
 {% endblock %}
 
 {% block scripts %}
   {{ super() }}
-  {{ bokeh_script|safe }}        
+  {% for bokeh_script in scripts %}
+    {{ bokeh_script|safe }}        
+  {% endfor %}
+
+  
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.2.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.2.min.js" crossorigin="anonymous"></script>
 {% endblock %}

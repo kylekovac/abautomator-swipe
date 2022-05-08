@@ -11,6 +11,8 @@ ENV PYTHONUNBUFFERED 1
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
+# RUN pip3 install -U pandas
+RUN pip3 install --upgrade pandas==1.3.5
 
 WORKDIR /abautomator/app
 

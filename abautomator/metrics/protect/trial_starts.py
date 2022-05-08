@@ -18,3 +18,9 @@ class TrialStartsMetric(BaseMetric):
         return query.where(
             table.c.transaction_id == table.c.original_transaction_id
         )
+
+@dataclass
+class ProtectPaymentSuccessfulMetric(BaseMetric):
+    name: str = "protect_payment_successful"
+    table_name: str = "segment_protect_landing_page_payment_successful"
+    table_col: str = "id"

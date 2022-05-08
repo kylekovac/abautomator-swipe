@@ -1,20 +1,10 @@
 from datetime import date
 import pytest
-from abautomator.utils import DateRange
-from abautomator import collector, describer, analyzer, metrics
+from abautomator import collector, metrics
 
 from tests import utils
-from tests.metrics.custom_queries import IOS_HS_ONE_QUERY, ANDROID_HS_ONE_QUERY
 
-EXP_NAME = "ProtedtUpSellExp20224023_"
-CTRL_NAME = 'ctrl'
-CONDS = [
-    'ProtedtUpSellExp20224023_ctrl',
-    'ProtedtUpSellExp20224023_tx_w_protect_upsell',
-]
-EVENT = "segment_viewed_feed_item_cohorted"
-EVENT_PROP = "context_homescreen_curated_cards_config_001"
-DT_RANGE = DateRange(date(2022, 4, 23))
+from abautomator.exp_config import EXP_NAME, CONDS, EVENT,EVENT_PROP, DT_RANGE
 
 @pytest.mark.build
 def test_get_analy(local_coll):
@@ -26,22 +16,6 @@ def test_get_analy(local_coll):
     local_coll.engine = None
     utils.cache_obj(local_coll, f"{EXP_NAME}_coll")
 
-    # for metric in local_coll.metrics:
-    #     metric.user_metric_df = metric.user_metric_df[metric.user_metric_df["device_type"] == 'android']
-
-    # print("describing data")
-    # # init and run the describer
-    # desc = describer.Describer(
-    #     metrics=local_coll.metrics
-    # )
-    # outcomes_dict = desc.describe_data(exp_name=EXP_NAME)
-
-    # print("analyzing data")
-    # analy =  analyzer.Analyzer(
-    #     outcomes=outcomes_dict,
-    #     ctrl_name=CTRL_NAME,
-    # )
-    # utils.cache_obj(analy, f"{EXP_NAME}_analy")
 
 @pytest.fixture
 def local_coll(engine):
@@ -57,6 +31,7 @@ def local_coll(engine):
             metrics.METRIC_LOOKUP["indirect_feed_shares"],
             metrics.METRIC_LOOKUP["signup_activation"],
             metrics.METRIC_LOOKUP["trial_starts"],
+            metrics.METRIC_LOOKUP["protect_payment_successful"],
             metrics.METRIC_LOOKUP["protect_cancellations"],
 
             # Secondary metrics
