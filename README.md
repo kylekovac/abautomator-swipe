@@ -6,6 +6,13 @@ A/B testing at the press of a button
 2. [Add a metric](#add-a-metric)
 3. [Data Architecture](#data-architecture)
 
+## How-to-use
+
+- Update `exp_config.py` with your values
+- Run the appropriate analysis object test getter from the test suite
+- Run the juptyer docker and the cells in the appropriate playground (should roll into above)
+- Run the flask app docker and viola - let there be visualization
+
 ## Setup
 
 ### Local Backend Development 
