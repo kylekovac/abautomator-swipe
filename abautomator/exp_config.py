@@ -32,23 +32,23 @@ PRIMARY_METRIC_LIST = [
 ]
  
 SECONDARY_METRIC_LIST = [
- 'n_all_sessions',
- 'pct_all_sessions',
- 'n_organic_sessions',
- 'pct_organic_sessions',
- 'n_push_driven_sessions',
- 'pct_push_driven_sessions',
- 'n_incident_views',
- 'pct_incident_views',
- 'n_incident_share_attempts',
- 'pct_incident_share_attempts',
+    'n_all_sessions',
+    'pct_all_sessions',
+    'n_organic_sessions',
+    'pct_organic_sessions',
+    'n_push_driven_sessions',
+    'pct_push_driven_sessions',
+    'n_incident_views',
+    'pct_incident_views',
+    'n_incident_share_attempts',
+    'pct_incident_share_attempts',
 ]
 
 GUARDRAIL_METRIC_LIST = [
- 'n_chats',
- 'pct_chats',
- 'n_friend_invites',
- 'pct_friend_invites',
- 'n_trial_starts',
- 'pct_trial_starts',
+    'n_chats',
+    'pct_chats',
+    'n_friend_invites',
+    'pct_friend_invites',
+    'n_trial_starts',
+    'pct_trial_starts',
 ]
