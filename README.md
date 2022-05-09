@@ -56,12 +56,6 @@ To pickle the analysis object used to build the jupyter viz:
 clear && pytest tests/test_get_analy.py --runbuild
 ```
 
-JupyterLab terminal:
-
-```bash
-pip install -U pandas
-```
-
 ## Add a metric
 
 1. Using any of the exiting metrics as a template, create your python file in the appropriate subfolder of `metrics/` 
