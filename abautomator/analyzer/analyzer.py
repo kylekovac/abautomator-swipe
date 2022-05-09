@@ -26,7 +26,7 @@ class Analyzer:
                         "mean": desc_df[n_or_pct_metric]["mean"],
                         "std": desc_df[n_or_pct_metric]["std"],
                         "count": desc_df[n_or_pct_metric]["count"],
-                        # "quant": desc_df[n_or_pct_metric]["mean"] * desc_df[n_or_pct_metric]["count"],
+                        "sum": desc_df[n_or_pct_metric]["mean"] * desc_df[n_or_pct_metric]["count"],
                     }
                     raw_data.append(curr_row)
 
@@ -48,12 +48,12 @@ class Analyzer:
         df["lower_95_ci"] = df["mean"] - (1.96 * df["std"])
 
         return df
-    
+
     def get_rel_diff_confidence_intervals(self) -> pd.DataFrame:
 
         df = self.get_abs_diff_confidence_intervals()
         df = df.rename(columns={"mean": "abs_mean", "std": "abs_std"})
-        df["mean"] =(( df["abs_mean"] / df["ctrl_mean"] ) * 100)
+        df["mean"] = (( df["abs_mean"] / df["ctrl_mean"] ) * 100)
         df["std"] = df["abs_std"] / df["ctrl_mean"] * 100
 
         return self._calculate_confidence_interval(df)
@@ -88,6 +88,7 @@ class Analyzer:
                 "mean": f"{prefix}_mean",
                 "std": f"{prefix}_std",
                 "count": f"{prefix}_count",
+                "sum": f"{prefix}_sum",
             }
         )
 
@@ -97,6 +98,7 @@ class Analyzer:
         return tx_df
     
     def _add_diff_desc(self, df):
+        # At this point we have ctrl/tx_mean/std/count
         df["mean"] = df["tx_mean"] - df["ctrl_mean"]
         df["std"] = df.apply(std.get_std_for_pop_mean_or_proportion, axis=1)
         df["p_value"] = df.apply(sig.get_pvalue_for_pop_mean_or_proportion, axis=1)

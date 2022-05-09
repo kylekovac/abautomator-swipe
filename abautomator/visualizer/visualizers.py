@@ -2,8 +2,8 @@ from .parent import Visualizer, StatSigVisualizer
 
 class BasicVisualizer(Visualizer):
 
-    def __init__(self, source):
-        super().__init__(source, "Population Mean/Proportion (x̄/p̂)")
+    def __init__(self, source, title=None):
+        super().__init__(source, "Population Mean/Proportion (x̄/p̂)", title)
     
     def _get_tool_tips(self):
         return [
@@ -13,8 +13,8 @@ class BasicVisualizer(Visualizer):
 
 class AbsDiffVisualizer(StatSigVisualizer):
 
-    def __init__(self, source):
-        super().__init__(source, "Tx - Ctrl Population (Absolute Diff.)")
+    def __init__(self, source, title=None):
+        super().__init__(source, "Tx - Ctrl Population (Absolute Diff.)", title)
     
     def _get_tool_tips(self):
         return [
@@ -24,12 +24,13 @@ class AbsDiffVisualizer(StatSigVisualizer):
             ("Ctrl x̄", "@{ctrl_mean}±@{ctrl_std}"),
             ("Tx x̄", "@{tx_mean}±@{tx_std}"),
             ("Ctrl/Tx n", "@{ctrl_count}/@{tx_count}"),
+            ("Ctrl/Tx Metric Total", "@{ctrl_sum}/@{tx_sum}"),
         ]
 
 class RelDiffVisualizer(StatSigVisualizer):
 
-    def __init__(self, source):
-        super().__init__(source, "Relative Difference of Tx vs Ctrl Population (%)")
+    def __init__(self, source, title=None):
+        super().__init__(source, "Relative Difference of Tx vs Ctrl Population (%)", title)
     
     def _get_tool_tips(self):
         return [
@@ -40,4 +41,5 @@ class RelDiffVisualizer(StatSigVisualizer):
             ("Ctrl x̄", "@{ctrl_mean}±@{ctrl_std}"),
             ("Tx x̄", "@{tx_mean}±@{tx_std}"),
             ("Ctrl/Tx n", "@{ctrl_count}/@{tx_count}"),
+            ("Ctrl/Tx Metric Total", "@{ctrl_sum}/@{tx_sum}"),
         ]

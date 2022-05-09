@@ -1,11 +1,15 @@
 """ Statisical significance functionality of the analyzer """
 import numpy as np
 import scipy.stats
-import logging
 
-LOGGER = logging.getLogger()
+from abautomator.analyzer import utils
+
 
 def get_pvalue_for_pop_mean_or_proportion(row):
+
+    if utils._confirm_stats_not_calculable(row):
+        return np.nan
+
     if row["metric"].startswith("n_"):
         return _get_pvalue_for_pop_mean(row)
     return _get_pvalue_for_pop_proportion(row)

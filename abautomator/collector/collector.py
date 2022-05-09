@@ -7,6 +7,8 @@ import pandas as pd
 import sqlalchemy
 from sqlalchemy.schema import Table, MetaData
 from sqlalchemy.sql import select
+from sqlalchemy.sql.expression import case
+
 
 from abautomator import metrics, utils, config
 
@@ -35,22 +37,36 @@ class Collector:
             )
 
     def _get_users_query(self):
-        table = Table(f'{config.GCP_DATASET}.{self.event}', MetaData(bind=self.engine), autoload=True)
+        event = Table(
+            f'{config.GCP_DATASET}.{self.event}',
+            MetaData(bind=self.engine),\
+            autoload=True
+        )
+        signups = Table(
+            f'{config.GCP_DATASET}.fct_user_signups',
+            MetaData(bind=self.engine),
+            autoload=True,
+        )
 
         result = select(
-            table.c.echelon_user_id,
-            table.c.device_type,
-            getattr(table.c, self.event_prop).label("exp_cond"),
+            event.c.echelon_user_id,
+            event.c.device_type,
+            getattr(event.c, self.event_prop).label("exp_cond"),
+            case(
+                [(signups.c.join_date >= self.dt_range.start, "new")],
+                else_= "existing"
+            ).label("user_type"),
+        ).select_from(
+            event.outerjoin(
+                signups,
+                event.c.echelon_user_id == signups.c.echelon_user_id
+            )
         ).where(
-            getattr(table.c, self.event_prop).in_(self.conds)
-        ).group_by(
-            table.c.echelon_user_id, 
-            table.c.device_type,
-            getattr(table.c, self.event_prop),
-        )
+            getattr(event.c, self.event_prop).in_(self.conds)
+        ).distinct()
         # Ommitting first_event_datetime for now
 
-        result = utils.add_inclusive_time_frame(result, table, self.dt_range)
+        result = utils.add_inclusive_time_frame(result, event, self.dt_range)
         return result
     
     def _populate_metric_data_dfs(self, conn):

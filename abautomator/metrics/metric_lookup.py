@@ -1,7 +1,7 @@
 from abautomator.metrics.general import user_sessions, incident_views, incident_shares, friend_invites
 from abautomator.metrics.protect import trial_starts, protect_cancellations
 from abautomator.metrics.exploration import feed, chat
-from abautomator.metrics.activation import (
+from abautomator.metrics.onboarding import (
     granted_location, entered_phone, granted_notifs, signup_complete, granted_contacts,
     viewed_shs, activation
 )
@@ -29,10 +29,11 @@ METRIC_LOOKUP = {
     "chats": chat.ChatsMetric(),
     
     # protect
-    "protect_cancellations" : protect_cancellations.ProtectCancellationsMetric(),
+    "protect_cancellations": protect_cancellations.ProtectCancellationsMetric(),
+    "protect_payment_successful": trial_starts.ProtectPaymentSuccessfulMetric(),
     "trial_starts": trial_starts.TrialStartsMetric(),
 
-    # activation
+    # onboarding
     "granted_location": granted_location.GrantedLocationMetric(),
     "entered_phone": entered_phone.EnteredPhoneMetric(),
     "granted_notifs": granted_notifs.GrantedNotifsMetric(),

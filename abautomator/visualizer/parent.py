@@ -7,9 +7,10 @@ from abautomator.visualizer import widgets, utils, bars
 class Visualizer:
     """ Parent object. Not to be initiated directly """
 
-    def __init__(self, source, x_axis_label):
+    def __init__(self, source, x_axis_label, title=None):
         self.source = source
         self.x_axis_label = x_axis_label
+        self.title = title
 
     def get_figure(self):
         fig = utils.init_fig(self._get_y_range(), self._get_tool_tips())
@@ -28,6 +29,7 @@ class Visualizer:
         utils.set_legend(fig)
         utils.set_x_axis(fig, self.x_axis_label, self.source)
         utils.set_y_axis(fig)
+        utils.set_fig_title(fig, self.title)
     
     def _get_tool_tips(self):
         pass  # To be implemented by children

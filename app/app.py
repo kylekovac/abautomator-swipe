@@ -1,61 +1,22 @@
-import os
-import pickle
+from flask import Flask, redirect, url_for
 
-from bokeh.embed import components
-from flask import Flask
-from flask import render_template
 
-from abautomator.visualizer import utils, RelDiffVisualizer, AbsDiffVisualizer
+from abautomator.exp_config import PRIMARY_METRIC_LIST, SECONDARY_METRIC_LIST, GUARDRAIL_METRIC_LIST
+from app import utils
 
 app = Flask(__name__)
 
-@app.route('/')
-@app.route('/relative')
-def relative():
-
-    vis = RelDiffVisualizer(_get_rel_source())
-    layout = vis.get_layout()
-    bokeh_script, bokeh_div = components(layout)
-    return render_template(
-        'index.html',
-        bokeh_script=bokeh_script,
-        bokeh_div=bokeh_div,
-        )
-
-def _get_rel_source():
-    name = "proximity_analy"
-    analy = pickle.load(
-        open(os.path.join("..", "tests", "cache", f"{name}.p"), "rb" )
-    )
-    metric_order = ['n_entered_phone', 'pct_entered_phone', 'n_granted_contacts', 'pct_granted_contacts']
-    cond_order = ['Video01', 'Carousel01', 'Carousel02', 'Carousel03', 'Carousel04']
-
-    df = analy.get_rel_diff_confidence_intervals()
-
-    df = utils.order_categories(df, metric_order, cond_order)
-    return utils.convert_df_to_source(df)
-
-@app.route('/absolute')
-def absolute():
-
-    vis = AbsDiffVisualizer(_get_abs_source())
-    layout = vis.get_layout()
-    bokeh_script, bokeh_div = components(layout)
-    return render_template(
-        'index.html',
-        bokeh_script=bokeh_script,
-        bokeh_div=bokeh_div,
-    )
-
-def _get_abs_source():
-    name = "proximity_analy"
-    analy = pickle.load(
-        open(os.path.join("..", "tests", "cache", f"{name}.p"), "rb" )
-    )
-    metric_order = ['n_entered_phone', 'pct_entered_phone', 'n_granted_contacts', 'pct_granted_contacts']
-    cond_order = ['Video01', 'Carousel01', 'Carousel02', 'Carousel03', 'Carousel04']
-
-    df = analy.get_abs_diff_confidence_intervals()
-
-    df = utils.order_categories(df, metric_order, cond_order)
-    return utils.convert_df_to_source(df)
+@app.route('/<metric_set>/')
+@app.route('/<metric_set>/<segment>')
+def get_graphs(metric_set="primary", segment=None):
+    if not segment:
+        return redirect(url_for("get_graphs", metric_set=metric_set, segment='all-charts'))
+    metric_mapping = {
+        'primary': PRIMARY_METRIC_LIST,
+        'secondary': SECONDARY_METRIC_LIST,
+        'guardrail': GUARDRAIL_METRIC_LIST,
+    }
+    if segment == "all-charts":
+        return utils.render_specific_metrics(metric_mapping[metric_set], f"{metric_set} metrics")
+    else:
+        return utils.render_specific_metrics(metric_mapping[metric_set], f"{metric_set} metrics", [segment])

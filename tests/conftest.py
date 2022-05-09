@@ -119,7 +119,7 @@ def desc(coll_w_users_df):
         desc = describer.Describer(
             metrics=coll_w_users_df.metrics
         )
-        utils.cache_obj(desc, "desc")
+        utils.cache_obj(desc, "describer")
 
         return desc
 
