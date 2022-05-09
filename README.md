@@ -13,12 +13,12 @@ A/B testing at the press of a button
 - Fork this repo. Name it `abautomator-<experiment label>`.
 - Update `abautomator/exp_config.py` with your experiment values
 - Standup the abautomator container
-    - In it run `pytest tests/metrics/test_get_exp_objs.py::test_get_collector.py`. Depending on experiment size this may take +10 minutes.
+    - In it run `pytest tests/metrics/test_get_exp_objs.py::test_get_objects.py --runbuild`. Depending on experiment size this may take +10 minutes.
     - `exit` this Docker container
 - Standup the Flask app Docker container
     - Navigate to `http://localhost:8000/primary/`. Voila! Your experiment results.
 - (Warming) Having the two Docker containers open at the same time will hog a majority of your systems's memory
-- (Optional) If you want to debug/more control over workflow there is a `notebooks/exp_playground.ipynb` file available through the jupyter Docker container
+- (Optional) If you want to debug/more control over workflow there is a `notebooks/exp_playground.ipynb` file available through the jupyter Docker container. This can also be used to save your experiment charts for upload to Google Drive
 
 ## Setup
 
