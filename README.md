@@ -2,16 +2,18 @@
 A/B testing at the press of a button
 
 ## Table of Contents
-1. [Setup](#setup)
-2. [Add a metric](#add-a-metric)
-3. [Data Architecture](#data-architecture)
+1. [How to Use](#how-to-use)
+2. [Setup](#setup)
+3. [Add a Metric](#add-a-metric)
+4. [Data Architecture](#data-architecture)
+5. 
 
 ## How-to-use
 
-- Update `exp_config.py` with your values
-- Run the appropriate analysis object test getter from the test suite
-- Run the juptyer docker and the cells in the appropriate playground (should roll into above)
-- Run the flask app docker and viola - let there be visualization
+- Update `abautomator/exp_config.py` with your experiment values
+- Run `pytest tests/metrics/test_get_exp_objs.py::test_get_collector.py`
+- Standup the Flask app Docker container and navigate to `http://localhost:8000/primary/`
+- (Optional) If you want to debug/more control over workflow there is a `notebooks/exp_playground.ipynb` file available through the jupyter Docker container
 
 ## Setup
 
