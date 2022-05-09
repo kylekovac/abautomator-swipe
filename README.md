@@ -6,7 +6,6 @@ A/B testing at the press of a button
 2. [Setup](#setup)
 3. [Add a Metric](#add-a-metric)
 4. [Data Architecture](#data-architecture)
-5. 
 
 ## How-to-use
 
