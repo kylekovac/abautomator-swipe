@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from sqlalchemy.schema import Table
 from sqlalchemy.sql.selectable import Selectable
-from sqlalchemy.sql.functions import coalesce
 
 from abautomator.metrics import BaseMetric
 from abautomator import utils
