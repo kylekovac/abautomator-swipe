@@ -10,6 +10,7 @@ A/B testing at the press of a button
 
 ## How-to-use
 
+- Fork this repo. Name it `abautomator-<experiment label>`.
 - Update `abautomator/exp_config.py` with your experiment values
 - Run `pytest tests/metrics/test_get_exp_objs.py::test_get_collector.py`
 - Standup the Flask app Docker container and navigate to `http://localhost:8000/primary/`
