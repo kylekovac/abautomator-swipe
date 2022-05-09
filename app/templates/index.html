@@ -1,28 +1,101 @@
 {% extends "base.html" %}
 
 {% block body_content %}
+
+{% if 'all-charts' in request.url %}
+  {% set segment = 'all-charts' %}
+{% elif 'all' in request.url %}
+  {% set segment = 'all' %}
+{% elif 'existing' in request.url %}
+  {% set segment = 'existing' %}
+{% elif 'new' in request.url %}
+  {% set segment = 'new' %}
+{% elif 'ios' in request.url %}
+  {% set segment = 'ios' %}
+{% else %}
+  {% set segment = 'android' %}
+{% endif %}
+
+  <div class="row mb-1 justify-content-center">
+    <div class="col-10">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          {% if 'primary' in request.url%}
+          <a class="nav-link active" aria-current="page">Primary</a>
+          {% else %}
+          <a class="nav-link" href="{{ url_for('get_graphs', metric_set='primary', segment=segment) }}">Primary</a>
+          {% endif %}
+        </li>
+        <li class="nav-item">
+          {% if 'secondary' in request.url %}
+          <a class="nav-link active" aria-current="page">Secondary</a>
+          {% else %}
+          <a class="nav-link" href="{{ url_for('get_graphs', metric_set='secondary', segment=segment) }}">Secondary</a>
+          {% endif %}
+        </li>
+        <li class="nav-item">
+          {% if 'guardrail' in request.url %}
+          <a class="nav-link active" aria-current="page">Guardrail</a>
+          {% else %}
+          <a class="nav-link" href="{{ url_for('get_graphs', metric_set='guardrail', segment=segment) }}">Guardrail</a>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  {% if 'primary' in request.url %}
+    {% set metric_set = 'primary' %}
+  {% elif 'secondary' in request.url %}
+    {% set metric_set = 'secondary' %}
+  {% else %}
+    {% set metric_set = 'guardrail' %}
+  {% endif %}
+
   <div class="row mb-4 justify-content-center">
     <div class="col-10">
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          {% if url_for(request.endpoint) == '/primary' %}
-          <a class="nav-link active" aria-current="page">Primary</a>
+          {% if 'all-charts' in request.url %}
+          <a class="nav-link active" aria-current="page">All Charts</a>
           {% else %}
-          <a class="nav-link" href="{{ url_for('primary') }}">Primary</a>
+          <a class="nav-link" href="{{ url_for('get_graphs', metric_set=metric_set, segment='all-charts') }}">All Charts</a>
+          {% endif %}
+        </li>
+        </li>
+        <li class="nav-item">
+          {% if 'all' in request.url and 'chart' not in request.url%}
+          <a class="nav-link active" aria-current="page">All Users</a>
+          {% else %}
+          <a class="nav-link" href="{{ url_for('get_graphs', metric_set=metric_set, segment='all') }}">All Users</a>
           {% endif %}
         </li>
         <li class="nav-item">
-          {% if url_for(request.endpoint) == '/secondary' %}
-          <a class="nav-link active" aria-current="page">Secondary</a>
+          {% if 'existing' in request.url %}
+          <a class="nav-link active" aria-current="page">Existing Users</a>
           {% else %}
-          <a class="nav-link" href="{{ url_for('secondary') }}">Secondary</a>
+          <a class="nav-link" href="{{ url_for('get_graphs', metric_set=metric_set, segment='existing') }}">Existing Users</a>
           {% endif %}
         </li>
         <li class="nav-item">
-          {% if url_for(request.endpoint) == '/guardrail' %}
-          <a class="nav-link active" aria-current="page">Guardrail</a>
+          {% if 'new' in request.url %}
+          <a class="nav-link active" aria-current="page">New Users</a>
           {% else %}
-          <a class="nav-link" href="{{ url_for('guardrail') }}">Guardrail</a>
+          <a class="nav-link" href="{{ url_for('get_graphs', metric_set=metric_set, segment='new') }}">New Users</a>
+          {% endif %}
+        </li>
+        <li class="nav-item">
+          {% if 'ios' in request.url %}
+          <a class="nav-link active" aria-current="page">iOS</a>
+          {% else %}
+          <a class="nav-link" href="{{ url_for('get_graphs', metric_set=metric_set, segment='ios') }}">iOS</a>
+          {% endif %}
+        </li>
+        <li class="nav-item">
+          {% if 'android' in request.url %}
+          <a class="nav-link active" aria-current="page">Android</a>
+          {% else %}
+          <a class="nav-link" href="{{ url_for('get_graphs', metric_set=metric_set, segment='android') }}">Android</a>
           {% endif %}
         </li>
       </ul>
