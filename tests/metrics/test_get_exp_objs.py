@@ -12,6 +12,18 @@ from abautomator import describer, analyzer
 from abautomator.exp_config import EXP_NAME, CTRL_NAME, CONDS, EVENT,EVENT_PROP, DT_RANGE
 
 @pytest.mark.build
+def test_get_objects(local_coll):
+    
+    print("Collecting data (this could take 10+ mins)")
+    local_coll.collect_data()
+
+    local_coll.engine = None
+    utils.cache_obj(local_coll, f"{EXP_NAME}_coll")
+    print("Data Collected! Generating Analyzers")
+
+    _generate_analyzers(local_coll)
+
+@pytest.mark.build
 def test_get_collector(local_coll):
     
     local_coll.collect_data()
@@ -22,15 +34,15 @@ def test_get_collector(local_coll):
     utils.cache_obj(local_coll, f"{EXP_NAME}_coll")
 
 @pytest.mark.build
-def test_generate_analyzers(local_coll):
+def test_generate_analyzers():
+    _generate_analyzers()
 
+
+def _generate_analyzers():
     local_coll = pickle.load(
-        open(f"{EXP_NAME}_coll.p"), "rb"
+        open(
+            utils.get_cache_path(f"{EXP_NAME}_coll"), "rb")
     )
-    _generate_analyzers(local_coll)
-
-
-def _generate_analyzers(local_coll):
     for mapping in [
             (None, "all"),
             ("device_type","android"),
@@ -44,20 +56,20 @@ def _generate_analyzers(local_coll):
             column, value = mapping
             curr_coll = _filter_coll_metrics(curr_coll, column=column, value=value)
 
-        print(f"describing data for {value}")
+        print(f"Describing data for {value}")
         desc = describer.Describer(
             metrics=curr_coll.metrics
         )
         outcomes_dict = desc.describe_data(exp_name=EXP_NAME)
         
-        print(f"analyzing data for {value}")
+        print(f"Analyzing data for {value}")
         analy =  analyzer.Analyzer(
             outcomes=outcomes_dict,
-            ctrl_name=CTRL_NAME,
+            ctrl_name=CTRL_NAME,    
         )
 
         pickle.dump(
-            analy, open(f"{EXP_NAME}_analy_{value}.p", "wb" )
+            analy, open(utils.get_cache_path(f"{EXP_NAME}_analy_{value}"), "wb")
         )
 
 def _filter_coll_metrics(coll, column, value):
@@ -65,7 +77,6 @@ def _filter_coll_metrics(coll, column, value):
         metric.user_metric_df = metric.user_metric_df[metric.user_metric_df[column] == value]
     
     return coll
-
 
 @pytest.fixture
 def local_coll(engine):

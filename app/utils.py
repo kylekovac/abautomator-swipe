@@ -35,7 +35,7 @@ def _get_layouts( vis_object, metric_list, metric_list_label, segments ):
 
 def _get_segment_layout(segment, vis_object, metric_list, metric_list_label):
     local_analy = pickle.load(
-        open(os.path.join("..", "notebooks", f"{EXP_NAME}_analy_{segment}.p"), "rb" )
+        open(os.path.join("..", "tests", "cache", f"{EXP_NAME}_analy_{segment}.p"), "rb" )
     )
     output_df = local_analy.get_rel_diff_confidence_intervals()
     df = utils.order_categories(output_df, metric_list, COND_ORDER)
