@@ -2,16 +2,16 @@ from datetime import date
 from abautomator.utils import DateRange
 
 
-EXP_NAME = "ProtedtUpSellExp20224023_"
-CTRL_NAME = 'ctrl'
-COND_ORDER = ["tx_w_protect_upsell"]
-CONDS = [
-    'ProtedtUpSellExp20224023_ctrl',
-    'ProtedtUpSellExp20224023_tx_w_protect_upsell',
-]
-EVENT = "segment_viewed_feed_item_cohorted"
-EVENT_PROP = "context_homescreen_curated_cards_config_001"
-DT_RANGE = DateRange(date(2022, 4, 23))
+EXP_NAME = "13052022SwipeUpAnimation_"                               # EXP_NAME = "ProtedtUpSellExp20224023_"
+CTRL_NAME = 'Ctrl'                                                   # CTRL_NAME = 'ctrl'
+COND_ORDER = ["Tx"]                                                  # COND_ORDER = ["tx_w_protect_upsell"]
+CONDS = [                                                            # CONDS = [
+    '13052022SwipeUpAnimation_Ctrl',                                 #     'ProtedtUpSellExp20224023_ctrl',
+    '13052022SwipeUpAnimation_Tx',                                   #     'ProtedtUpSellExp20224023_tx_w_protect_upsell',
+]                                                                    # ]
+EVENT = "segment_app_open_2"                                            # EVENT = "segment_viewed_feed_item_cohorted"
+EVENT_PROP = "context_traits_homescreen_mobile_config_001"           # EVENT_PROP = "context_homescreen_curated_cards_config_001"
+DT_RANGE = DateRange(date(2022, 5, 13), date(2022, 5, 17))                              # DT_RANGE = DateRange(date(2022, 4, 23))
 
 PRIMARY_METRIC_LIST = [
     'n_feed_views',
